@@ -16,8 +16,8 @@ line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 target_x, target_y = 8.5, 2.5  # Coordinates of the target point
 delta_t = 300
-center = (4, 2.5)
-radius = (2.5)
+center = (11.5, 1.5)
+radius = (1)
 max_velocity = 10
 
 # Initializes the figure
