@@ -76,8 +76,8 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    if np.linalg.norm(np.array(arm.end_effector) - np.array([target_x, target_y])) < 0.1:
-        print("Target reached!")
+    if (pf.cartesian_distance(arm.end_effector, (target_x, target_y))) < 0.1 :
+        print("SUCCESS: Target reached!")
         ani.event_source.stop()
 
     # Checks if the other links touch the Obstacle
