@@ -14,9 +14,9 @@ ax.set_xlim(-5,15)
 ax.set_ylim(-5,15)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
-target_x, target_y = 8, 8  # Coordinates of the target point
+target_x, target_y = 8.5, 2.5  # Coordinates of the target point
 delta_t = 300
-center = (4.5, 7.5)
+center = (4, 2.5)
 radius = (2.5)
 
 # Initializes the figure
@@ -53,13 +53,14 @@ def update(frame):
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
         ani.event_source.stop()
-        return line, point, obstacle_circle
+        return line, point, #obstacle_circle
 
     # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, 0.5, 2)
+    v_rep_joint = pf.v_rep_function(distance, 2, 20)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
     joint_velocity = joint_velocity_att - joint_velocity_rep
+    print(f"joint_velocity={joint_velocity}, jv_att={joint_velocity_att}, jv_rep={joint_velocity_rep}")
 
     # Calculate the new thetas
     daempfungsfaktor = 0.0001
@@ -83,12 +84,12 @@ def update(frame):
     distance =  distance_to_circle(center, radius, arm.joint_coxa)
     if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
-        ani.event_source.stop()
+        #ani.event_source.stop()
         return line, point, obstacle_circle
     distance = distance_to_circle(center, radius, arm.joint_femur)
     if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
-        ani.event_source.stop()
+        #ani.event_source.stop()
         return line, point, obstacle_circle
             
     return line, point, obstacle_circle
