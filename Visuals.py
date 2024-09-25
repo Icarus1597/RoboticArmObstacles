@@ -18,6 +18,7 @@ target_x, target_y = 8.5, 2.5  # Coordinates of the target point
 delta_t = 300
 center = (4, 2.5)
 radius = (2.5)
+max_velocity = 10
 
 # Initializes the figure
 def init():
@@ -60,6 +61,14 @@ def update(frame):
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
     joint_velocity = joint_velocity_att - joint_velocity_rep
+
+    # Hard maximum velocity for robot arm
+    if(np.abs(joint_velocity[0])>max_velocity):
+        joint_velocity[0] = np.sign(joint_velocity[0]) * max_velocity
+    if(np.abs(joint_velocity[1])>max_velocity):
+        joint_velocity[1] = np.sign(joint_velocity[1]) *max_velocity
+    if(np.abs(joint_velocity[2])>max_velocity):
+        joint_velocity[2] = np.sign(joint_velocity[2]) *max_velocity
     print(f"joint_velocity={joint_velocity}, jv_att={joint_velocity_att}, jv_rep={joint_velocity_rep}")
 
     # Calculate the new thetas
