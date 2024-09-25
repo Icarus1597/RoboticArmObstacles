@@ -26,8 +26,17 @@ def init():
     obstacle_circle = plt.Circle(center, radius, fc='y')
     return line, point, obstacle_circle
 
+# Method to calculate the distance between a circle and a point. TODO: Maybe put this in another Script
+# Input:
+#   center:   center point of the circle
+#   point:    point for which the distance shall be calculated
+#   radius:   radius of the circle
+# Ouput:
+#   distance: distance between the point and the border of the circle
 def distance_to_circle(center, radius, point):
     distance = pf.cartesian_distance(center, point) - radius
+    if(distance < 0) : 
+        distance = 0
     return distance
 
 # Updates the frame
@@ -39,9 +48,9 @@ def update(frame):
     inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
 
-    # Calculate distance to Circle
+    # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = distance_to_circle(center, radius, arm.end_effector)
-    if(distance <= 0):
+    if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
         ani.event_source.stop()
         return line, point, obstacle_circle
@@ -52,32 +61,32 @@ def update(frame):
 
     joint_velocity = joint_velocity_att - joint_velocity_rep
 
+    # Calculate the new thetas
     daempfungsfaktor = 0.0001
     theta_coxa = arm.theta_coxa + delta_t * joint_velocity[0] * daempfungsfaktor
     theta_femur = arm.theta_femur + delta_t * joint_velocity[1] * daempfungsfaktor
     theta_tibia = arm.theta_tibia + delta_t * joint_velocity[2] * daempfungsfaktor
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
+    # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
     point.set_data([target_x], [target_y])  # Update the position of the additional point
     obstacle_circle = plt.Circle(center, radius, fc='y')
     plt.gca().add_patch(obstacle_circle)
 
-    # Abbruchbedingung: target_point = point_ee
+    # Stops, when target reached/ close to target
     if np.linalg.norm(np.array(arm.end_effector) - np.array([target_x, target_y])) < 0.1:
         print("Target reached!")
         ani.event_source.stop()
 
-    # Checks if the other links touch the Polygon
-    point_coxa = Point(arm.joint_coxa)
-    point_femur = Point(arm.joint_femur)
+    # Checks if the other links touch the Obstacle
     distance =  distance_to_circle(center, radius, arm.joint_coxa)
-    if(distance <= 0):
+    if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
         ani.event_source.stop()
         return line, point, obstacle_circle
     distance = distance_to_circle(center, radius, arm.joint_femur)
-    if(distance <= 0):
+    if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
         ani.event_source.stop()
         return line, point, obstacle_circle
@@ -85,6 +94,8 @@ def update(frame):
     return line, point, obstacle_circle
 
 arm = RoboterArm.RoboticArm(7,6,4)
+
+# Start the animation
 frames = np.linspace(0, 2 * np.pi, delta_t)
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
 #plt.axis('scaled')
