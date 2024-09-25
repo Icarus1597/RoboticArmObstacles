@@ -2,9 +2,6 @@ import numpy as np
 from autograd import grad
 import autograd.numpy as anp
 
-
-# Traditional Potential Field (https://www.mdpi.com/1424-8220/23/7/3754)
-
 # Attractive Potential Field 
 # Inputs:
 # pos_ee     : position end effector
@@ -13,9 +10,10 @@ import autograd.numpy as anp
 # Ouputs:
 # u_att      : attractive potential field
 def u_att_function(pos_ee, pos_target, zeta) :
+    #print(f"pos_ee:{pos_ee}, pos_target:{pos_target}")
     # rho : cartesian distance end effector pos_ee and target pos_target
-    rho = cartesian_distance(pos_ee, pos_target)
-    u_att = 1/2 * zeta * rho * rho
+    rho = cartesian_distance(pos_target, pos_ee)
+    u_att = 1/2 * zeta * rho **2
     return u_att
 
 # Cartesian distance of two points
@@ -62,12 +60,16 @@ def v_att_function(pos_ee, pos_target, zeta) :
     
     # Compute the gradient at the given pos_ee
     v_att = grad_function(pos_ee)
-    
     return -v_att
 
-# TODO
-def V_att(v_att):
-    return np.array([0, v_att[0], v_att[1]])
+# Converts v_att to Vector with omega_att the angular velocity (which is zero)
+# Input:
+# v_att : Attraction Velocity in Cartesian Space
+# Output:
+# V_att : Attraction Velocity in Cartesian SPace Array 3x1 with added omega_att = 0
+def V_att(v_att): 
+    #TODO: muss ich überhaupt transponieren?
+    return np.array([v_att[0], v_att[1]]).T
 
 # Repulsive Velocity in Cartesian Space
 # Input:
@@ -75,16 +77,27 @@ def V_att(v_att):
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain
 # Output:
-# -v_rep: Gradient of the Potential Field and Repulsive Velocity in Cartesian Space
+# v_rep: Gradient of the Potential Field and Repulsive Velocity in Cartesian Space
 def v_rep_function(rho_b, rho_0, k) :
-    def potential_funkction(rho_b):
-        return u_rep_function(rho_b, rho_0, k)
-    v_rep = grad(potential_funkction)
-    return -v_rep
+    if(rho_b <= rho_0):
+        v_rep = k * (1/rho_b - 1/rho_0) * 1 / rho_b**2
+        return v_rep
+    return 0
+#def v_rep_function(pos_ee, pos_obstacle, rho_b, rho_0, k):
+   # if rho_b <= rho_0:
+   #     grad_rep = (1 / rho_b - 1 / rho_0) * (1 / rho_b**2)
+   #     rep_direction = (pos_ee - pos_obstacle) / rho_b  # Vector pointing away from the obstacle
+   #     v_rep = k * grad_rep * rep_direction
+   #     return v_rep
+  #  return np.zeros_like(pos_ee)
 
-# TODO
+# Repulsive Velocity in Cartesian Space with angular velocity added
+# Input:
+# v_rep : Repulsive Velocity in Cartesian Space, is a Scalar
+# Output:
+# V_rep : Repulsive Velocity in Cartesian Space, is a 3x1 Vector, with added Angular Velocities omega_rep
 def V_rep(v_rep):
-    return np.array([0, v_rep[0], v_rep[1]])
+    return np.array([0, v_rep])
 
 # Calculates the Joint Velocities from Cartesian Space to Joint Space for the Attractive Velocity
 # Inputs:
@@ -93,11 +106,9 @@ def V_rep(v_rep):
 # Output:
 # Attraction Velocity in Joint Space
 def joint_velocities_att(inverse_jacobian_matrix, v_att) :
-    #print("Inverse Jacobian Matrix:")
-    #print(inverse_jacobian_matrix)
-    #print("v_att:")
-    #print(v_att)
-    return inverse_jacobian_matrix * V_att(v_att)
+    v_att_vec = V_att(v_att)
+    return np.dot(inverse_jacobian_matrix, v_att_vec)
+    #return np.dot(inverse_jacobian_matrix, V_att(v_att))
 
 # Calculates the Joint Velocities from Cartesian Space to Joint Space for the Repulsive Velocity
 # Inputs:
@@ -106,5 +117,5 @@ def joint_velocities_att(inverse_jacobian_matrix, v_att) :
 # Output:
 # Repulsive Velocity in Joint Space
 def joint_velocities_rep(inverse_jacobian_matrix, v_rep) :
-    return inverse_jacobian_matrix * V_rep(v_rep)
+    return np.dot(inverse_jacobian_matrix, V_rep(v_rep))
 
