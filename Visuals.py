@@ -29,8 +29,8 @@ tibia_length = config.tibia_length
 
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
-ax.set_xlim(-5,15)
-ax.set_ylim(-5,15)
+ax.set_xlim(-(coxa_length+femur_length+tibia_length),  coxa_length+femur_length+tibia_length)
+ax.set_ylim(-(coxa_length+femur_length+tibia_length),  coxa_length+femur_length+tibia_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
@@ -121,5 +121,4 @@ arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, delta_t)
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
-#plt.axis('scaled')
 plt.show()

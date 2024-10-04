@@ -1,3 +1,5 @@
+import numpy as np
+
 # Test Parameter:
 # Position of the target
 target_x, target_y = 2, 8.5
@@ -32,8 +34,6 @@ k = 20
 zeta = 1
 
 # Start Position of the arm (posture/angles):
-theta_coxa = 0
+theta_coxa = np.pi
 theta_femur = 0
 theta_tibia = 0
-
-# TODO: axis limits of the figure
