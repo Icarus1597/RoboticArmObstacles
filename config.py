@@ -1,13 +1,13 @@
 # Test Parameter:
 # Position of the target
-target_x, target_y = 0, 0
+target_x, target_y = 2, 8.5
 
 # delta_t Time between frames
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
 center = (11.5, 1.5)
-radius = (1)
+radius = 1
 
 # Hard maximum velocity
 max_velocity = 10
@@ -21,7 +21,7 @@ tibia_length = 4
 delta_success_distance = 0.1
 
 # damping factor for arm velocity
-damping_factor =  0.001
+damping_factor =  0.0001
 
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain

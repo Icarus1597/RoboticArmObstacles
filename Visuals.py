@@ -7,6 +7,25 @@ import time
 import autograd.numpy as anp
 from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
+import config
+
+# Parameters
+target_x, target_y = config.target_x, config.target_y  # Coordinates of the target point
+delta_t = config.delta_t
+center = config.center
+radius = config.radius
+max_velocity = config.max_velocity
+zeta = config.zeta
+rho_0 = config.rho_0
+k = config.k
+damping_factor = config.damping_factor
+delta_success_distance = config.delta_success_distance
+theta_coxa = config.theta_coxa
+theta_femur = config.theta_femur
+theta_tibia = config.theta_tibia
+coxa_length = config.coxa_length
+femur_length = config.femur_length
+tibia_length = config.tibia_length
 
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
@@ -14,23 +33,6 @@ ax.set_xlim(-5,15)
 ax.set_ylim(-5,15)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
-
-# Parameters
-target_x, target_y = 8.5, 2.5  # Coordinates of the target point
-delta_t = 300
-center = (11.5, 1.5)
-radius = (1)
-max_velocity = 10
-zeta = 1
-rho_0 = 2
-k = 20
-damping_factor = 0.0001
-delta_success_distance = 0.1
-theta_coxa = 0
-theta_femur = 0
-theta_tibia = 0
-
-# TODO: How to configure the parameters
 
 # Initializes the figure
 def init():
@@ -114,7 +116,7 @@ def update(frame):
             
     return line, point, obstacle_circle
 
-arm = RoboterArm.RoboticArm(7,6,4)
+arm = RoboterArm.RoboticArm(coxa_length,femur_length,tibia_length)
 arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, delta_t)
