@@ -74,7 +74,7 @@ def update(frame):
     v_rep_joint = pf.v_rep_function(distance, rho_0, k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
-    joint_velocity = joint_velocity_att - joint_velocity_rep
+    joint_velocity = joint_velocity_att + joint_velocity_rep
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>max_velocity):
@@ -106,12 +106,12 @@ def update(frame):
     distance =  distance_to_circle(center, radius, arm.joint_coxa)
     if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
-        #ani.event_source.stop()
+        ani.event_source.stop()
         return line, point, obstacle_circle
     distance = distance_to_circle(center, radius, arm.joint_femur)
     if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
-        #ani.event_source.stop()
+        ani.event_source.stop()
         return line, point, obstacle_circle
             
     return line, point, obstacle_circle
