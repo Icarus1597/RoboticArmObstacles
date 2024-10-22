@@ -2,14 +2,14 @@ import numpy as np
 
 # Test Parameter:
 # Position of the target
-target_x, target_y = 2, 8.5
+target_x, target_y = -12, 0
 
 # delta_t Time between frames
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (11.5, 1.5)
-radius = 1
+center = (-6, 0)
+radius = 2
 
 # Hard maximum velocity
 max_velocity = 10
@@ -34,6 +34,6 @@ k = 20
 zeta = 1
 
 # Start Position of the arm (posture/angles):
-theta_coxa = np.pi
-theta_femur = 0
-theta_tibia = 0
+theta_coxa = 0
+theta_femur = np.pi
+theta_tibia = np.pi
