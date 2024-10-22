@@ -76,7 +76,7 @@ def update(frame):
 
     joint_velocity = joint_velocity_att + joint_velocity_rep
     if(joint_velocity.all() == 0):
-        joint_velocity=[1E-10, 0, 0]
+        joint_velocity=[-1E-10, 0, 0]
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>max_velocity):
@@ -115,7 +115,7 @@ def update(frame):
         print(f"ERROR: Femur-Link touches the obstacle!")
         ani.event_source.stop()
         return line, point, obstacle_circle
-            
+    #ani.event_source.stop() # If you want to take a closer look to the start-position
     return line, point, obstacle_circle
 
 arm = RoboterArm.RoboticArm(coxa_length,femur_length,tibia_length)

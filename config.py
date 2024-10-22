@@ -8,8 +8,8 @@ target_x, target_y = -12,0
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (-6, 0)
-radius = 4
+center = (-9, -1)
+radius = 2
 
 # Hard maximum velocity
 max_velocity = 2
@@ -27,13 +27,13 @@ damping_factor =  0.0001
 
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain
-rho_0 = 2
-k = 20
+rho_0 = 3.5
+k = 10
 
 # zeta  : attractive potential gain
-zeta = 5
+zeta = 1.1
 
 # Start Position of the arm (posture/angles):
-theta_coxa = np.pi/2
-theta_femur = 0
-theta_tibia = 0
+theta_coxa = np.pi/4
+theta_femur = np.pi
+theta_tibia = np.pi
