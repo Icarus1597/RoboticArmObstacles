@@ -8,7 +8,7 @@ target_x, target_y = -12,0
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (-9, -1)
+center = (-9, 0)
 radius = 2
 
 # Hard maximum velocity
@@ -20,7 +20,7 @@ femur_length = 6
 tibia_length = 4
 
 # Max. distance between end effector and target point for success
-delta_success_distance = 0.2
+delta_success_distance = 1.1
 
 # damping factor for arm velocity
 damping_factor =  0.0001
@@ -34,6 +34,6 @@ k = 10
 zeta = 1.1
 
 # Start Position of the arm (posture/angles):
-theta_coxa = np.pi/4
-theta_femur = np.pi
-theta_tibia = np.pi
+theta_coxa = 3/2*np.pi
+theta_femur = 0
+theta_tibia = 0

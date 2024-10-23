@@ -13,7 +13,7 @@ def u_att_function(pos_ee, pos_target, zeta) :
     #print(f"pos_ee:{pos_ee}, pos_target:{pos_target}")
     # rho : cartesian distance end effector pos_ee and target pos_target
     rho = cartesian_distance(pos_target, pos_ee)
-    print(f"Distance EE to target: {rho}")
+    #print(f"Distance EE to target: {rho}")
     u_att = 1/2 * zeta * rho **2
     return u_att
 
