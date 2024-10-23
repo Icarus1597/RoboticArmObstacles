@@ -20,7 +20,7 @@ femur_length = 6
 tibia_length = 4
 
 # Max. distance between end effector and target point for success
-delta_success_distance = 1.1
+delta_success_distance = 2
 
 # damping factor for arm velocity
 damping_factor =  0.0001
