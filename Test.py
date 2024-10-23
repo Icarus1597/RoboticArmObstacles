@@ -97,7 +97,7 @@ exec(open("Visuals.py").read())
 
 # 4. Spalte: Ausgestreckt nach unten
 print("Vierte Spalte 3/2*PI, 0, 0")
-config.theta_coxa = PI/2
+config.theta_coxa = PI/2*3
 config.theta_femur = 0
 config.theta_tibia = 0
 
@@ -126,7 +126,7 @@ config.radius = 4
 exec(open("Visuals.py").read())
 
 # 5. Spalte: Eingeklappt nach rechts
-print("5. Spalte 0, 0, 0")
+print("5. Spalte 0, PI, PI")
 config.theta_coxa = 0
 config.theta_femur = PI
 config.theta_tibia = PI
@@ -157,7 +157,7 @@ exec(open("Visuals.py").read())
 
 
 # 6. Spalte: Eingeklappt nach oben
-print("6. Spalte PI/2, 0, 0")
+print("6. Spalte PI/2, PI, PI")
 config.theta_coxa = PI/2
 config.theta_femur = PI
 config.theta_tibia = PI
@@ -187,7 +187,7 @@ config.radius = 4
 exec(open("Visuals.py").read())
 
 # 7. Spalte: Eingeklappt nach schräg rechts oben
-print("7. Spalte PI/4, 0, 0")
+print("7. Spalte PI/4, PI, PI")
 config.theta_coxa = PI/4
 config.theta_femur = PI
 config.theta_tibia = PI
@@ -217,7 +217,7 @@ config.radius = 4
 exec(open("Visuals.py").read())
 
 # 8. Spalte: Eingeklappt nach unten
-print("8. Spalte 3/2*PI, PI/2, PI/2")
+print("8. Spalte 3/2*PI, PI, PI")
 config.theta_coxa = PI/2*3
 config.theta_femur = PI
 config.theta_tibia = PI
