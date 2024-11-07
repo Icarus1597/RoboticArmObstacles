@@ -8,7 +8,7 @@ target_x, target_y = -12,0
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (-9, 0)
+center = (-6, -1)
 radius = 2
 
 # Hard maximum velocity
@@ -33,7 +33,11 @@ k = 10
 # zeta  : attractive potential gain
 zeta = 1.1
 
+PI = np.pi
 # Start Position of the arm (posture/angles):
 theta_coxa = 3/2*np.pi
 theta_femur = 0
 theta_tibia = 0
+theta_coxa = PI/4
+theta_femur = PI
+theta_tibia = PI
