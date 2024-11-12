@@ -41,6 +41,8 @@ def init():
     obstacle_circle = plt.Circle(center, radius, fc='y')
     return line, point, obstacle_circle
 
+start_time = time.time()
+
 # Method to calculate the distance between a circle and a point. TODO: Maybe put this in another Script
 # Input:
 #   center:   center point of the circle
@@ -56,6 +58,14 @@ def distance_to_circle(center, radius, point):
 
 # Updates the frame
 def update(frame):
+
+    # After a given time, the execution will be aborted
+    current_time = time.time()
+    if(current_time - start_time > config.timeout) :
+        print(f"TIMEOUT")
+        ani.event_source.stop()
+        plt.close()
+        return line, point, #obstacle_circle
 
     # Calculations for the movement of joints: Attractive Velocity
     v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([target_x, target_y], dtype=anp.float64), zeta)

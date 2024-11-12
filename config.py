@@ -41,3 +41,6 @@ theta_tibia = 0
 theta_coxa = PI/4
 theta_femur = PI
 theta_tibia = PI
+
+# Maximum total time in seconds
+timeout = 120
