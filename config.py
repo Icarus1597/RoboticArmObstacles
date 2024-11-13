@@ -44,3 +44,6 @@ theta_tibia = PI
 
 # Maximum total time in seconds
 timeout = 120
+
+# If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
+min_distance_to_obstacle = 0.25

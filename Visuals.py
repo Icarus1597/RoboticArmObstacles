@@ -67,6 +67,14 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
+    # Calculate distance arm to obstacle. If negative, error and abort execution
+    distance = arm.distance_arm_obstacle(center, radius)
+    if(distance < config.min_distance_to_obstacle):
+        #print(f"ERROR: Arm touches the obstacle!")
+        ani.event_source.stop()
+        plt.close()
+        return line, point, #obstacle_circle
+
     # Calculations for the movement of joints: Attractive Velocity
     v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([target_x, target_y], dtype=anp.float64), zeta)
     jacobian_matrix = arm.jacobian_matrix()
