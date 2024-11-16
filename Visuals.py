@@ -34,6 +34,18 @@ ax.set_ylim(-(coxa_length+femur_length+tibia_length),  coxa_length+femur_length+
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
+plt.ion()  # Activates interactive mode
+fig2, ax2 = plt.subplots()
+x_data_time = []
+y_data_distance_to_target = []
+line2, = ax2.plot([], [], 'r-', label="Distance")
+
+ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
+ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
+ax2.set_xlabel('Time (s)')
+ax2.set_ylabel('Distance')
+ax2.legend()
+
 # Initializes the figure
 def init():
     line.set_data([], [])
@@ -122,7 +134,8 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    if (pf.cartesian_distance(arm.end_effector, (target_x, target_y))) < delta_success_distance :
+    distance_to_target = pf.cartesian_distance(arm.end_effector, (target_x, target_y))
+    if (distance_to_target) < delta_success_distance :
         print("SUCCESS: Target reached!")
         ani.event_source.stop()
         plt.close()
@@ -141,11 +154,25 @@ def update(frame):
         plt.close()
         return line, point, obstacle_circle
     #ani.event_source.stop() # If you want to take a closer look to the start-position
+
+    # Füge die neuen Werte zu den Daten hinzu
+    x_data_time.append(current_time - start_time)
+    y_data_distance_to_target.append(distance_to_target)
+    
+    # Aktualisiere den Plot
+    line2.set_xdata(x_data_time)
+    line2.set_ydata(y_data_distance_to_target)
+    print(f"Time:{current_time - start_time}, Distance:{distance_to_target}")
+    
+    # Aktualisiere das Diagramm
+    #fig2.canvas.draw()
+    #fig2.canvas.flush_events()
     return line, point, obstacle_circle
 
 arm = RoboterArm.RoboticArm(coxa_length,femur_length,tibia_length)
 arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, delta_t)
-ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
+ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init) # blit=True
+plt.ioff()
 plt.show()
