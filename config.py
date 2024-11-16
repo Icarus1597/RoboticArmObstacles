@@ -27,8 +27,8 @@ damping_factor =  0.0001
 
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain
-rho_0 = 3.5
-k = 10
+rho_0 = 4
+k = 15
 
 # zeta  : attractive potential gain
 zeta = 1.1

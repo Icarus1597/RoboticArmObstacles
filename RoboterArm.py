@@ -132,10 +132,13 @@ class RoboticArm:
         # Checks if arm touches the obstacle
         if(distance_coxa < 0) :
             print(f"ERROR: Coxa-Link touches the obstacle")
+            return -1
         if(distance_femur < 0) :
             print(f"ERROR: Femur-Link touches the obstacle")
+            return -1
         if(distance_tibia < 0) :
             print(f"ERROR: Tibia-Link touches the obstacle")
+            return -1
 
         # Checks if arm is closer to the obstacle than the minimum required distance
         if(distance_coxa < config.min_distance_to_obstacle):
@@ -145,3 +148,4 @@ class RoboticArm:
         if(distance_tibia < config.min_distance_to_obstacle):
             print(f"WARNING: Tibia too close to obstacle")
         return min(distance_coxa, distance_femur, distance_tibia)
+        
