@@ -48,6 +48,13 @@ ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
 
+if plt.get_backend() == 'TkAgg':
+    # Set the position of fig
+    fig.canvas.manager.window.geometry("+1000+100")
+    
+    # Set position of fig2
+    fig2.canvas.manager.window.geometry("+1000+100")
+
 # Initializes the figure
 def init():
     line.set_data([], [])
