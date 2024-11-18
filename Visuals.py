@@ -27,6 +27,7 @@ coxa_length = config.coxa_length
 femur_length = config.femur_length
 tibia_length = config.tibia_length
 
+# Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
 ax.set_xlim(-(coxa_length+femur_length+tibia_length),  coxa_length+femur_length+tibia_length)
@@ -34,6 +35,7 @@ ax.set_ylim(-(coxa_length+femur_length+tibia_length),  coxa_length+femur_length+
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
+# Plot: Distance End Effector to target
 plt.ion()  # Activates interactive mode
 fig2, ax2 = plt.subplots()
 x_data_time = []
@@ -76,6 +78,9 @@ def update(frame):
     if(current_time - start_time > config.timeout) :
         print(f"TIMEOUT")
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(fig2.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -84,6 +89,9 @@ def update(frame):
     if(distance < config.min_distance_to_obstacle):
         #print(f"ERROR: Arm touches the obstacle!")
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(fig2.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -98,6 +106,9 @@ def update(frame):
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(fig2.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -131,6 +142,7 @@ def update(frame):
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
     point.set_data([target_x], [target_y])  # Update the position of the additional point
     obstacle_circle = plt.Circle(center, radius, fc='y')
+    plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
@@ -138,6 +150,9 @@ def update(frame):
     if (distance_to_target) < delta_success_distance :
         print("SUCCESS: Target reached!")
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(fig2.number)
         plt.close()
 
     # Checks if the other links touch the Obstacle
@@ -145,12 +160,18 @@ def update(frame):
     if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
         ani.event_source.stop()
+        plt.figure(fig.number)
         plt.close()
+        plt.figure(fig2.number)
+        plt.close()        
         return line, point, obstacle_circle
     distance = distance_to_circle(center, radius, arm.joint_femur)
     if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(fig2.number)
         plt.close()
         return line, point, obstacle_circle
     #ani.event_source.stop() # If you want to take a closer look to the start-position
@@ -162,7 +183,7 @@ def update(frame):
     # Aktualisiere den Plot
     line2.set_xdata(x_data_time)
     line2.set_ydata(y_data_distance_to_target)
-    print(f"Time:{current_time - start_time}, Distance:{distance_to_target}")
+    #print(f"Time:{current_time - start_time}, Distance:{distance_to_target}")
     
     # Aktualisiere das Diagramm
     fig2.canvas.draw()
