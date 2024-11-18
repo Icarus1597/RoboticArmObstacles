@@ -165,7 +165,7 @@ def update(frame):
     print(f"Time:{current_time - start_time}, Distance:{distance_to_target}")
     
     # Aktualisiere das Diagramm
-    #fig2.canvas.draw()
+    fig2.canvas.draw()
     #fig2.canvas.flush_events()
     return line, point, obstacle_circle
 
@@ -173,6 +173,6 @@ arm = RoboterArm.RoboticArm(coxa_length,femur_length,tibia_length)
 arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, delta_t)
-ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init) # blit=True
+ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True) # blit=True
 plt.ioff()
 plt.show()
