@@ -671,3 +671,6 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open("Visuals.py").read())
+
+with open("testresults.txt", "a") as file:
+    file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
