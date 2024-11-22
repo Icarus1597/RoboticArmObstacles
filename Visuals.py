@@ -84,6 +84,9 @@ def update(frame):
     current_time = time.time()
     if(current_time - start_time > config.timeout) :
         print(f"TIMEOUT")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: TIMEOUT\n")
+        config.number_timeout += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -112,6 +115,9 @@ def update(frame):
     distance = distance_to_circle(center, radius, arm.end_effector)
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
+        config.number_error_ee +=1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -156,6 +162,9 @@ def update(frame):
     distance_to_target = pf.cartesian_distance(arm.end_effector, (target_x, target_y))
     if (distance_to_target) < delta_success_distance :
         print("SUCCESS: Target reached!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: SUCCESS\n")
+        config.number_success += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -166,6 +175,9 @@ def update(frame):
     distance =  distance_to_circle(center, radius, arm.joint_coxa)
     if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
+        config.number_error_coxa += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -175,6 +187,9 @@ def update(frame):
     distance = distance_to_circle(center, radius, arm.joint_femur)
     if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
+        config.number_error_femur += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
