@@ -187,7 +187,7 @@ def update(frame):
         plt.figure(figure_distance_to_target.number)
         plt.close()
         return line, point, obstacle_circle
-    ani.event_source.stop() # If you want to take a closer look to the start-position
+    #ani.event_source.stop() # If you want to take a closer look to the start-position
 
     # Append the new data
     x_data_time.append(current_time - start_time)
