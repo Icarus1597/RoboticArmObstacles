@@ -9,6 +9,14 @@ from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
 import config
 
+# Update the posture of the arm
+arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
+
+start_time = time.time() # To track the duration of the test 
+covered_distance = 0 # To measure the path length
+previous_end_effector_position = arm.end_effector
+
 # Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
@@ -45,8 +53,6 @@ def init():
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     return line, point, obstacle_circle
 
-start_time = time.time() # To track the duration of the test
-
 # Method to calculate the distance between a circle and a point
 # Input:
 #   center:   center point of the circle
@@ -62,6 +68,8 @@ def distance_to_circle(center, radius, point):
 
 # Updates the frame
 def update(frame):
+    global previous_end_effector_position
+    global covered_distance
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -143,7 +151,7 @@ def update(frame):
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}\n")
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
         config.number_success += 1
         ani.event_source.stop()
         plt.figure(fig.number)
@@ -190,11 +198,11 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
-    return line, point, obstacle_circle
+    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    covered_distance += step_covered_distance
+    previous_end_effector_position = arm.end_effector
 
-# Update the posture of the arm
-arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
-arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
+    return line, point, obstacle_circle
 
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, config.delta_t)
