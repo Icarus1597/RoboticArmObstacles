@@ -47,3 +47,15 @@ timeout = 120
 
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
 min_distance_to_obstacle = 0.25
+
+# Counter for types of test results
+number_timeout = 0
+number_success = 0
+number_error_ee = 0
+number_error_tibia = 0
+number_error_femur = 0
+number_error_coxa = 0
+
+# Lists to later calculate mean of covered distance and time needed
+list_covered_distance = []
+list_time_needed = []
