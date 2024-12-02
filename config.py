@@ -55,3 +55,7 @@ number_error_ee = 0
 number_error_tibia = 0
 number_error_femur = 0
 number_error_coxa = 0
+
+# Lists to later calculate mean of covered distance and time needed
+list_covered_distance = []
+list_time_needed = []

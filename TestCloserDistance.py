@@ -747,3 +747,10 @@ exec(open("Visuals.py").read())
 
 with open("testresults.txt", "a") as file:
     file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
+
+# Statistics
+mean_covered_distance = sum(config.list_covered_distance) / len(config.list_covered_distance)
+mean_time_needed = sum(config.list_time_needed) / len(config.list_time_needed)
+with open("testresults.txt", "a") as file:
+    file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
+    file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")

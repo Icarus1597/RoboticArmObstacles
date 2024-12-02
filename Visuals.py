@@ -153,6 +153,8 @@ def update(frame):
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
         config.number_success += 1
+        config.list_covered_distance.append(covered_distance)
+        config.list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
