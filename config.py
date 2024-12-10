@@ -59,3 +59,7 @@ number_error_coxa = 0
 # Lists to later calculate mean of covered distance and time needed
 list_covered_distance = []
 list_time_needed = []
+
+# Parameters A Star Algorithm
+distance_to_neighbour = 0.1
+number_neighboring_nodes = 8

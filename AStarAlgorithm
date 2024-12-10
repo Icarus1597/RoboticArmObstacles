@@ -1,0 +1,72 @@
+import numpy as np
+import config
+
+PI = np.pi
+
+class AStarNode:
+    # Initializes the Point for the A-Star search
+    # Inputs:
+    def __init__(self, position, goal_point):
+        self.position = position
+        self.goal_point = goal_point
+        self.open_list = []
+        self.closed_list = []
+        self.evaluation_function = 0
+        self.parent_node = None
+        self.open_list.append(self)
+    
+    def iterative_search(self) :
+        node = self.smallest_evaluation_function
+        self.open_list.remove(node)
+        self.closed_list.append(node)
+        if(self.initial_point == self.goal_point):
+            print("SUCCESS!\n")
+            # TODO: Backtracking
+            return
+        if(len(self.open_list)== 0 ):
+            print("FAIL: Goal point cannot be reached")
+            return
+        #TODO
+        neighbouring_nodes = self.generate_neighbouring_nodes()
+        for node in neighbouring_nodes:
+            node_evaluation_function = node.calculate_evaluation_function()
+            if self.closed_list.__contains__(node):
+                break
+            elif not (self.open_list.__contains__(node)):
+                self.open_list.append(node)
+                node.parent_node = self
+            else :
+                if(node_evaluation_function < self.evaluation_function):
+                    node.parent_node = self
+                    node.evaluation_function = node_evaluation_function
+        return
+    
+    def smallest_evaluation_function(self):
+        if(self.open_list == None):
+            return -1
+        node_smallest_evaluation_function = self.open_list[0]
+        current_smallest_evaluation_function_value = self.open_list[0].evaluation_function
+        for node in self.open_list:
+            if(current_smallest_evaluation_function_value > node.evaluation_function): 
+                current_smallest_evaluation_function_value = node.evaluation_function
+                node_smallest_evaluation_function = node
+        return node_smallest_evaluation_function
+    
+    def generate_neighbouring_nodes(self):
+        neighbouring_nodes = []
+        for i in range (config.number_neighboring_nodes):
+            alpha = 2 * PI / config.number_neighboring_nodes * i
+            position_x = self.position[0] + np.cos(alpha)*config.distance_to_neighbour
+            position_y = self.position[1] + np.sin(alpha)*config.distance_to_neighbour
+            new_node = AStarNode(new_node, (position_x, position_y), self.goal_point)
+            neighbouring_nodes.append(new_node)
+        
+        return neighbouring_nodes
+    
+    def calculate_evaluation_function(self):
+        # TODO
+        return 
+    
+    def iterative_search_wrapper(self):
+        # TODO
+        return
