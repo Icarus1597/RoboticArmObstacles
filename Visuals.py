@@ -7,100 +7,207 @@ import time
 import autograd.numpy as anp
 from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
+import config
 
+# Update the posture of the arm
+arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
+
+start_time = time.time() # To track the duration of the test 
+covered_distance = 0 # To measure the path length
+previous_end_effector_position = arm.end_effector
+
+# Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
-ax.set_xlim(-5,15)
-ax.set_ylim(-5,15)
+# Set axis limits considering the link lengths
+ax.set_xlim(-(config.coxa_length +config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
+ax.set_ylim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
-target_x, target_y = 8, 8  # Coordinates of the target point
-delta_t = 300
-points = [[3,4], [7.5,11],[3,8]]
+
+# Plot: Distance End Effector to target
+plt.ion()  # Activates interactive mode
+figure_distance_to_target, ax2 = plt.subplots()
+x_data_time = []
+y_data_distance_to_target = []
+line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
+
+ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
+ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
+ax2.set_xlabel('Time (s)')
+ax2.set_ylabel('Distance')
+ax2.legend()
+
+if plt.get_backend() == 'TkAgg':
+    # Set the position of fig
+    fig.canvas.manager.window.geometry("+1000+100")
+    
+    # Set position of figure_distance_to_target
+    figure_distance_to_target.canvas.manager.window.geometry("+1000+100")
 
 # Initializes the figure
 def init():
     line.set_data([], [])
     point.set_data([], [])
-    #obstacle_circle = plt.Circle((0.5, 0.5), radius=0.5, fc='y')
-    
-    obstacle_polygon = plt.Polygon(points)
-    #plt.gca().add_patch(circle)
-    return line, point, obstacle_polygon
+    obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+    return line, point, obstacle_circle
+
+# Method to calculate the distance between a circle and a point
+# Input:
+#   center:   center point of the circle
+#   point:    point for which the distance shall be calculated
+#   radius:   radius of the circle
+# Ouput:
+#   distance: distance between the point and the border of the circle
+def distance_to_circle(center, radius, point):
+    distance = pf.cartesian_distance(center, point) - radius
+    if(distance < 0) : 
+        distance = 0
+    return distance
 
 # Updates the frame
 def update(frame):
-    
-    #arm.update_joints(arm.theta_coxa, arm.theta_femur, arm.theta_tibia)
+    global previous_end_effector_position
+    global covered_distance
+
+    # After a given time, the execution will be aborted
+    current_time = time.time()
+    if(current_time - start_time > config.timeout) :
+        print(f"TIMEOUT")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: TIMEOUT\n")
+        config.number_timeout += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
+    # Calculate distance arm to obstacle. If negative, error and abort execution
+    distance = arm.distance_arm_obstacle(config.center, config.radius)
+    if(distance < config.min_distance_to_obstacle):
+        #print(f"ERROR: Arm touches the obstacle!")
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
 
     # Calculations for the movement of joints: Attractive Velocity
-    #print(f"pos_ee/joint_tibia:{arm.joint_tibia}")
-    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([target_x, target_y], dtype=anp.float64), 1)
+    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
     jacobian_matrix = arm.jacobian_matrix()
     inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
 
-    # Creates shapely Polygon to calculate the distance between End Effector and Polygon
-    point_ee = Point(arm.end_effector)
-    #points = [(3,4), (9,5), (7,8), (3,8), (3,4)]
-    obstacle_polygon_shapely = Polygon(points)
-    distance = point_ee.distance(obstacle_polygon_shapely)
+    # Calculate distance to Circle and checks if the End Effector touches the Circle
+    distance = distance_to_circle(config.center, config.radius, arm.end_effector)
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
+        config.number_error_ee +=1
         ani.event_source.stop()
-        return line, point, obstacle_polygon
-    #print(f"Distance Point to Polygon: {distance}")
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
 
     # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, 0.5, 2)
+    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
-    #print(f"joint_vel_att:{joint_velocity_att}, joint_vel_rep:{joint_velocity_rep}")
-    joint_velocity = joint_velocity_att - joint_velocity_rep
-    #print(f"Joint Velocity:{joint_velocity}")
-    #x0, y0 = 0, 0
+    if(arm.end_effector[1] < 0):
+        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
+    else:
+        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
 
-    delta_coxa, delta_femur, delta_tibia = joint_velocity
-    #print(f"d_coxa:{delta_coxa}, d_femur:{delta_femur}, d_tibia:{delta_tibia}")
-    daempfungsfaktor = 0.0001
-    theta_coxa = arm.theta_coxa + delta_t * joint_velocity[0] * daempfungsfaktor
-    theta_femur = arm.theta_femur + delta_t * joint_velocity[1] * daempfungsfaktor
-    theta_tibia = arm.theta_tibia + delta_t * joint_velocity[2] * daempfungsfaktor
+    # Hard maximum velocity for robot arm
+    if(np.abs(joint_velocity[0])>config.max_velocity):
+        joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
+    if(np.abs(joint_velocity[1])>config.max_velocity):
+        joint_velocity[1] = np.sign(joint_velocity[1]) * config.max_velocity
+    if(np.abs(joint_velocity[2])>config.max_velocity):
+        joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
+
+    # Calculate the new thetas and update joints
+    theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
+    theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
+    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
-    # Debug-Ausgaben
-    #print(f"Frame: {frame}, Coxa Joint: ({arm.joint_coxa_x}, {arm.joint_coxa_y}), Femur Joint: ({arm.joint_femur_x}, {arm.joint_femur_y}), Tibia Joint: ({arm.joint_tibia_x}, {arm.joint_tibia_x})")
+    # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
-    #line.set_data([x0, x1, x2, x3], [y0, y1, y2, y3])
-    point.set_data([target_x], [target_y])  # Update the position of the additional point
-    #obstacle_circle = plt.Circle((0.5, 0.5), radius=0.5, fc='y')
-    #plt.gca().add_patch(obstacle_circle)
-    obstacle_polygon = plt.Polygon(points)    
-    plt.gca().add_patch(obstacle_polygon)
+    point.set_data([config.target_x], [config.target_y])  # Update the position of the target point
+    obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+    plt.figure(fig.number)
+    plt.gca().add_patch(obstacle_circle)
 
-    # Abbruchbedingung: target_point = point_ee
-    if np.linalg.norm(np.array(arm.end_effector) - np.array([target_x, target_y])) < 0.1:
-        print("Target reached!")
+    # Stops, when target reached/ close to target
+    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    if (distance_to_target) < config.delta_success_distance :
+        print("SUCCESS: Target reached!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
+        config.number_success += 1
+        config.list_covered_distance.append(covered_distance)
+        config.list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
 
-    # Checks if the other links touch the Polygon
-    point_coxa = Point(arm.joint_coxa)
-    point_femur = Point(arm.joint_femur)
-    distance = point_coxa.distance(obstacle_polygon_shapely)
+    # Checks if the other links touch the Obstacle
+    # Coxa
+    distance =  distance_to_circle(config.center, config.radius, arm.joint_coxa)
     if(distance == 0):
         print(f"ERROR: Coxa-Link touches the obstacle!")
-        #ani.event_source.stop()
-        #return line, point, obstacle_polygon
-    distance = point_femur.distance(obstacle_polygon_shapely)
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
+        config.number_error_coxa += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()        
+        return line, point, obstacle_circle
+    
+    # Femur
+    distance = distance_to_circle(config.center, config.radius, arm.joint_femur)
     if(distance == 0):
         print(f"ERROR: Femur-Link touches the obstacle!")
-        #ani.event_source.stop()
-        #return line, point, obstacle_polygon
-            
-    return line, point, obstacle_polygon
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
+        config.number_error_femur += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, obstacle_circle
+    #ani.event_source.stop() # If you want to take a closer look to the start-position
 
-arm = RoboterArm.RoboticArm(7,6,4)
-frames = np.linspace(0, 2 * np.pi, delta_t)
+    # Append the new data
+    x_data_time.append(current_time - start_time)
+    y_data_distance_to_target.append(distance_to_target)
+    
+    # Actualize the figure
+    line_distance_to_target.set_xdata(x_data_time)
+    line_distance_to_target.set_ydata(y_data_distance_to_target)
+    figure_distance_to_target.canvas.draw()
+
+    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    covered_distance += step_covered_distance
+    previous_end_effector_position = arm.end_effector
+
+    return line, point, obstacle_circle
+
+# Start the animation
+frames = np.linspace(0, 2 * np.pi, config.delta_t)
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
-#plt.axis('scaled')
+plt.ioff()
 plt.show()
