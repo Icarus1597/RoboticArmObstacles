@@ -20,7 +20,7 @@ with open("testresults.txt", "w") as file:
     file.write(f"Maximum time for a test: timeout = {config.timeout}\n")
     file.write(f"Minimum distnace to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
 
-
+"""
 # 1. Spalte: Ausgestreckt nach rechts
 print("Erste Spalte 0, 0, 0")
 config.theta_coxa = 0
@@ -75,7 +75,7 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open("Visuals.py").read())
 
-
+"""
 # 2. Spalte: Ausgestreckt nach oben
 print("Zweite Spalte PI/2, 0, 0")
 config.theta_coxa = PI/2
