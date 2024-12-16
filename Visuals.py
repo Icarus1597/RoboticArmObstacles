@@ -9,6 +9,7 @@ from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
 import config
 import AStarAlgorithm
+import Obstacles
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -54,18 +55,10 @@ def init():
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     return line, point, obstacle_circle
 
-# Method to calculate the distance between a circle and a point
-# Input:
-#   center:   center point of the circle
-#   point:    point for which the distance shall be calculated
-#   radius:   radius of the circle
-# Ouput:
-#   distance: distance between the point and the border of the circle
-def distance_to_circle(center, radius, point):
-    distance = pf.cartesian_distance(center, point) - radius
-    if(distance < 0) : 
-        distance = 0
-    return distance
+# A-Star Algorithm
+initial_point = AStarAlgorithm.AStarNode(arm, (config.target_x, config.target_y))
+path_node_list = initial_point.iterative_search_wrapper()
+
 
 # Updates the frame
 def update(frame):
@@ -97,8 +90,7 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
-    # A-Star Algorithm
-    path_node_list = AStarAlgorithm.iterative_search_wrapper(arm, (config.target_x, config.target_y))
+    
 
 
     # Calculations for the movement of joints: Attractive Velocity
@@ -109,7 +101,7 @@ def update(frame):
 
    
     # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = distance_to_circle(config.center, config.radius, arm.end_effector)
+    distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
     '''
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")

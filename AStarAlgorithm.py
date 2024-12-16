@@ -1,6 +1,6 @@
 import numpy as np
 import PotentialFields as pf
-import Visuals
+import Obstacles
 import config
 
 PI = np.pi
@@ -15,19 +15,21 @@ class AStarNode:
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list) :
+        for node in open_list:
+            print(f"Node: {node.position}")
         node = self.smallest_evaluation_function(open_list)
         open_list.remove(node)
         closed_list.append(node)
 
-        if(self.position == self.goal_point):
+        if(node.position == node.goal_point):
             print("SUCCESS!\n")
-            return self.path_node_list()
+            return node.path_node_list()
         
         if(len(open_list)== 0 ):
             print("FAIL: Goal point cannot be reached")
             return -1
         
-        if(Visuals.distance_to_circle(config.center, config.radius, self.position)<= 0):
+        if(Obstacles.distance_to_circle(config.center, config.radius, node.position)<= 0):
             return -1
         
         neighbouring_nodes = node.generate_neighbouring_nodes()
@@ -93,14 +95,14 @@ class AStarNode:
     # Output:
     #   -1 : If no path is found
     #   path_node_list: list of the nodes of the path found
-    def iterative_search_wrapper(self, arm, goal_point):
+    def iterative_search_wrapper(self):
         open_list = []
         closed_list = []
-        initial_point = AStarNode(arm.end_effector, goal_point)
-        open_list.append(initial_point)
+        #initial_point = AStarNode(arm.end_effector, goal_point)
+        open_list.append(self)
 
         while open_list:
-            result = open_list.iterative_search(open_list, closed_list)
+            result = self.iterative_search(open_list, closed_list)
             if result:
                 return result
         return -1
