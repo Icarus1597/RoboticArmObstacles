@@ -8,6 +8,7 @@ import autograd.numpy as anp
 from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
 import config
+import AStarAlgorithm
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -66,32 +67,6 @@ def distance_to_circle(center, radius, point):
         distance = 0
     return distance
 
-def calculate_joint_velocity(distance):
-    # Calculations for the movement of joints: Attractive Velocity
-    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
-    jacobian_matrix = arm.jacobian_matrix()
-    inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
-    joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
-
-    # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
-    joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
-
-    if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
-
-    # Hard maximum velocity for robot arm
-    if(np.abs(joint_velocity[0])>config.max_velocity):
-        joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
-    if(np.abs(joint_velocity[1])>config.max_velocity):
-        joint_velocity[1] = np.sign(joint_velocity[1]) * config.max_velocity
-    if(np.abs(joint_velocity[2])>config.max_velocity):
-        joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
-
-    return joint_velocity
-
 # Updates the frame
 def update(frame):
     global previous_end_effector_position
@@ -122,23 +97,48 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
-    joint_velocity = calculate_joint_velocity(distance)
+    # A-Star Algorithm
+    path_node_list = AStarAlgorithm.iterative_search_wrapper(arm, (config.target_x, config.target_y))
 
-    # Stops, when target reached/ close to target
-    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
-    if (distance_to_target) < config.delta_success_distance :
-        print("SUCCESS: Target reached!")
+
+    # Calculations for the movement of joints: Attractive Velocity
+    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
+    jacobian_matrix = arm.jacobian_matrix()
+    inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
+    joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
+
+   
+    # Calculate distance to Circle and checks if the End Effector touches the Circle
+    distance = distance_to_circle(config.center, config.radius, arm.end_effector)
+    '''
+    if(distance == 0):
+        print(f"ERROR: End-Effector touches the obstacle!")
         with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
-        config.number_success += 1
-        config.list_covered_distance.append(covered_distance)
-        config.list_time_needed.append(time.time() - start_time)
+            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
+        config.number_error_ee +=1
+        ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        ani.event_source.stop()
-        
+        return line, point, #obstacle_circle
+    '''
+    # Calculates Joint Velocities for U_rep
+    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
+    joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
+
+    if(arm.end_effector[1] < 0):
+        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
+    else:
+        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+
+    # Hard maximum velocity for robot arm
+    if(np.abs(joint_velocity[0])>config.max_velocity):
+        joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
+    if(np.abs(joint_velocity[1])>config.max_velocity):
+        joint_velocity[1] = np.sign(joint_velocity[1]) * config.max_velocity
+    if(np.abs(joint_velocity[2])>config.max_velocity):
+        joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
 
     # Calculate the new thetas and update joints
     theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
@@ -153,42 +153,21 @@ def update(frame):
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
 
-    # Append the new data
-    x_data_time.append(current_time - start_time)
-    y_data_distance_to_target.append(distance_to_target)
-    
-    # Actualize the figure
-    line_distance_to_target.set_xdata(x_data_time)
-    line_distance_to_target.set_ydata(y_data_distance_to_target)
-    figure_distance_to_target.canvas.draw()
-
-    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
-    covered_distance += step_covered_distance
-    previous_end_effector_position = arm.end_effector
-
-    return line, point, obstacle_circle
-
-# Start the animation
-frames = np.linspace(0, 2 * np.pi, config.delta_t)
-ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
-plt.ioff()
-plt.show()
-
-"""
-    # Calculate distance to Circle and checks if the End Effector touches the Circle
-    #distance = distance_to_circle(config.center, config.radius, arm.end_effector)
-    if(distance == 0):
-        print(f"ERROR: End-Effector touches the obstacle!")
+    # Stops, when target reached/ close to target
+    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    if (distance_to_target) < config.delta_success_distance :
+        print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
-        config.number_error_ee +=1
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
+        config.number_success += 1
+        config.list_covered_distance.append(covered_distance)
+        config.list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
-   
+    '''
     # Checks if the other links touch the Obstacle
     # Coxa
     distance =  distance_to_circle(config.center, config.radius, arm.joint_coxa)
@@ -218,5 +197,24 @@ plt.show()
         plt.close()
         return line, point, obstacle_circle
     #ani.event_source.stop() # If you want to take a closer look to the start-position
-    """
+    '''
+    # Append the new data
+    x_data_time.append(current_time - start_time)
+    y_data_distance_to_target.append(distance_to_target)
+    
+    # Actualize the figure
+    line_distance_to_target.set_xdata(x_data_time)
+    line_distance_to_target.set_ydata(y_data_distance_to_target)
+    figure_distance_to_target.canvas.draw()
 
+    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    covered_distance += step_covered_distance
+    previous_end_effector_position = arm.end_effector
+
+    return line, point, obstacle_circle
+
+# Start the animation
+frames = np.linspace(0, 2 * np.pi, config.delta_t)
+ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
+plt.ioff()
+plt.show()

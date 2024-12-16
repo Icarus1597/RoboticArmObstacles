@@ -100,7 +100,7 @@ class AStarNode:
         open_list.append(initial_point)
 
         while open_list:
-            result = initial_point.iterative_search(open_list, closed_list)
+            result = open_list.iterative_search(open_list, closed_list)
             if result:
                 return result
         return -1
