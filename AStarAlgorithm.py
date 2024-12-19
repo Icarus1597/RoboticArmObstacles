@@ -11,7 +11,8 @@ class AStarNode:
     def __init__(self, position, goal_point):
         self.position = position
         self.goal_point = goal_point
-        self.evaluation_function = 0
+        self.true_cost = 0
+        self.estimated_cost = pf.cartesian_distance(position, goal_point)
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list) :
@@ -52,10 +53,10 @@ class AStarNode:
         if(open_list == None):
             return -1
         node_smallest_evaluation_function = open_list[0]
-        current_smallest_evaluation_function_value = open_list[0].evaluation_function
+        current_smallest_evaluation_function_value = open_list[0].calculate_evaluation_function()
         for node in open_list:
-            if(current_smallest_evaluation_function_value > node.evaluation_function): 
-                current_smallest_evaluation_function_value = node.evaluation_function
+            if(current_smallest_evaluation_function_value > node.calculate_evaluation_function()): 
+                current_smallest_evaluation_function_value = node.calculate_evaluation_function()
                 node_smallest_evaluation_function = node
         return node_smallest_evaluation_function
     
@@ -82,11 +83,11 @@ class AStarNode:
     #   h : Estimated cost from current node to goal point
     def calculate_evaluation_function(self):
         if(self.parent_node == None):
-            g = 0
+            self.true_cost = 0
         else:
-            g = self.parent_node.evaluation_function + pf.cartesian_distance(self.parent_node.position, self.position)
-        h = pf.cartesian_distance(self.goal_point, self.position)
-        return g + h
+            self.true_cost = self.parent_node.true_cost + pf.cartesian_distance(self.parent_node.position, self.position)
+        self.estimated_cost = pf.cartesian_distance(self.goal_point, self.position)
+        return self.true_cost + self.estimated_cost
     
     # Wraps the iterative search and iterates over every node in open_list
     # Input:
