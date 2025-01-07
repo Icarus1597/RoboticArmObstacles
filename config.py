@@ -8,7 +8,7 @@ target_x, target_y = -12,0
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (-6, -1)
+center = (-106, -1)
 radius = 2
 
 # Hard maximum velocity
@@ -63,4 +63,4 @@ list_time_needed = []
 # Parameters A Star Algorithm
 distance_to_neighbour = 0.1
 number_neighboring_nodes = 8
-max_distance_to_target = 0.25
+max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour

@@ -28,15 +28,15 @@ class AStarNode:
         open_list.remove(node)
         closed_list.append(node)
 
-        if(np.abs(node.position[0] - node.goal_point[0]) <= config.max_distance_to_target and 
-           np.abs(node.position[1] - node.goal_point[1]) <= config.max_distance_to_target):
+        if(np.abs(node.position[0] - node.goal_point[0]) < config.distance_to_neighbour and 
+           np.abs(node.position[1] - node.goal_point[1]) < config.distance_to_neighbour):
             print("SUCCESS! Reached goal point\n")
             return node.path_node_list()
         
         
         
         if(Obstacles.distance_to_circle(config.center, config.radius, node.position)<= 0):
-            return -1
+            return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()
         for neighbour in neighbouring_nodes:

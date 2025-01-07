@@ -110,13 +110,20 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(path_node_list[2], node3)
 
     def test_iterative_search(self):
-        node = AStarAlgorithm.AStarNode((0, 0), (10, 10))
+        node = AStarAlgorithm.AStarNode((0, 0), (0, 10))
         result = node.iterative_search_wrapper()
         self.assertNotEqual(result, -1)
-        print(f"Result:{result}")
-        print(f"Result length= {len(result)}")
-        print(f"{result[0].position}")
+        self.assertEqual(len(result), 11)
+        #print(f"Result:{result}")
+        #print(f"Result length= {len(result)}")
+        #print(f"{result[0].position}")
         #print(f"Path Node List : {result.path_node_list()}")
+
+        # TODO: Test Case with Obstacle
+        config.center = (0, 5)
+        config.radius = 2
+        result = node.iterative_search_wrapper()
+        self.assertNotEqual(result, -1)
 
 
 if __name__ == "__main__":
