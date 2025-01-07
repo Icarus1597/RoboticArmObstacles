@@ -109,6 +109,15 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(path_node_list[1], node2)
         self.assertEqual(path_node_list[2], node3)
 
+    def test_iterative_search(self):
+        node = AStarAlgorithm.AStarNode((0, 0), (10, 10))
+        result = node.iterative_search_wrapper()
+        self.assertNotEqual(result, -1)
+        print(f"Result:{result}")
+        print(f"Result length= {len(result)}")
+        print(f"{result[0].position}")
+        #print(f"Path Node List : {result.path_node_list()}")
+
 
 if __name__ == "__main__":
     unittest.main()

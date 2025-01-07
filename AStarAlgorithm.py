@@ -16,19 +16,24 @@ class AStarNode:
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list) :
-        for node in open_list:
-            print(f"Node: {node.position}")
-        node = self.smallest_evaluation_function(open_list)
-        open_list.remove(node)
-        closed_list.append(node)
+        #for node in open_list:
+            #print(f"Node: {node.position}")
 
-        if(node.position == node.goal_point):
-            print("SUCCESS!\n")
-            return node.path_node_list()
-        
         if(len(open_list)== 0 ):
             print("FAIL: Goal point cannot be reached")
             return -1
+        
+        node = self.smallest_evaluation_function(open_list)
+        print(f"Distance to target:{pf.cartesian_distance(node.position, node.goal_point)}")
+        open_list.remove(node)
+        closed_list.append(node)
+
+        if(np.abs(node.position[0] - node.goal_point[0]) <= config.max_distance_to_target and 
+           np.abs(node.position[1] - node.goal_point[1]) <= config.max_distance_to_target):
+            print("SUCCESS! Reached goal point\n")
+            return node.path_node_list()
+        
+        
         
         if(Obstacles.distance_to_circle(config.center, config.radius, node.position)<= 0):
             return -1

@@ -63,3 +63,4 @@ list_time_needed = []
 # Parameters A Star Algorithm
 distance_to_neighbour = 0.1
 number_neighboring_nodes = 8
+max_distance_to_target = 0.25
