@@ -24,7 +24,7 @@ class AStarNode:
             return -1
         
         node = self.smallest_evaluation_function(open_list)
-        print(f"Distance to target:{pf.cartesian_distance(node.position, node.goal_point)}")
+        #print(f"Distance to target:{pf.cartesian_distance(node.position, node.goal_point)}")
         open_list.remove(node)
         closed_list.append(node)
 
@@ -41,15 +41,28 @@ class AStarNode:
         neighbouring_nodes = node.generate_neighbouring_nodes()
         for neighbour in neighbouring_nodes:
             neighbour_evaluation_function = neighbour.calculate_evaluation_function()
-            if not(closed_list.__contains__(neighbour)):
-                if not (open_list.__contains__(neighbour)):
+            if not(neighbour.is_contained_in_list(closed_list)):
+                if not (neighbour.is_contained_in_list(open_list)):
                     open_list.append(neighbour)
                     neighbour.parent_node = node
                 else :
-                    if(neighbour_evaluation_function < node.evaluation_function):
+                    if(neighbour_evaluation_function < (node.true_cost + node.estimated_cost)):
                         neighbour.parent_node = node
                         neighbour.evaluation_function = neighbour_evaluation_function
         return
+
+    # Determines if the node is in the list or not, comparing the position
+    # Input:
+    #   list: list to search the node
+    # Output:
+    #   True, if there is a node in the list at the same position
+    #   False, if there is not a node in the list at the same position
+    def is_contained_in_list(self, list):
+        for node in list:
+            if (node.position[0] == self.position[0] and node.position[1] == self.position[1]):
+                return True
+        return False
+
     
     # Searches for the node with the smallest evaluation function in the open list
     # Output:
@@ -124,4 +137,5 @@ class AStarNode:
             path_node_list.append(current_node.parent_node)
             current_node = current_node.parent_node
         path_node_list.reverse()
+        print(f"Length Path Node List = {len(path_node_list)}")
         return path_node_list

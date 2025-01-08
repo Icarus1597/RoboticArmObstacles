@@ -59,6 +59,13 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertAlmostEqual(node4.estimated_cost, 9.219544457292)
         self.assertAlmostEqual(node4.calculate_evaluation_function(), 17.63375801966)
 
+    def test_is_contained_in_list(self):
+        node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
+        list = []
+        self.assertFalse(node.is_contained_in_list(list))
+        list.append(node)
+        self.assertTrue(node.is_contained_in_list(list))
+
     def test_smallest_evaluation_function(self):
         node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
 
