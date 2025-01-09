@@ -163,4 +163,21 @@ class RoboticArm:
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link too close to the obstacle!\n")
         return min(distance_coxa, distance_femur, distance_tibia)
+
+
+    def error_target_end_effector(self, target):
+        return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
         
+
+    def inverse_kinematics(self, target):
+        error = self.error_target_end_effector(target)
+        jacobian_matrix = self.jacobian_matrix()
+        inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
+        delta_theta = inverse_jacobian_matrix @ error
+
+        new_theta_coxa = self.theta_coxa + config.learning_rate * delta_theta[0]
+        new_theta_femur = self.theta_femur + config.learning_rate * delta_theta[1]
+        new_theta_tibia = self.theta_tibia + config.learning_rate * delta_theta[2]
+
+        self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
+        return

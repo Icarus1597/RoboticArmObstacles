@@ -56,8 +56,8 @@ def init():
     return line, point, obstacle_circle
 
 # A-Star Algorithm
-initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
-path_node_list = initial_point.iterative_search_wrapper()
+#initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
+#path_node_list = initial_point.iterative_search_wrapper()
 
 
 # Updates the frame

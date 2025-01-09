@@ -21,7 +21,7 @@ previous_end_effector_position = arm.end_effector
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
 # Set axis limits considering the link lengths
-ax.set_xlim(-(config.coxa_length +config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
+ax.set_xlim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
 ax.set_ylim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
@@ -56,12 +56,16 @@ def init():
 # A-Star Algorithm
 initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
 path_node_list = initial_point.iterative_search_wrapper()
+next_node_index = 0
+for node in path_node_list:
+    print(f"Position of Path Node:{node.position}\n")
 
 
 # Updates the frame
 def update(frame):
     global previous_end_effector_position
     global covered_distance
+    global next_node_index
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -113,6 +117,18 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
     '''
+    # TODO: Punkte nacheinander abfahren path node list
+    
+    arm.inverse_kinematics(path_node_list[next_node_index].position)
+    print(f"End-Effector Position:{arm.end_effector}, Next Path Node:{path_node_list[next_node_index].position}")
+   
+
+    if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))>config.tolerance) :
+        if(len(path_node_list) > next_node_index):
+            next_node_index += 1
+        else:
+            print(f"End of path node list reached")
+
 
     '''
     # Calculates Joint Velocities for U_rep
@@ -138,6 +154,7 @@ def update(frame):
     theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
     theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
+    '''
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -145,7 +162,7 @@ def update(frame):
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
-    '''
+    
 
     # Stops, when target reached/ close to target
     distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))

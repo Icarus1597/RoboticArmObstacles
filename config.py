@@ -64,3 +64,7 @@ list_time_needed = []
 distance_to_neighbour = 1
 number_neighboring_nodes = 4
 #max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
+
+# Parameters inverse Kinematics
+tolerance = 0.1
+learning_rate = 0.1
