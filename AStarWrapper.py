@@ -66,9 +66,10 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
     global next_node_index
-
-    # After a given time, the execution will be aborted
+    
     current_time = time.time()
+    '''
+    # After a given time, the execution will be aborted
     if(current_time - start_time > config.timeout) :
         print(f"TIMEOUT")
         with open("testresults.txt", "a") as file:
@@ -80,7 +81,7 @@ def update(frame):
         plt.figure(figure_distance_to_target.number)
         plt.close()
         return line, point, #obstacle_circle
-
+    '''
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < config.min_distance_to_obstacle):
@@ -123,7 +124,7 @@ def update(frame):
     print(f"End-Effector Position:{arm.end_effector}, Next Path Node:{path_node_list[next_node_index].position}")
    
 
-    if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))>config.tolerance) :
+    if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
         if(len(path_node_list) > next_node_index):
             next_node_index += 1
         else:
