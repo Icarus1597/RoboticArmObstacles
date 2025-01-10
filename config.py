@@ -2,13 +2,13 @@ import numpy as np
 
 # Test Parameter:
 # Position of the target
-target_x, target_y = -12,0
+target_x, target_y = -12,0.1
 
 # delta_t Time between frames
 delta_t = 300
 
 # Position and radius of the obstacle (circle)
-center = (-106, -1)
+center = (-6, -1)
 radius = 2
 
 # Hard maximum velocity
@@ -61,10 +61,10 @@ list_covered_distance = []
 list_time_needed = []
 
 # Parameters A Star Algorithm
-distance_to_neighbour = 1
+distance_to_neighbour = 1.5
 number_neighboring_nodes = 4
 #max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
 
 # Parameters inverse Kinematics
-tolerance = 0.1
-learning_rate = 0.1
+tolerance = 0.5
+learning_rate = 0.25
