@@ -8,6 +8,7 @@ import autograd.numpy as anp
 import config
 import AStarAlgorithm
 import Obstacles
+import Geometrie
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -58,12 +59,12 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
 
-    #if (config.mode_ellbow_coxa):
+    if (config.mode_ellbow_coxa):
         # TODO
-    #    return
-    #if (config.mode_ellbow_femur):
+        return
+    if (config.mode_ellbow_femur):
         # TODO
-    #    return
+        return
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -165,7 +166,8 @@ def update(frame):
     return line, point, obstacle_circle
 
 def correct_ellbow_posture_coxa(arm):
-
+    target_coxa = Geometrie.reflect_on_hypotenuse(0, 0, arm.joint_coxa_x, arm.joint_coxa_y, arm.joint_femur_x, arm.joint_femur_y)
+    # TODO move towards this target_coxa, while femur stays in place
     return
 
 # Start the animation
