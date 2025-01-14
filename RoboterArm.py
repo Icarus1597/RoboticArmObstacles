@@ -152,14 +152,18 @@ class RoboticArm:
         # Checks if arm is closer to the obstacle than the minimum required distance
         if(distance_coxa < config.min_distance_to_obstacle):
             print(f"WARNING: Coxa too close to obstacle")
+            config.mode_ellbow_coxa = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Coxa-Link too close to the obstacle!\n")
         if(distance_femur < config.min_distance_to_obstacle):
             print(f"WARNING: Femur too close to obstacle")
+            config.mode_ellbow_coxa = True
+            config.mode_ellbow_femur = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Femur-Link too close to the obstacle!\n")
         if(distance_tibia < config.min_distance_to_obstacle):
             print(f"WARNING: Tibia too close to obstacle")
+            config.mode_ellbow_femur = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link too close to the obstacle!\n")
         return min(distance_coxa, distance_femur, distance_tibia)
@@ -175,9 +179,9 @@ class RoboticArm:
         inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
         delta_theta = inverse_jacobian_matrix @ error
 
-        new_theta_coxa = self.theta_coxa + config.learning_rate * delta_theta[0]
-        new_theta_femur = self.theta_femur + config.learning_rate * delta_theta[1]
-        new_theta_tibia = self.theta_tibia + config.learning_rate * delta_theta[2]
+        new_theta_coxa = self.theta_coxa + np.minimum(config.learning_rate * delta_theta[0], np.pi/20)
+        new_theta_femur = self.theta_femur + np.minimum(config.learning_rate * delta_theta[1], np.pi/10)
+        new_theta_tibia = self.theta_tibia + np.minimum(config.learning_rate * delta_theta[2], np.pi/5)
 
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return

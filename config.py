@@ -67,4 +67,11 @@ number_neighboring_nodes = 4
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.25
+learning_rate = 0.1
+
+# Change Ellbow Posture Mode
+mode_ellbow_coxa = False
+goal_ellbow_coxa = (0,0)
+
+mode_ellbow_femur = False
+goal_ellbow_femur = (0,0)
