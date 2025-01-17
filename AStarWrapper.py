@@ -67,8 +67,8 @@ def init():
 initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
 path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
 next_node_index = 0
-for node in path_node_list:
-    print(f"Position of Path Node:{node.position}\n")
+#for node in path_node_list:
+#    print(f"Position of Path Node:{node.position}\n")
 
 
 # Updates the frame
@@ -86,6 +86,8 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+        plt.figure(search_points_plot.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -125,6 +127,8 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+        plt.figure(search_points_plot.number)
         plt.close()
 
     # Append the new data

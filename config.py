@@ -62,12 +62,12 @@ list_time_needed = []
 
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5
-number_neighboring_nodes = 4
+number_neighboring_nodes = 8
 #max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.1
+learning_rate = 0.125
 
 # Change Ellbow Posture Mode
 mode_ellbow_coxa = False
