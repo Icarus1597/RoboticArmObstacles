@@ -19,10 +19,11 @@ previous_end_effector_position = arm.end_effector
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
-ax.set_aspect('equal')
+ax.set_aspect('equal') #TODO ?
 # Set axis limits considering the link lengths
-ax.set_xlim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
-ax.set_ylim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
+arm_length = config.coxa_length + config.femur_length + config.tibia_length
+ax.set_xlim(-arm_length,  arm_length)
+ax.set_ylim(-arm_length,  arm_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
@@ -32,6 +33,15 @@ figure_distance_to_target, ax2 = plt.subplots()
 x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
+
+# Plot: Searched Points of the A-Star Algorithm
+search_points_plot, ax_search_points = plt.subplots()
+plt.figure(search_points_plot.number) # To make sure, the correct plot is the active one
+ax_search_points.set_aspect('equal')
+# Set axis limits considering the link lengths
+
+ax_search_points.set_xlim(-arm_length,  arm_length)
+ax_search_points.set_ylim(-arm_length,  arm_length)
 
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
@@ -55,7 +65,7 @@ def init():
 
 # A-Star Algorithm
 initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
-path_node_list = initial_point.iterative_search_wrapper()
+path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
 next_node_index = 0
 for node in path_node_list:
     print(f"Position of Path Node:{node.position}\n")
@@ -68,20 +78,6 @@ def update(frame):
     global next_node_index
     
     current_time = time.time()
-    '''
-    # After a given time, the execution will be aborted
-    if(current_time - start_time > config.timeout) :
-        print(f"TIMEOUT")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: TIMEOUT\n")
-        config.number_timeout += 1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()
-        return line, point, #obstacle_circle
-    '''
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < config.min_distance_to_obstacle):
@@ -93,31 +89,9 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
-    
-
-    '''
-    # Calculations for the movement of joints: Attractive Velocity
-    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
-    jacobian_matrix = arm.jacobian_matrix()
-    inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
-    joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
-    '''
-   
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
-    '''
-    if(distance == 0):
-        print(f"ERROR: End-Effector touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
-        config.number_error_ee +=1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()
-        return line, point, #obstacle_circle
-    '''
+
     # TODO: Punkte nacheinander abfahren path node list
     
     arm.inverse_kinematics(path_node_list[next_node_index].position)
@@ -129,33 +103,6 @@ def update(frame):
             next_node_index += 1
         else:
             print(f"End of path node list reached")
-
-
-    '''
-    # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
-    joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
-
-    if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
-    
-
-    # Hard maximum velocity for robot arm
-    if(np.abs(joint_velocity[0])>config.max_velocity):
-        joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
-    if(np.abs(joint_velocity[1])>config.max_velocity):
-        joint_velocity[1] = np.sign(joint_velocity[1]) * config.max_velocity
-    if(np.abs(joint_velocity[2])>config.max_velocity):
-        joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
-
-    # Calculate the new thetas and update joints
-    theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
-    theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
-    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
-    arm.update_joints(theta_coxa, theta_femur, theta_tibia)
-    '''
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -179,37 +126,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-    '''
-    # Checks if the other links touch the Obstacle
-    # Coxa
-    distance =  distance_to_circle(config.center, config.radius, arm.joint_coxa)
-    if(distance == 0):
-        print(f"ERROR: Coxa-Link touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
-        config.number_error_coxa += 1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()        
-        return line, point, obstacle_circle
-    
-    # Femur
-    distance = distance_to_circle(config.center, config.radius, arm.joint_femur)
-    if(distance == 0):
-        print(f"ERROR: Femur-Link touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
-        config.number_error_femur += 1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()
-        return line, point, obstacle_circle
-    #ani.event_source.stop() # If you want to take a closer look to the start-position
-    '''
+
     # Append the new data
     x_data_time.append(current_time - start_time)
     y_data_distance_to_target.append(distance_to_target)
@@ -219,6 +136,7 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
+    # Track covered distance
     step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
