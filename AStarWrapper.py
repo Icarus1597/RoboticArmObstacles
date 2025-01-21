@@ -101,7 +101,7 @@ def update(frame):
    
 
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
-        if(len(path_node_list) > next_node_index):
+        if(len(path_node_list) > next_node_index+1):
             next_node_index += 1
         else:
             print(f"End of path node list reached")
