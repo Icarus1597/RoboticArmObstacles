@@ -70,6 +70,7 @@ path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
 time_end_algorithm = time.time()
 config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
 
+
 next_node_index = 0
 
 # Updates the frame

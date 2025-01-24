@@ -46,7 +46,7 @@ theta_tibia = PI
 timeout = 120
 
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
-min_distance_to_obstacle = 0.25
+min_distance_to_obstacle = 0.75
 
 # Counter for types of test results
 number_timeout = 0
@@ -68,7 +68,7 @@ number_neighboring_nodes = 8
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.15
+learning_rate = 0.2
 
 # Change Ellbow Posture Mode
 mode_ellbow_coxa = False
