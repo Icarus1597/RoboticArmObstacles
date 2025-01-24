@@ -90,3 +90,5 @@ def booleans_switch_elbows(arm, center):
         bool_result_tibia = 0
     else:
         bool_result_tibia = 1
+    
+    return bool_result_coxa, bool_result_tibia
