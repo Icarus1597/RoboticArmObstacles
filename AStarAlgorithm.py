@@ -1,7 +1,9 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import PotentialFields as pf
 import Obstacles
 import config
+import time
 
 PI = np.pi
 
@@ -15,7 +17,7 @@ class AStarNode:
         self.estimated_cost = pf.cartesian_distance(position, goal_point)
         self.parent_node = None
     
-    def iterative_search(self, open_list, closed_list) :
+    def iterative_search(self, open_list, closed_list, search_points_plot) :
         #for node in open_list:
             #print(f"Node: {node.position}")
 
@@ -24,18 +26,22 @@ class AStarNode:
             return -1
         
         node = self.smallest_evaluation_function(open_list)
-        #print(f"Distance to target:{pf.cartesian_distance(node.position, node.goal_point)}")
         open_list.remove(node)
         closed_list.append(node)
 
+        x = np.array([node.position[0]])
+        y = np.array([node.position[1]])
+        
+        plt.figure(search_points_plot.number) #To make sure, the correct plot is the active one
+        plt.scatter(x, y)
+        plt.show()
+
         if(np.abs(node.position[0] - node.goal_point[0]) < config.distance_to_neighbour and 
            np.abs(node.position[1] - node.goal_point[1]) < config.distance_to_neighbour):
-            print("SUCCESS! Reached goal point\n")
+            print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
-        
-        
-        if(Obstacles.distance_to_circle(config.center, config.radius, node.position)<= 0):
+        if(Obstacles.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
             return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()
@@ -59,7 +65,7 @@ class AStarNode:
     #   False, if there is not a node in the list at the same position
     def is_contained_in_list(self, list):
         for node in list:
-            if (node.position[0] == self.position[0] and node.position[1] == self.position[1]):
+            if (np.abs(node.position[0] - self.position[0]) < config.distance_to_neighbour/10 and np.abs(node.position[1]- self.position[1])< config.distance_to_neighbour/10):
                 return True
         return False
 
@@ -114,14 +120,14 @@ class AStarNode:
     # Output:
     #   -1 : If no path is found
     #   path_node_list: list of the nodes of the path found
-    def iterative_search_wrapper(self):
+    def iterative_search_wrapper(self, search_points_plot):
         open_list = []
         closed_list = []
         #initial_point = AStarNode(arm.end_effector, goal_point)
         open_list.append(self)
 
         while open_list:
-            result = self.iterative_search(open_list, closed_list)
+            result = self.iterative_search(open_list, closed_list, search_points_plot)
             if result:
                 return result
         return -1

@@ -46,7 +46,7 @@ theta_tibia = PI
 timeout = 120
 
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
-min_distance_to_obstacle = 0.25
+min_distance_to_obstacle = 0.75
 
 # Counter for types of test results
 number_timeout = 0
@@ -59,15 +59,16 @@ number_error_coxa = 0
 # Lists to later calculate mean of covered distance and time needed
 list_covered_distance = []
 list_time_needed = []
+list_time_needed_for_calculation = []
 
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5
-number_neighboring_nodes = 4
+number_neighboring_nodes = 8
 #max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.1
+learning_rate = 0.2
 
 # Change Ellbow Posture Mode
 mode_ellbow_coxa = False

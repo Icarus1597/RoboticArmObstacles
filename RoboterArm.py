@@ -179,9 +179,11 @@ class RoboticArm:
         inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
         delta_theta = inverse_jacobian_matrix @ error
 
-        new_theta_coxa = self.theta_coxa + np.minimum(config.learning_rate * delta_theta[0], np.pi/20)
-        new_theta_femur = self.theta_femur + np.minimum(config.learning_rate * delta_theta[1], np.pi/10)
-        new_theta_tibia = self.theta_tibia + np.minimum(config.learning_rate * delta_theta[2], np.pi/5)
+        #print(f"delta_coxa = {delta_theta[0]}, delta_femur = {delta_theta[1]}, delta_tibia = {delta_theta[2]}")
+        
+        new_theta_coxa = self.theta_coxa + 0.0001 + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
+        new_theta_femur = self.theta_femur + np.sign(delta_theta[1])* np.minimum(abs(config.learning_rate * delta_theta[1]), 0.5)
+        new_theta_tibia = self.theta_tibia + np.sign(delta_theta[2])* np.minimum(abs(config.learning_rate * delta_theta[2]), 0.5)
 
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return
