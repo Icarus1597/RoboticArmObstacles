@@ -1,0 +1,24 @@
+import unittest
+import config
+import numpy as np
+import RoboterArm
+import Geometrie
+
+class TestGeometrie(unittest.TestCase):
+    
+    def test_reflect_on_hypotenuse(self):
+        return
+        
+    def test_which_side_small_angle(self):
+        arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+        arm.update_joints(np.pi/4, np.pi/2, np.pi*3/2)
+        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_coxa), 0)
+        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_femur), 0)
+        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_tibia), 1)
+
+    def test_which_side_obstacle_to_coxa(self):
+        return
+
+if __name__ == "__main__":
+    unittest.main()
+    
