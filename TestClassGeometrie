@@ -18,6 +18,9 @@ class TestGeometrie(unittest.TestCase):
 
     def test_which_side_obstacle_to_coxa(self):
         return
+    
+    def test_boolean_switch_elbow(self):
+        return
 
 if __name__ == "__main__":
     unittest.main()

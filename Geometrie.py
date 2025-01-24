@@ -68,3 +68,25 @@ def which_side_obstacle_to_coxa(arm, center):
         return 0
     else:
         return 1
+    
+# Determines, if the elbows need to change side or not
+# Input:
+#   arm: Robotic arm
+#   center: center of the obstacle
+# Output:
+#   bool_result_coxa: 0, if on correct side, else 1
+#   bool_result_tibia: 0, if on correct side, else 1
+def booleans_switch_elbows(arm, center):
+    bool_obstacle_side = which_side_obstacle_to_coxa(arm, center)
+    bool_coxa_elbow = which_side_small_angle(arm.theta_femur)
+    bool_tibia_elbow = which_side_small_angle(arm.theta_tibia)
+
+    if(bool_obstacle_side == bool_coxa_elbow):
+        bool_result_coxa = 0
+    else: 
+        bool_result_coxa = 1
+
+    if(bool_obstacle_side == bool_tibia_elbow):
+        bool_result_tibia = 0
+    else:
+        bool_result_tibia = 1
