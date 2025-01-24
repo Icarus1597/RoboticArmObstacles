@@ -65,11 +65,12 @@ def init():
 
 # A-Star Algorithm
 initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
+time_start_algorithm = time.time()
 path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
-next_node_index = 0
-#for node in path_node_list:
-#    print(f"Position of Path Node:{node.position}\n")
+time_end_algorithm = time.time()
+config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
 
+next_node_index = 0
 
 # Updates the frame
 def update(frame):
@@ -94,10 +95,10 @@ def update(frame):
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
 
-    # TODO: Punkte nacheinander abfahren path node list
+    # Punkte nacheinander abfahren path node list
     
     arm.inverse_kinematics(path_node_list[next_node_index].position)
-    print(f"End-Effector Position:{arm.end_effector}, Next Path Node:{path_node_list[next_node_index].position}")
+    #print(f"End-Effector Position:{arm.end_effector}, Next Path Node:{path_node_list[next_node_index].position}")
    
 
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
@@ -119,7 +120,7 @@ def update(frame):
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, calculation_time = {time_end_algorithm - time_start_algorithm}, covered distance = {covered_distance}\n")
         config.number_success += 1
         config.list_covered_distance.append(covered_distance)
         config.list_time_needed.append(time.time() - start_time)

@@ -21,7 +21,7 @@ with open("testresults.txt", "w") as file:
     file.write(f"Parameter attractive field zeta = {config.zeta}\n")
     file.write(f"Maximum time for a test: timeout = {config.timeout}\n")
     file.write(f"Minimum distnace to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
-'''
+
 
 # 1. Spalte: Ausgestreckt nach rechts
 print("Erste Spalte 0, 0, 0")
@@ -130,7 +130,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
-'''
+
 
 # 3. Spalte: Ausgestreckt nach schräg rechts oben
 print("Dritte Spalte PI/4, 0, 0")
@@ -676,8 +676,18 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 # Statistics
-mean_covered_distance = sum(config.list_covered_distance) / len(config.list_covered_distance)
-mean_time_needed = sum(config.list_time_needed) / len(config.list_time_needed)
+if(len(config.list_covered_distance) > 0):
+    mean_covered_distance = sum(config.list_covered_distance) / len(config.list_covered_distance)
+else:
+    mean_covered_distance = -1
+if(len(config.list_time_needed) > 0):
+    mean_time_needed = sum(config.list_time_needed) / len(config.list_time_needed)
+else:
+    mean_time_needed = -1
 with open("testresults.txt", "a") as file:
     file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
     file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")
+    if(mode == 0):
+        mean_time_needed_calculation = sum(config.list_time_needed_for_calculation)/len(config.list_time_needed_for_calculation)
+        file.write(f"Median time needed for calculation = {mean_time_needed_calculation}")
+     

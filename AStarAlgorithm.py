@@ -26,31 +26,22 @@ class AStarNode:
             return -1
         
         node = self.smallest_evaluation_function(open_list)
-        #print(f"Distance to target:{pf.cartesian_distance(node.position, node.goal_point)}")
         open_list.remove(node)
         closed_list.append(node)
 
-        # TODO here node abgreifen und plotten
         x = np.array([node.position[0]])
         y = np.array([node.position[1]])
         
-        
         plt.figure(search_points_plot.number) #To make sure, the correct plot is the active one
         plt.scatter(x, y)
-        #print(f"Searched Point: x={x}, y={y}")
-        #time.sleep(1)
         plt.show()
-
-
 
         if(np.abs(node.position[0] - node.goal_point[0]) < config.distance_to_neighbour and 
            np.abs(node.position[1] - node.goal_point[1]) < config.distance_to_neighbour):
-            print("SUCCESS! Reached goal point\n")
+            print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
-        
-        
-        if(Obstacles.distance_to_circle(config.center, config.radius, node.position)<= 0):
+        if(Obstacles.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
             return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()

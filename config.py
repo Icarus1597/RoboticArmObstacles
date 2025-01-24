@@ -59,6 +59,7 @@ number_error_coxa = 0
 # Lists to later calculate mean of covered distance and time needed
 list_covered_distance = []
 list_time_needed = []
+list_time_needed_for_calculation = []
 
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5
@@ -67,7 +68,7 @@ number_neighboring_nodes = 8
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.125
+learning_rate = 0.15
 
 # Change Ellbow Posture Mode
 mode_ellbow_coxa = False
