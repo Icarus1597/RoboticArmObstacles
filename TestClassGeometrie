@@ -17,6 +17,12 @@ class TestGeometrie(unittest.TestCase):
         self.assertEqual(Geometrie.which_side_small_angle(arm.theta_tibia), 1)
 
     def test_which_side_obstacle_to_coxa(self):
+        arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+        arm.update_joints(0, np.pi/2, np.pi/2)
+        self.assertEqual(Geometrie.which_side_obstacle_to_coxa(arm, config.center), 0)
+
+        arm.update_joints(np.pi, np.pi/2, np.pi/2)
+        self.assertEqual(Geometrie.which_side_obstacle_to_coxa(arm, config.center), 1)
         return
     
     def test_boolean_switch_elbow(self):
@@ -26,8 +32,23 @@ class TestGeometrie(unittest.TestCase):
         bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
 
         # TODO Entweder Fehler im Test oder in der Funktion!!!
+        self.assertEqual(bool_result_coxa, 1)
+        self.assertEqual(bool_result_tibia, 0)
+
+        arm.update_joints(np.pi*5/4, np.pi*3/2, np.pi/2)
+        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
         self.assertEqual(bool_result_coxa, 0)
         self.assertEqual(bool_result_tibia, 1)
+
+        arm.update_joints(0, np.pi/2, np.pi/2)
+        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+        self.assertEqual(bool_result_tibia, 1)
+        self.assertEqual(bool_result_coxa, 1)
+
+        arm.update_joints(0, np.pi/2*3, np.pi/2*3)
+        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+        self.assertEqual(bool_result_tibia, 0)
+        self.assertEqual(bool_result_coxa, 0)
         return
 
 if __name__ == "__main__":

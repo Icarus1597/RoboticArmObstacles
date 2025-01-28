@@ -52,6 +52,7 @@ def which_side_small_angle(angle):
         return 1
     
 # TODO: Determines, from perspective of the coxa link, if the obstacle is on its right side or left side
+# TODO: This is buggy
 # Input:
 #   arm: To know the position and current posture of the coxa link
 #   center: Center Point of the Obstacle
@@ -61,6 +62,8 @@ def which_side_small_angle(angle):
 def which_side_obstacle_to_coxa(arm, center):
     # Calculate the slope of the coxa link under the presumption, that the arm's origin is always (0,0)
     m = arm.joint_coxa[1]/arm.joint_coxa[0]
+
+    
 
     f_center = m * center[0]
 
@@ -74,8 +77,8 @@ def which_side_obstacle_to_coxa(arm, center):
 #   arm: Robotic arm
 #   center: center of the obstacle
 # Output:
-#   bool_result_coxa: 0, if on correct side, else 1
-#   bool_result_tibia: 0, if on correct side, else 1
+#   bool_result_coxa: 1, if on correct side, else 0
+#   bool_result_tibia: 1, if on correct side, else 0
 def booleans_switch_elbows(arm, center):
     bool_obstacle_side = which_side_obstacle_to_coxa(arm, center)
     bool_coxa_elbow = which_side_small_angle(arm.theta_femur)
