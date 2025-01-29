@@ -2,7 +2,7 @@ import numpy as np
 # TODO
 
 # Function to calculate the reflection of a point P(x0, y0) across a line defined by points (x1, y1) and (x2, y2)
-def reflect_on_hypotenuse(arm, x0, y0, x1, y1, x2, y2):
+def reflect_on_hypotenuse(x0, y0, x1, y1, x2, y2):
     # Calculate the reflection of the point (x0, y0) across the line (x1, y1) - (x2, y2)
     
     # Compute the slope of the line
@@ -51,6 +51,7 @@ def which_side_small_angle(angle):
     else:
         return 1
     
+'''
 # TODO: Determines, from perspective of the coxa link, if the obstacle is on its right side or left side
 # TODO: This is buggy
 # Input:
@@ -63,15 +64,31 @@ def which_side_obstacle_to_coxa(arm, center):
     # Calculate the slope of the coxa link under the presumption, that the arm's origin is always (0,0)
     m = arm.joint_coxa[1]/arm.joint_coxa[0]
 
-    
-
     f_center = m * center[0]
 
     if (f_center > center[1]):
         return 0
     else:
         return 1
-    
+'''
+
+# Determines, from perspective of the direction of the line, if the point is on its right side or left side
+# Input:
+#   point_x, point_y: Point on right or left side of line
+#   line_start_x, line_start_y: Starting point of the line
+#   line_end_x, line_end_y: End Point of the line
+# Ouput:
+#   0 : Point is on the left side of the line
+#   1 : Point is on the right side of the line
+def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x, line_end_y):
+    # Cross product to determine the side of the line
+    cross_product = (line_end_x - line_start_x) * (point_y - line_start_y) - (line_end_y - line_start_y) * (point_x - line_start_x)
+
+    if cross_product > 0:  # Point is on the left side of the line
+        return 0
+    else:  # Point is on the right side of the line
+        return 1
+
 # Determines, if the elbows need to change side or not
 # Input:
 #   arm: Robotic arm
@@ -80,7 +97,7 @@ def which_side_obstacle_to_coxa(arm, center):
 #   bool_result_coxa: 1, if on correct side, else 0
 #   bool_result_tibia: 1, if on correct side, else 0
 def booleans_switch_elbows(arm, center):
-    bool_obstacle_side = which_side_obstacle_to_coxa(arm, center)
+    bool_obstacle_side = side_point_to_line(center[0], center[1], 0, 0, arm.joint_coxa[0], arm.joint_coxa[1])
     bool_coxa_elbow = which_side_small_angle(arm.theta_femur)
     bool_tibia_elbow = which_side_small_angle(arm.theta_tibia)
 
