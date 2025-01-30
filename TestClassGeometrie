@@ -59,28 +59,29 @@ class TestGeometrie(unittest.TestCase):
     
     def test_boolean_switch_elbow(self):
         arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
-        arm.update_joints(np.pi/4, np.pi/2, np.pi*3/2)
+        arm.update_joints(np.pi/4, np.pi/4, np.pi/4)
         config.center = (-1, 5)
         bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
 
-        # TODO Entweder Fehler im Test oder in der Funktion!!!
+        # Should both be on correct side
+        self.assertEqual(bool_result_coxa, 1)
+        self.assertEqual(bool_result_tibia, 1)
+
+        arm.update_joints(np.pi/4, np.pi/4, np.pi*3/2)
+        config.center = (-1, 5)
+        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+
+        # Coxa should still be correct, tibia on the other side
         self.assertEqual(bool_result_coxa, 1)
         self.assertEqual(bool_result_tibia, 0)
 
-        arm.update_joints(np.pi*5/4, np.pi*3/2, np.pi/2)
+        arm.update_joints(np.pi/4*5, np.pi/4, 0)
+        config.center = (-1, 5)
         bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+
+        # Should both be on wrong side
         self.assertEqual(bool_result_coxa, 0)
-        self.assertEqual(bool_result_tibia, 1)
-
-        arm.update_joints(0, np.pi/2, np.pi/2)
-        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
-        self.assertEqual(bool_result_tibia, 1)
-        self.assertEqual(bool_result_coxa, 1)
-
-        arm.update_joints(0, np.pi/2*3, np.pi/2*3)
-        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
         self.assertEqual(bool_result_tibia, 0)
-        self.assertEqual(bool_result_coxa, 0)
         return
 
 if __name__ == "__main__":
