@@ -71,8 +71,6 @@ tolerance = 0.5
 learning_rate = 0.2
 
 # Change Ellbow Posture Mode
-mode_ellbow_coxa = False
-goal_ellbow_coxa = (0,0)
+coxa_elbow_goal = (0,0)
 
-mode_ellbow_femur = False
-goal_ellbow_femur = (0,0)
+tibia_elbow_goal = (0,0)

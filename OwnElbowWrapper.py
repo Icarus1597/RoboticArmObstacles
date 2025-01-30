@@ -18,6 +18,8 @@ start_time = time.time() # To track the duration of the test
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
 
+coxa_elbow_goal = (0,0)
+
 # Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
@@ -59,13 +61,6 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
 
-    if (config.mode_ellbow_coxa):
-        # TODO
-        return
-    if (config.mode_ellbow_femur):
-        # TODO
-        return
-
     # After a given time, the execution will be aborted
     current_time = time.time()
     if(current_time - start_time > config.timeout) :
@@ -83,50 +78,12 @@ def update(frame):
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < config.min_distance_to_obstacle):
-        #print(f"ERROR: Arm touches the obstacle!")
-        # TODO
-        #if(True) :
-            #TODO
-            #return
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
         return line, point, #obstacle_circle
-
-    # Calculations for the movement of joints: Attractive Velocity
-    v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
-    jacobian_matrix = arm.jacobian_matrix()
-    inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
-    joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
-
-   
-    # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
-  
-    # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
-    joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
-
-    if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
-
-    # Hard maximum velocity for robot arm
-    if(np.abs(joint_velocity[0])>config.max_velocity):
-        joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
-    if(np.abs(joint_velocity[1])>config.max_velocity):
-        joint_velocity[1] = np.sign(joint_velocity[1]) * config.max_velocity
-    if(np.abs(joint_velocity[2])>config.max_velocity):
-        joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
-
-    # Calculate the new thetas and update joints
-    theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
-    theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
-    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
-    arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -165,13 +122,81 @@ def update(frame):
 
     return line, point, obstacle_circle
 
-def correct_ellbow_posture_coxa(arm):
-    target_coxa = Geometrie.reflect_on_hypotenuse(0, 0, arm.joint_coxa_x, arm.joint_coxa_y, arm.joint_femur_x, arm.joint_femur_y)
-    # TODO move towards this target_coxa, while femur stays in place
-    return
+# Updates the frame
+def update_coxa_elbow(frame):
+    global previous_end_effector_position
+    global covered_distance
+
+    # After a given time, the execution will be aborted
+    current_time = time.time()
+    if(current_time - start_time > config.timeout) :
+        print(f"TIMEOUT")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: TIMEOUT\n")
+        config.number_timeout += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
+    # Calculate distance arm to obstacle. If negative, error and abort execution
+    distance = arm.distance_arm_obstacle(config.center, config.radius)
+    if(distance < config.min_distance_to_obstacle):
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
+    # Actualize data for the next frame
+    line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
+    point.set_data([config.target_x], [config.target_y])  # Update the position of the target point
+    obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+    plt.figure(fig.number)
+    plt.gca().add_patch(obstacle_circle)
+
+    # Stops, when target reached/ close to target
+    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    if (distance_to_target) < config.delta_success_distance :
+        print("SUCCESS: Target reached!")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
+        config.number_success += 1
+        config.list_covered_distance.append(covered_distance)
+        config.list_time_needed.append(time.time() - start_time)
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+       
+    # Append the new data
+    x_data_time.append(current_time - start_time)
+    y_data_distance_to_target.append(distance_to_target)
+    
+    # Actualize the figure
+    line_distance_to_target.set_xdata(x_data_time)
+    line_distance_to_target.set_ydata(y_data_distance_to_target)
+    figure_distance_to_target.canvas.draw()
+
+    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    covered_distance += step_covered_distance
+    previous_end_effector_position = arm.end_effector
+
+    return line, point, obstacle_circle
 
 # Start the animation
 frames = np.linspace(0, 2 * np.pi, config.delta_t)
+
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
+
+# if Mode coxa: Nicht immer neu berechnen! Nur wenn in den Mode gegangen wird!
+#coxa_elbow_goal = Geometrie.reflect_on_hypotenuse(config.center[0], config.center[1], 0, 0, arm.joint_coxa[0], arm.joint_coxa[1])
+
+# Femur analog
 plt.ioff()
 plt.show()
+
