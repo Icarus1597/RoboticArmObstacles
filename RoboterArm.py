@@ -72,6 +72,41 @@ class RoboticArm:
             
         ])
         return j_matrix
+    
+    def jacobian_matrix_knee(self):
+        """
+        Berechnet die Jacobian-Matrix für das Kniegelenk (Femur-Tibia).
+        
+        - Die Matrix berücksichtigt die Änderungen der Position des Knies (x, y)
+        basierend auf den Gelenkwinkeln:
+        - theta_femur (Femur-Gelenk)
+        - theta_tibia (Tibia-Gelenk)
+        
+        Rückgabe:
+        - 2x2 Matrix mit den partiellen Ableitungen der Knie-Position (x, y)
+        nach den Gelenkwinkeln (theta_femur, theta_tibia).
+        """
+        # Coxa-Femur und Femur-Tibia Längen
+        l1 = self.length_femur  # Länge des Femur-Segments
+        l2 = self.length_tibia   # Länge des Tibia-Segments
+
+        # Berechnung der partiellen Ableitungen
+        # x-Ableitungen
+        dx_dtheta_femur = -l1 * np.sin(self.theta_coxa + self.theta_femur) - l2 * np.sin(self.theta_coxa + self.theta_femur + self.theta_tibia)
+        dx_dtheta_tibia = -l2 * np.sin(self.theta_coxa + self.theta_femur + self.theta_tibia)
+
+        # y-Ableitungen
+        dy_dtheta_femur = l1 * np.cos(self.theta_coxa + self.theta_femur) + l2 * np.cos(self.theta_coxa + self.theta_femur + self.theta_tibia)
+        dy_dtheta_tibia = l2 * np.cos(self.theta_coxa + self.theta_femur + self.theta_tibia)
+
+        # Setze die Jacobian-Matrix für das Kniegelenk zusammen (2x2 Matrix für das Knie)
+        jacobian_knee = np.array([
+            [dx_dtheta_femur, dx_dtheta_tibia],
+            [dy_dtheta_femur, dy_dtheta_tibia]
+        ])
+        
+        return jacobian_knee
+
 
 
     # Calculate the Inverse of the Jacobian Matrix. If given matrix is singular, calculates the pseudoinverse instead
@@ -187,3 +222,164 @@ class RoboticArm:
 
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return
+    
+    def calculate_femur_angle(self, elbow_target):
+        """
+        Berechnet den Winkel des Femur-Links (zwischen Coxa und Femur)
+        anhand der Zielkoordinaten des Ellbogens.
+        """
+        x_elbow, y_elbow = elbow_target
+        distance = np.sqrt(x_elbow**2 + y_elbow**2)  # Distanz vom Ursprung zum Ellbogen
+
+        if distance > (self.length_femur + self.length_tibia) or distance < abs(self.length_femur - self.length_tibia):
+            raise ValueError("Das Ziel ist außerhalb des Arbeitsbereichs des Arms")
+
+        # Berechnung des Femur-Winkels mit Cosinusregel
+        cos_theta_femur = (self.length_femur**2 + distance**2 - self.length_tibia**2) / (2 * self.length_femur * distance)
+        cos_theta_femur = np.clip(cos_theta_femur, -1.0, 1.0)  # Numerische Sicherheit
+        femur_angle = np.arccos(cos_theta_femur)  # Winkel in Bogenmaß
+
+        return femur_angle  # In Radiant
+
+    def calculate_tibia_angle(self, end_effector_target, elbow_target):
+        """
+        Berechnet den Winkel des Tibia-Links (zwischen Femur und Tibia)
+        anhand der Zielkoordinaten des Endeffektors.
+        """
+        x_eff, y_eff = end_effector_target
+        x_elbow, y_elbow = elbow_target
+        distance = np.sqrt((x_eff - x_elbow)**2 + (y_eff - y_elbow)**2)  # Distanz Ellbogen-Endeffektor
+
+        if distance > (self.length_femur + self.length_tibia) or distance < abs(self.length_femur - self.length_tibia):
+            raise ValueError("Das Ziel ist außerhalb des Arbeitsbereichs des Arms")
+
+        # Berechnung des Tibia-Winkels mit Cosinusregel
+        cos_theta_tibia = (self.length_femur**2 + self.length_tibia**2 - distance**2) / (2 * self.length_femur * self.length_tibia)
+        cos_theta_tibia = np.clip(cos_theta_tibia, -1.0, 1.0)  # Numerische Sicherheit
+        tibia_angle = np.arccos(cos_theta_tibia)  # Winkel in Bogenmaß
+
+        return tibia_angle  # In Radiant
+    
+    # TODO for tibia link
+    def inverse_kinematics_with_tibia(self, target, tibia_angle=None):
+        """
+        Berechnet die inverse Kinematik für den planaren Roboterarm mit einem Zielwinkel für das Tibia-Gelenk (Femur-Tibia-Winkel).
+
+        - target: Endeffektor-Zielposition (x, y)
+        - tibia_angle: Zielwinkel für das Tibia-Gelenk (Femur-Tibia-Winkel)
+        """
+        # Berechne den Fehler des Endeffektors
+        error = self.error_target_end_effector(target)
+        
+        # Berechne die Jacobian-Matrix
+        jacobian_matrix = self.jacobian_matrix()
+
+        # Falls ein Ziel-Tibiawinkel gegeben ist, berücksichtige ihn in der Berechnung
+        if tibia_angle is not None:
+            # Berechne die Abweichung vom Zielwinkel
+            tibia_error = tibia_angle - self.theta_tibia
+            
+            # Füge den Tibia-Fehler als zusätzliche Zeile zur Jacobian-Matrix hinzu
+            jacobian_matrix_tibia = self.jacobian_matrix_tibia()
+            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_tibia), axis=0)
+            
+            # Erweitere den Fehler-Vektor um die Tibia-Abweichung
+            error = np.append(error, tibia_error)
+
+        # Berechne das Delta für die Gelenkwinkel
+        inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
+        delta_theta = inverse_jacobian_matrix @ error
+
+        # Update der Gelenkwinkel mit den berechneten Änderungen
+        new_theta_coxa = self.theta_coxa + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
+        new_theta_femur = self.theta_femur + np.sign(delta_theta[1]) * np.minimum(abs(config.learning_rate * delta_theta[1]), 0.5)
+        new_theta_tibia = self.theta_tibia + np.sign(delta_theta[2]) * np.minimum(abs(config.learning_rate * delta_theta[2]), 0.5)
+
+        # Falls ein Zielwinkel für das Tibia-Gelenk gegeben ist, nutze diesen als neuen Winkel
+        if tibia_angle is not None:
+            new_theta_tibia = tibia_angle  
+
+        # Aktualisiere die Gelenkwinkel des Arms
+        self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
+
+        return
+    
+    def jacobian_matrix_tibia(self):
+        """
+        Berechnet die Jacobian-Matrix für das Tibia-Gelenk.
+        
+        - Die Matrix berücksichtigt die Änderungen der Position des Tibia-Endpunkts (x, y)
+        basierend auf den Gelenkwinkeln:
+        - theta_femur (Femur-Gelenk)
+        - theta_tibia (Tibia-Gelenk)
+        
+        Rückgabe:
+        - 2x1 Matrix mit den partiellen Ableitungen der Tibia-Position (x, y)
+        nach dem Gelenkwinkel (theta_tibia).
+        """
+        # Femur-Tibia und Tibia Längen
+        l1 = self.length_femur  # Länge des Femur-Segments
+        l2 = self.length_tibia   # Länge des Tibia-Segments
+
+        # Berechnung der partiellen Ableitungen
+        # x-Ableitung
+        dx_dtheta_tibia = -l2 * np.sin(self.theta_coxa + self.theta_femur + self.theta_tibia)
+
+        # y-Ableitung
+        dy_dtheta_tibia = l2 * np.cos(self.theta_coxa + self.theta_femur + self.theta_tibia)
+
+        # Setze die Jacobian-Matrix für das Tibia-Gelenk zusammen (2x1 Matrix für Tibia)
+        jacobian_tibia = np.array([
+            [dx_dtheta_tibia],
+            [dy_dtheta_tibia]
+        ])
+        
+        return jacobian_tibia
+
+
+
+    # TODO for femur link
+    def inverse_kinematics_with_knee(self, target, knee_angle=None):
+        """
+        Berechnet die inverse Kinematik für den planaren Roboterarm mit einem Zielwinkel für das Knie (Coxa-Femur-Gelenk).
+
+        - target: Endeffektor-Zielposition (x, y)
+        - knee_angle: Zielwinkel für das Coxa-Femur-Gelenk
+        """
+        # Berechne den Fehler des Endeffektors
+        error = self.error_target_end_effector(target)
+        
+        # Berechne die Jacobian-Matrix
+        jacobian_matrix = self.jacobian_matrix()
+
+        # Falls ein Ziel-Kniewinkel gegeben ist, berücksichtige ihn in der Berechnung
+        if knee_angle is not None:
+            # Berechne die Abweichung vom Zielwinkel
+            knee_error = knee_angle - self.theta_femur
+            
+            # Füge den Knie-Fehler als zusätzliche Zeile zur Jacobian-Matrix hinzu
+            jacobian_matrix_knee = self.jacobian_matrix_knee()
+            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_knee), axis=0)
+            
+            # Erweitere den Fehler-Vektor um die Knie-Abweichung
+            error = np.append(error, knee_error)
+
+        # Berechne das Delta für die Gelenkwinkel
+        inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
+        delta_theta = inverse_jacobian_matrix @ error
+
+        # Update der Gelenkwinkel mit den berechneten Änderungen
+        new_theta_coxa = self.theta_coxa + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
+        new_theta_femur = self.theta_femur + np.sign(delta_theta[1]) * np.minimum(abs(config.learning_rate * delta_theta[1]), 0.5)
+        new_theta_tibia = self.theta_tibia + np.sign(delta_theta[2]) * np.minimum(abs(config.learning_rate * delta_theta[2]), 0.5)
+
+        # Falls ein Zielwinkel für das Knie gegeben ist, nutze diesen als neuen Winkel
+        if knee_angle is not None:
+            new_theta_femur = knee_angle  
+
+        # Aktualisiere die Gelenkwinkel des Arms
+        self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
+
+        return
+
+

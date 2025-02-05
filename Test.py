@@ -5,8 +5,8 @@ import numpy as np
 PI = np.pi
 
 current_test = 1
-algorithm = ["AStarWrapper.py", "Visuals.py"]
-mode = 0 # 0 : Astar-Algorithm, 1 : Potential Fields Method
+algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py"]
+mode = 2 # 0 : Astar-Algorithm, 1 : Potential Fields Method, 2: OwnElbow Ansatz
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
