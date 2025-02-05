@@ -381,5 +381,100 @@ class RoboticArm:
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
         return
+    
+    import numpy as np
+
+    def reflect_tibia_and_femur(self):
+        """
+        Spiegelt den Tibia-Link und berechnet auch den Femur-Winkel,
+        während der Coxa-Winkel unverändert bleibt.
+        """
+        # Aktuelle Gelenkwinkel
+        theta_coxa = self.theta_coxa  # Coxa-Winkel bleibt unverändert
+        theta_femur = self.theta_femur  # Femur-Winkel, der angepasst werden muss
+        theta_tibia = self.theta_tibia  # Tibia-Winkel, der gespiegelt werden soll
+        
+        # Spiegeln des Tibia-Winkels (umkehren des Winkels)
+        new_theta_tibia = -theta_tibia
+        
+        # Um den Femur-Winkel zu berechnen, nutzen wir die Inverse Kinematik
+        # Nehmen wir an, dass der Arm auf einer Ebene funktioniert (planarer Roboterarm)
+        
+        # Berechnung der neuen Winkel
+        # Hier müssen wir die neuen Theta-Werte durch inverse Kinematik berechnen
+        # Diese Berechnungen setzen voraus, dass du eine Methode hast, um die
+        # Gelenkwinkel zu berechnen, die den Endeffektor an der gewünschten Position
+        # halten. Zum Beispiel könnte das so aussehen:
+
+        # Berechne die Endeffektor-Position, basierend auf den aktuellen Werten
+        x_end_effector = self.length_coxa * np.cos(theta_coxa) + self.length_femur * np.cos(theta_coxa + theta_femur) + self.length_tibia * np.cos(theta_coxa + theta_femur + theta_tibia)
+        y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + theta_tibia)
+        
+        # Berechne die neue Position des Endeffektors, wenn der Tibia gespiegelt wird
+        # (die X- und Y-Position bleiben gleich, aber der Tibia-Winkel wird gespiegelt)
+        new_x_end_effector = self.length_coxa * np.cos(theta_coxa) + self.length_femur * np.cos(theta_coxa + theta_femur) + self.length_tibia * np.cos(theta_coxa + theta_femur + new_theta_tibia)
+        new_y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + new_theta_tibia)
+        
+        # Berechne den Fehler in der Endeffektor-Position
+        delta_x = x_end_effector - new_x_end_effector
+        delta_y = y_end_effector - new_y_end_effector
+        
+        # Berechne den neuen Femur-Winkel unter Verwendung der inverse Kinematik
+        # Hier könnte eine Näherung verwendet werden, um den Femur-Winkel zu berechnen, damit der Fehler minimiert wird.
+        # Ein Beispiel könnte wie folgt aussehen:
+        delta_theta_femur = np.arctan2(delta_y, delta_x)  # Dies ist eine einfache Näherung
+        
+        # Berechne den neuen Femur-Winkel
+        new_theta_femur = theta_femur + delta_theta_femur
+        
+        # Setze die neuen Winkel
+        self.update_joints(theta_coxa, new_theta_femur, new_theta_tibia)
+        
+        return theta_coxa, new_theta_femur, new_theta_tibia
+    
+    import numpy as np
+
+    def reflect_coxa_and_femur(self):
+        """
+        Spiegelt den Coxa- und Femur-Link und berechnet die neuen Gelenkwinkel,
+        während der Tibia-Winkel unverändert bleibt.
+        """
+        # Aktuelle Gelenkwinkel
+        theta_coxa = self.theta_coxa  # Coxa-Winkel, der reflektiert werden soll
+        theta_femur = self.theta_femur  # Femur-Winkel, der ebenfalls reflektiert wird
+        theta_tibia = self.theta_tibia  # Tibia-Winkel bleibt unverändert
+        
+        # Spiegeln des Coxa-Winkels (umkehren des Winkels)
+        new_theta_coxa = -theta_coxa
+        
+        # Spiegeln des Femur-Winkels (umkehren des Winkels)
+        new_theta_femur = -theta_femur
+        
+        # Berechne die Endeffektor-Position, basierend auf den aktuellen Werten
+        x_end_effector = self.length_coxa * np.cos(theta_coxa) + self.length_femur * np.cos(theta_coxa + theta_femur) + self.length_tibia * np.cos(theta_coxa + theta_femur + theta_tibia)
+        y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + theta_tibia)
+        
+        # Berechne die neue Position des Endeffektors, wenn der Coxa- und Femur-Winkel gespiegelt werden
+        new_x_end_effector = self.length_coxa * np.cos(new_theta_coxa) + self.length_femur * np.cos(new_theta_coxa + new_theta_femur) + self.length_tibia * np.cos(new_theta_coxa + new_theta_femur + theta_tibia)
+        new_y_end_effector = self.length_coxa * np.sin(new_theta_coxa) + self.length_femur * np.sin(new_theta_coxa + new_theta_femur) + self.length_tibia * np.sin(new_theta_coxa + new_theta_femur + theta_tibia)
+        
+        # Berechne den Fehler in der Endeffektor-Position
+        delta_x = x_end_effector - new_x_end_effector
+        delta_y = y_end_effector - new_y_end_effector
+        
+        # Berechne den Fehler in den Gelenkwinkeln (zum Beispiel durch inverse Kinematik)
+        delta_theta_coxa = np.arctan2(delta_y, delta_x)  # Dies ist eine einfache Näherung
+        delta_theta_femur = np.arctan2(delta_y, delta_x)  # Auch eine Näherung
+        
+        # Berechne den neuen Coxa- und Femur-Winkel
+        new_theta_coxa += delta_theta_coxa
+        new_theta_femur += delta_theta_femur
+        
+        # Setze die neuen Winkel
+        self.update_joints(new_theta_coxa, new_theta_femur, theta_tibia)
+        
+        return new_theta_coxa, new_theta_femur, theta_tibia
+
+
 
 
