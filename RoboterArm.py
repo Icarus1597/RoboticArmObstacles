@@ -1,8 +1,8 @@
 import numpy as np
 from numpy.linalg import LinAlgError
 import autograd.numpy as anp
-import math
 import config
+import Geometrie
 
 # Class RoboticArm:
 # Model of a robotic arm with three joints
@@ -72,7 +72,7 @@ class RoboticArm:
             
         ])
         return j_matrix
-    
+    '''
     def jacobian_matrix_knee(self):
         """
         Berechnet die Jacobian-Matrix für das Kniegelenk (Femur-Tibia).
@@ -106,7 +106,8 @@ class RoboticArm:
         ])
         
         return jacobian_knee
-
+    '''
+    
 
 
     # Calculate the Inverse of the Jacobian Matrix. If given matrix is singular, calculates the pseudoinverse instead
@@ -116,39 +117,6 @@ class RoboticArm:
     #   inv_matrix: Inverse of matrix. If matrix was singular, pseudoinverse
     def inverse_jacobian_matrix(self, matrix) :
         return np.linalg.pinv(matrix)
-
-
-    # Calculates the minimum distance between a segment and a point
-    # Input: 
-    #   point: (Point) 
-    #   segment_a, segment_b: (Point) start- and endpoint of the segment
-    # Output:
-    #   minimum distance between the segment and point
-    def distance_segment_point(self, point_x, point_y, segment_a_x, segment_a_y, segment_b_x, segment_b_y) :
-        # Calculates slope of the segment
-        dx = segment_b_x - segment_a_x
-        dy = segment_b_y - segment_a_y
-
-        # Special case
-        if (dx == 0):
-            return abs(point_x - segment_a_x)
-        
-        # Calculate foot point
-        t = ((point_x - segment_a_x) * dx + (point_y - segment_a_y) * dy) / (dx**2 + dy**2)
-
-        hx = segment_a_x + t * dx
-        hy = segment_a_y + t * dy
-
-        # Check if the foot point H is within the segment AB
-        if t < 0:
-            # If t < 0, the foot point is outside the segment, closest point is A
-            return math.sqrt((point_x - segment_a_x)**2 + (point_y - segment_a_y)**2)
-        elif t > 1:
-            # If t > 1, the foot point is outside the segment, closest point is B
-            return math.sqrt((point_x - segment_b_x)**2 + (point_y - segment_b_y)**2)
-        else:
-            # Otherwise, the foot point H is within the segment, calculate the euclidian distance
-            return math.sqrt((point_x - hx)**2 + (point_y - hy)**2)
         
 
     
@@ -160,9 +128,9 @@ class RoboticArm:
     #   distance: minimum distance between links and obstacle
     def distance_arm_obstacle(self, center, radius) :
         # Calculates distance between each link and circle-obstacle
-        distance_coxa = self.distance_segment_point(center[0], center[1], 0, 0, self.joint_coxa_x, self.joint_coxa_y) - radius
-        distance_femur = self.distance_segment_point(center[0], center[1], self.joint_coxa_x, self.joint_coxa_y, self.joint_femur_x, self.joint_femur_y) - radius
-        distance_tibia = self.distance_segment_point(center[0], center[1], self.joint_femur_x, self.joint_femur_y, self.joint_tibia_x, self.joint_tibia_y) - radius
+        distance_coxa = Geometrie.distance_segment_point(center[0], center[1], 0, 0, self.joint_coxa_x, self.joint_coxa_y) - radius
+        distance_femur = Geometrie.distance_segment_point(center[0], center[1], self.joint_coxa_x, self.joint_coxa_y, self.joint_femur_x, self.joint_femur_y) - radius
+        distance_tibia = Geometrie.distance_segment_point(center[0], center[1], self.joint_femur_x, self.joint_femur_y, self.joint_tibia_x, self.joint_tibia_y) - radius
         
         # Checks if arm touches the obstacle
         if(distance_coxa < 0) :
@@ -208,6 +176,7 @@ class RoboticArm:
         return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
         
 
+    # Nicht inverse_kinematics im eigentlichen Sinne! Bewegt joint langsam zur Zielposition
     def inverse_kinematics(self, target):
         error = self.error_target_end_effector(target)
         jacobian_matrix = self.jacobian_matrix()
@@ -223,6 +192,34 @@ class RoboticArm:
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return
     
+    def move_to_target(self, target_angles, step_size=0.001, tolerance=0.01):
+        """
+        Bewegt den Roboterarm in kleinen Schritten zu den Zielwinkeln.
+
+        - target_angles: Ein Array mit den Zielwinkeln [theta_coxa, theta_femur, theta_tibia].
+        - step_size: Die Schrittgröße für die Bewegung.
+        - tolerance: Die Toleranz, bei der die Bewegung stoppt, wenn die Differenz zwischen aktuellen und Zielwinkeln kleiner ist.
+        """
+        # Berechne die Differenz zwischen Zielwinkeln und aktuellen Winkeln
+        delta_angles = np.array(target_angles) - np.array([self.theta_coxa, self.theta_femur, self.theta_tibia])
+        
+        # Solange die Differenz größer als die Toleranz ist, bewege den Arm
+        while np.linalg.norm(delta_angles) > tolerance:
+            # Bewege die Gelenke in kleinen Schritten
+            step = np.sign(delta_angles) * np.minimum(np.abs(delta_angles), step_size)
+            
+            # Berechne die neuen Winkel
+            new_theta_coxa = self.theta_coxa + step[0]
+            new_theta_femur = self.theta_femur + step[1]
+            new_theta_tibia = self.theta_tibia + step[2]
+            
+            # Aktualisiere die Gelenkwinkel des Arms
+            self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
+            
+            # Berechne die neue Differenz
+            delta_angles = np.array(target_angles) - np.array([new_theta_coxa, new_theta_femur, new_theta_tibia])
+    
+    # For posture changing of femur link
     def calculate_femur_angle(self, elbow_target):
         """
         Berechnet den Winkel des Femur-Links (zwischen Coxa und Femur)
@@ -241,6 +238,7 @@ class RoboticArm:
 
         return femur_angle  # In Radiant
 
+    # For posture changing of tibia link
     def calculate_tibia_angle(self, end_effector_target, elbow_target):
         """
         Berechnet den Winkel des Tibia-Links (zwischen Femur und Tibia)
@@ -260,6 +258,7 @@ class RoboticArm:
 
         return tibia_angle  # In Radiant
     
+    '''
     # TODO for tibia link
     def inverse_kinematics_with_tibia(self, target, tibia_angle=None):
         """
@@ -280,8 +279,9 @@ class RoboticArm:
             tibia_error = tibia_angle - self.theta_tibia
             
             # Füge den Tibia-Fehler als zusätzliche Zeile zur Jacobian-Matrix hinzu
-            jacobian_matrix_tibia = self.jacobian_matrix_tibia()
-            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_tibia), axis=0)
+            jacobian_matrix_tibia = self.jacobian_matrix_tibia()#.reshape(2, 1)
+            #jacobian_matrix_tibia = np.reshape(jacobian_matrix_tibia, (1, -1))
+            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_tibia), axis=1)
             
             # Erweitere den Fehler-Vektor um die Tibia-Abweichung
             error = np.append(error, tibia_error)
@@ -333,9 +333,11 @@ class RoboticArm:
             [dx_dtheta_tibia],
             [dy_dtheta_tibia]
         ])
+
+        jacobian_tibia = np.array([dx_dtheta_tibia, dy_dtheta_tibia])#.reshape(2, 1)
         
         return jacobian_tibia
-
+    
 
 
     # TODO for femur link
@@ -358,8 +360,8 @@ class RoboticArm:
             knee_error = knee_angle - self.theta_femur
             
             # Füge den Knie-Fehler als zusätzliche Zeile zur Jacobian-Matrix hinzu
-            jacobian_matrix_knee = self.jacobian_matrix_knee()
-            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_knee), axis=0)
+            jacobian_matrix_knee = self.jacobian_matrix_knee()#.reshape(2, 1)
+            jacobian_matrix = np.concatenate((jacobian_matrix, jacobian_matrix_knee), axis=1)
             
             # Erweitere den Fehler-Vektor um die Knie-Abweichung
             error = np.append(error, knee_error)
@@ -384,6 +386,12 @@ class RoboticArm:
     
     import numpy as np
 
+    '''
+
+    #So funktioniert das nicht wie ich mir das vorgestellt habe
+    
+
+    # For posture changing of the tibia link
     def reflect_tibia_and_femur(self):
         """
         Spiegelt den Tibia-Link und berechnet auch den Femur-Winkel,
@@ -432,8 +440,10 @@ class RoboticArm:
         
         return theta_coxa, new_theta_femur, new_theta_tibia
     
-    import numpy as np
+    
+    #import numpy as np
 
+    # For posture changing of the femur link
     def reflect_coxa_and_femur(self):
         """
         Spiegelt den Coxa- und Femur-Link und berechnet die neuen Gelenkwinkel,
@@ -474,7 +484,5 @@ class RoboticArm:
         self.update_joints(new_theta_coxa, new_theta_femur, theta_tibia)
         
         return new_theta_coxa, new_theta_femur, theta_tibia
-
-
 
 

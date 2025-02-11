@@ -45,6 +45,13 @@ class TestGeometrie(unittest.TestCase):
         self.assertEqual(Geometrie.which_side_obstacle_to_coxa(arm, config.center), 1)
         return
     '''
+
+    def test_distance_segment_point(self):
+        result = Geometrie.distance_segment_point(3, 3, 0, 0, 0, 5)
+        self.assertEqual(result, 3)
+
+        result = Geometrie.distance_segment_point(-3, 3, 0, 0, 0, 5)
+        self.assertEqual(result, 3)
     
     def test_side_point_to_line(self):
         result = Geometrie.side_point_to_line(1, 0, 0, 0, 1, 1)

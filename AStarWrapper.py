@@ -8,6 +8,7 @@ import autograd.numpy as anp
 import config
 import AStarAlgorithm
 import Obstacles
+import SwitchMode as sm
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -97,8 +98,19 @@ def update(frame):
     distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Punkte nacheinander abfahren path node list
+
+    # TODO calculate new thetas here
+    current_mode = sm.choose_mode(arm)
+    print(f"Current Mode = {current_mode}")
+    if (current_mode == 0):
+        #arm.inverse_kinematics((config.target_x, config.target_y))
+        arm.inverse_kinematics(path_node_list[next_node_index].position)
+    if (current_mode == 1):
+        arm.inverse_kinematics_with_knee(arm.joint_tibia, config.goal_femur_angle)
+    if (current_mode == 2):
+        arm.inverse_kinematics_with_tibia(arm.joint_tibia, config.goal_tibia_angle)
     
-    arm.inverse_kinematics(path_node_list[next_node_index].position)
+    #arm.inverse_kinematics(path_node_list[next_node_index].position)
     #print(f"End-Effector Position:{arm.end_effector}, Next Path Node:{path_node_list[next_node_index].position}")
    
 

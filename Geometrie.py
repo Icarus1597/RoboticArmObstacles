@@ -1,5 +1,5 @@
 import numpy as np
-# TODO
+import math
 
 # Function to calculate the reflection of a point P(x0, y0) across a line defined by points (x1, y1) and (x2, y2)
 def reflect_on_hypotenuse(x0, y0, x1, y1, x2, y2):
@@ -51,6 +51,39 @@ def which_side_small_angle(angle):
     else:
         return 1
     
+
+# Calculates the minimum distance between a segment and a point
+# Input: 
+#   point: (Point) 
+#   segment_a, segment_b: (Point) start- and endpoint of the segment
+# Output:
+#   minimum distance between the segment and point
+def distance_segment_point(point_x, point_y, segment_a_x, segment_a_y, segment_b_x, segment_b_y) :
+    # Calculates slope of the segment
+    dx = segment_b_x - segment_a_x
+    dy = segment_b_y - segment_a_y
+
+    # Special case
+    if (dx == 0):
+        return abs(point_x - segment_a_x)
+    
+    # Calculate foot point
+    t = ((point_x - segment_a_x) * dx + (point_y - segment_a_y) * dy) / (dx**2 + dy**2)
+
+    hx = segment_a_x + t * dx
+    hy = segment_a_y + t * dy
+
+    # Check if the foot point H is within the segment AB
+    if t < 0:
+        # If t < 0, the foot point is outside the segment, closest point is A
+        return math.sqrt((point_x - segment_a_x)**2 + (point_y - segment_a_y)**2)
+    elif t > 1:
+        # If t > 1, the foot point is outside the segment, closest point is B
+        return math.sqrt((point_x - segment_b_x)**2 + (point_y - segment_b_y)**2)
+    else:
+        # Otherwise, the foot point H is within the segment, calculate the euclidian distance
+        return math.sqrt((point_x - hx)**2 + (point_y - hy)**2)
+        
 '''
 # TODO: Determines, from perspective of the coxa link, if the obstacle is on its right side or left side
 # TODO: This is buggy

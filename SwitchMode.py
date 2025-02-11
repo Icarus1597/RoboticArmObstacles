@@ -23,7 +23,7 @@ def switch_to_mode_tibia(arm):
     config.tibia_elbow_goal = Geometrie.reflect_on_hypotenuse(config.center[0], config.center[1], 
                                                               arm.joint_femur[0], arm.joint_femur[1], 
                                                               arm.joint_tibia[0], arm.joint_tibia[1])
-    config.goal_tibia_angle = arm.calculate_tibia_angle(config.tibia_elbow_goal)
+    config.goal_tibia_angle = arm.calculate_tibia_angle(arm.joint_tibia, config.tibia_elbow_goal)
     return
 
 def switch_to_mode_normal():
