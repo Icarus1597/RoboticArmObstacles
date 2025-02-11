@@ -415,8 +415,8 @@ class RoboticArm:
         # halten. Zum Beispiel könnte das so aussehen:
 
         # Berechne die Endeffektor-Position, basierend auf den aktuellen Werten
-        x_end_effector = self.length_coxa * np.cos(theta_coxa) + self.length_femur * np.cos(theta_coxa + theta_femur) + self.length_tibia * np.cos(theta_coxa + theta_femur + theta_tibia)
-        y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + theta_tibia)
+        #x_end_effector = self.length_coxa * np.cos(theta_coxa) + self.length_femur * np.cos(theta_coxa + theta_femur) + self.length_tibia * np.cos(theta_coxa + theta_femur + theta_tibia)
+        #y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + theta_tibia)
         
         # Berechne die neue Position des Endeffektors, wenn der Tibia gespiegelt wird
         # (die X- und Y-Position bleiben gleich, aber der Tibia-Winkel wird gespiegelt)
@@ -424,8 +424,8 @@ class RoboticArm:
         new_y_end_effector = self.length_coxa * np.sin(theta_coxa) + self.length_femur * np.sin(theta_coxa + theta_femur) + self.length_tibia * np.sin(theta_coxa + theta_femur + new_theta_tibia)
         
         # Berechne den Fehler in der Endeffektor-Position
-        delta_x = x_end_effector - new_x_end_effector
-        delta_y = y_end_effector - new_y_end_effector
+        delta_x = self.joint_tibia[0] - new_x_end_effector
+        delta_y = self.joint_tibia[1] - new_y_end_effector
         
         # Berechne den neuen Femur-Winkel unter Verwendung der inverse Kinematik
         # Hier könnte eine Näherung verwendet werden, um den Femur-Winkel zu berechnen, damit der Fehler minimiert wird.

@@ -62,6 +62,27 @@ class TestRoboterArm(unittest.TestCase):
 
         # TODO: Cases closer to obstacle than minimum required distance
         return
+    
+    def test_reflect_tibia_and_femur(self):
+        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm.update_joints(0, 0, 0)
+        result_coxa, result_femur, result_tibia = arm.reflect_coxa_and_femur()
+        self.assertAlmostEqual(result_coxa, 0)
+        self.assertAlmostEqual(result_femur, 0)
+        self.assertAlmostEqual(result_tibia, 0)
+
+        arm.update_joints(0, np.pi, 0)
+        result_coxa, result_femur, result_tibia = arm.reflect_coxa_and_femur()
+        # TODO Hier sinnvolle Werte einfügen
+        #self.assertAlmostEqual(result_coxa, 0)
+        #self.assertAlmostEqual(result_femur, 0)
+        #self.assertAlmostEqual(result_tibia, 0)
+
+        # End Effector should approximately be at the same location afterwards
+        arm.update_joints(result_coxa, result_femur, result_tibia)
+        self.assertAlmostEqual(arm.joint_tibia[0], 3)
+        self.assertAlmostEqual(arm.joint_tibia[1], 6)
+
 
 if __name__ == "__main__":
     unittest.main()
