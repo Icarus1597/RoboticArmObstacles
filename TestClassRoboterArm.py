@@ -63,7 +63,7 @@ class TestRoboterArm(unittest.TestCase):
         # TODO: Cases closer to obstacle than minimum required distance
         return
     
-    def test_reflect_tibia_and_femur(self):
+    def test_reflect_coxa_and_femur(self):
         arm = RoboterArm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
         result_coxa, result_femur, result_tibia = arm.reflect_coxa_and_femur()
@@ -82,6 +82,14 @@ class TestRoboterArm(unittest.TestCase):
         arm.update_joints(result_coxa, result_femur, result_tibia)
         self.assertAlmostEqual(arm.joint_tibia[0], 3)
         self.assertAlmostEqual(arm.joint_tibia[1], 6)
+
+    def test_reflect_femur_link(self):
+        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm.update_joints(0, 0, 0)
+        result_coxa, result_femur, result_tibia = arm.reflect_femur_link()
+        self.assertAlmostEqual(result_coxa, 0)
+        self.assertAlmostEqual(result_femur, 0)
+        self.assertAlmostEqual(result_tibia, 0)
 
 
 if __name__ == "__main__":

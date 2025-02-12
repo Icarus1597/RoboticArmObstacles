@@ -145,3 +145,5 @@ def booleans_switch_elbows(arm, center):
         bool_result_tibia = 1
     
     return bool_result_coxa, bool_result_tibia
+
+#def angle_of_intersection(m_line_a, m_line_b):
