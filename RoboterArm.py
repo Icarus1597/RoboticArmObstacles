@@ -491,8 +491,13 @@ class RoboticArm:
         theta_femur = self.theta_femur  # Femur-Winkel, der ebenfalls reflektiert wird
         theta_tibia = self.theta_tibia  # Tibia-Winkel bleibt unverändert
 
+        if(theta_femur % (np.pi*2) < np.pi):
+            factor = 1
+        else:
+            factor = -1
+
         # Femur spiegeln
-        theta_femur = - theta_femur
+        theta_femur = (- theta_femur) % (np.pi*2)
 
         # TODO ggf in Geometrie auslagern
         # Gerade Steigung berechnen Coxa Link zu Tibia Link
@@ -503,18 +508,16 @@ class RoboticArm:
 
         # Winkel zwischen Gerade berechnen
         alpha = np.arctan(np.abs((m_coxa_tibia - m_coxa)/(1 + m_coxa_tibia * m_coxa)))
-        #if (theta > np.pi):
-        #    theta = np.abs(alpha - np.pi)
 
         # Theta Coxa berechnen
-        theta_coxa = theta_coxa + alpha*2 # TODO Vorzeichen gucken wenn Ellbogen in andere Richtung soll
+        theta_coxa = (theta_coxa + factor * alpha*2) % (np.pi*2)# TODO Vorzeichen gucken wenn Ellbogen in andere Richtung soll
 
         # Theta Tibia berechnen
         
         # Dritten Winkel im Dreieck über Innnenwinkelsumme berechnen
-        gamma = np.pi - alpha - (np.pi - theta_femur)
+        gamma = np.pi - alpha + factor * (np.pi - theta_femur)
 
-        theta_tibia = theta_tibia + 2*gamma
+        theta_tibia = (theta_tibia + factor*2*gamma) % (np.pi*2)
 
         return theta_coxa, theta_femur, theta_tibia
 
@@ -527,10 +530,10 @@ class RoboticArm:
 
         theta_tibia = - theta_tibia
 
-        # TODO: Calculate new theta_femur
+        # Calculate new theta_femur
 
         # Gerade Steigung berechnen Femur Link zu End Effector
-        m_tibia_ee = (self.joint_tibia[1] - self.joint_femur[1]) - (self.joint_tibia[0] - self.joint_femur[0])
+        m_tibia_ee = (self.joint_tibia[1] - self.joint_femur[1]) / (self.joint_tibia[0] - self.joint_femur[0])
         # TODO null exception handlen
 
         # Gerade Steigung Femur Joint
@@ -538,8 +541,9 @@ class RoboticArm:
 
         # Winkel zwischen Gerade berechnen
         alpha = np.arctan(np.abs((m_femur - m_tibia_ee)/(1 + m_femur * m_tibia_ee)))
-        #if (theta > np.pi):
-        #    theta = np.abs(alpha - np.pi)
+        alpha = alpha % np.pi
+
+        print(f"alpha in Gradmass = {alpha/np.pi * 180}")
 
         # Theta Coxa berechnen
         theta_femur = theta_femur + alpha*2 # TODO Vorzeichen gucken wenn Ellbogen in andere Richtung soll

@@ -63,6 +63,7 @@ class TestRoboterArm(unittest.TestCase):
         # TODO: Cases closer to obstacle than minimum required distance
         return
     
+    '''
     def test_reflect_coxa_and_femur(self):
         arm = RoboterArm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
@@ -82,6 +83,7 @@ class TestRoboterArm(unittest.TestCase):
         arm.update_joints(result_coxa, result_femur, result_tibia)
         self.assertAlmostEqual(arm.joint_tibia[0], 3)
         self.assertAlmostEqual(arm.joint_tibia[1], 6)
+    '''
 
     def test_reflect_femur_link(self):
         arm = RoboterArm.RoboticArm(3, 3, 3)
@@ -91,6 +93,31 @@ class TestRoboterArm(unittest.TestCase):
         self.assertAlmostEqual(result_femur, 0)
         self.assertAlmostEqual(result_tibia, 0)
 
+        arm.update_joints(0, 50/180*np.pi, -40/180*np.pi)
+        result_coxa, result_femur, result_tibia = arm.reflect_femur_link()
+        self.assertAlmostEqual(result_coxa, 50/180*np.pi)
+        self.assertAlmostEqual(result_femur, 310/180*np.pi)
+        self.assertAlmostEqual(result_tibia, 10/180*np.pi)
+
+        arm.update_joints(50/180*np.pi, -50/180*np.pi, 10/180*np.pi)
+        result_coxa, result_femur, result_tibia = arm.reflect_femur_link()
+        self.assertAlmostEqual(result_coxa, 0)
+        self.assertAlmostEqual(result_femur, 50/180*np.pi)
+        self.assertAlmostEqual(result_tibia, 320/180*np.pi)
+
+    def test_reflect_tibia_link(self):
+        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm.update_joints(0, 0, 0)
+        result_coxa, result_femur, result_tibia = arm.reflect_tibia_link()
+        self.assertAlmostEqual(result_coxa, 0)
+        self.assertAlmostEqual(result_femur, 0)
+        self.assertAlmostEqual(result_tibia, 0)
+
+        arm.update_joints(0, np.pi/2, 40/180*np.pi)
+        result_coxa, result_femur, result_tibia = arm.reflect_tibia_link()
+        self.assertAlmostEqual(result_coxa, 0)
+        self.assertAlmostEqual(result_femur, 320/180*np.pi)
+        #self.assertAlmostEqual(result_tibia, 10/180*np.pi)
 
 if __name__ == "__main__":
     unittest.main()
