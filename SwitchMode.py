@@ -1,8 +1,8 @@
 import config
 import Geometrie
 import PotentialFields as pf
-
-# I think this set thingy is not doing what its supposed to do TODO
+import RoboterArm
+import numpy as np
 
 # Current mode
 # 0 : normal mode
@@ -14,6 +14,7 @@ current_mode = 0
 # Calculate new goal position for the elbow
 def switch_to_mode_coxa(arm):
     config.goal_reflect_femur_link = arm.reflect_femur_link()
+    print(f"goal angles femur = {config.goal_reflect_femur_link}")
     return
 
 def switch_to_mode_tibia(arm):
@@ -53,14 +54,10 @@ def choose_mode(arm):
         # If no: Continue in normal mode
         else:
             return 0
-    
-
 
     # Current mode: coxa mode
     if(current_mode == 1):
-        # Elbow near coxa elbow goal? TODO this doesn't make sense
-        error_elbow = pf.cartesian_distance(config.goal_reflect_femur_link[1], arm.joint_coxa)
-        if(error_elbow < 0.1):
+        if(arm_near_target_angles(arm, config.goal_reflect_femur_link)):
             # If yes: normal/tibia mode
             return 0
         # If no: Continue in coxa mode
@@ -69,11 +66,20 @@ def choose_mode(arm):
 
     # Current mode: tibia mode
     if(current_mode == 2):
-        # Elbow near tibia goal? TODO this doesn't make sense
-        error_elbow = pf.cartesian_distance(config.goal_reflect_tibia_link[2], arm.joint_femur)
-        if(error_elbow < 0.1):
+        # Elbow near tibia goal?
+        if(arm_near_target_angles(arm, config.goal_reflect_tibia_link)):
             # If yes: normal
             return 0
         # If no: Continue in tibia mode
         else:
             return 2
+        
+def arm_near_target_angles(arm :RoboterArm, target_angles, tolerance = 0.001):
+    if(np.abs(arm.theta_coxa - target_angles[0]) > tolerance):
+        return False
+    elif(np.abs(arm.theta_femur - target_angles[1]) > tolerance):
+        return False
+    elif(np.abs(arm.theta_tibia - target_angles[2]) > tolerance):
+        return False
+    else:
+        return True

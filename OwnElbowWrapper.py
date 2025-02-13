@@ -108,7 +108,6 @@ def update(frame):
         plt.figure(figure_distance_to_target.number)
         plt.close()
 
-    # TODO calculate new thetas here
     current_mode = sm.choose_mode(arm)
     print(f"Current Mode = {current_mode}")
     if (current_mode == 0):

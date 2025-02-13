@@ -155,7 +155,7 @@ class RoboticArm:
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return
     
-    def move_to_target(self, target_angles, step_size=0.001, tolerance=0.01):
+    def move_to_target(self, target_angles, step_size=0.02, tolerance=0.01):
         """
         Bewegt den Roboterarm in kleinen Schritten zu den Zielwinkeln.
 
@@ -185,9 +185,10 @@ class RoboticArm:
             delta_angles = np.array(target_angles) - np.array([new_theta_coxa, new_theta_femur, new_theta_tibia])
         '''
         delta_angles = np.array(target_angles) - np.array([self.theta_coxa, self.theta_femur, self.theta_tibia])
-        new_theta_coxa = np.sign(delta_angles[0]) * np.minimum(np.abs(delta_angles[0]), step_size)
-        new_theta_femur = np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size)
-        new_theta_tibia = np.sign(delta_angles[2]) * np.minimum(np.abs(delta_angles[2]), step_size)
+        new_theta_coxa = self.theta_coxa + np.sign(delta_angles[0]) * np.minimum(np.abs(delta_angles[0]), step_size)
+        new_theta_femur = self.theta_femur + np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size)
+        new_theta_tibia = self.theta_tibia + np.sign(delta_angles[2]) * np.minimum(np.abs(delta_angles[2]), step_size)
+        print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
 
@@ -228,7 +229,13 @@ class RoboticArm:
         # Dritten Winkel im Dreieck über Innnenwinkelsumme berechnen
         gamma = np.pi - alpha + factor * (np.pi - theta_femur)
 
-        theta_tibia = (theta_tibia + factor*2*gamma) % (np.pi*2)
+        theta_tibia = (theta_tibia + factor*2*gamma)
+
+        theta_coxa = theta_coxa % (np.pi*2)
+        theta_femur = theta_femur % (np.pi*2)
+        theta_tibia = theta_tibia % (np.pi*2)
+        
+        print(f"Reflect femur link result: coxa = {theta_coxa}, femur = {theta_femur}, tibia = {theta_tibia}")
 
         return theta_coxa, theta_femur, theta_tibia
 
@@ -265,6 +272,11 @@ class RoboticArm:
         # Theta Coxa berechnen
         theta_femur = theta_femur + factor * alpha*2
 
+        theta_coxa = theta_coxa % (np.pi*2)
+        theta_femur = theta_femur % (np.pi*2)
+        theta_tibia = theta_tibia % (np.pi*2)
+
+        print(f"Reflect tibia link result: coxa = {theta_coxa}, femur = {theta_femur}, tibia = {theta_tibia}")
         return theta_coxa, theta_femur, theta_tibia
 
 
