@@ -8,7 +8,7 @@ import numpy as np
 # 0 : normal mode
 # 1 : coxa mode
 # 2 : tibia mode
-current_mode = 0 
+#current_mode = 0 
 
 # Call this methods, if there is a switch to a new mode. When there ought to be a change in the elbow posture, 
 # Calculate new goal position for the elbow
@@ -36,9 +36,9 @@ set_modes = {"ModeCoxa":mode_coxa, "ModeTibia":mode_tibia, "Normal":mode_normal}
 # Continouusly reeavaluates the current mode and determines if it is still the current one or veranlasst TODO a switch
 # Output: 
 #   Current mode
-def choose_mode(arm):
+def choose_mode(arm, current_mode):
     # Current mode: normal
-    if(current_mode == 0):
+    if(current_mode == 0 or current_mode == None):
         # Near obstacle?
         distance_to_obstacle = arm.distance_arm_obstacle(config.center, config.radius)
         if(distance_to_obstacle < 2):
@@ -74,7 +74,7 @@ def choose_mode(arm):
         else:
             return 2
         
-def arm_near_target_angles(arm :RoboterArm, target_angles, tolerance = 0.001):
+def arm_near_target_angles(arm :RoboterArm.RoboticArm, target_angles, tolerance = 0.001):
     if(np.abs(arm.theta_coxa - target_angles[0]) > tolerance):
         return False
     elif(np.abs(arm.theta_femur - target_angles[1]) > tolerance):
@@ -82,4 +82,5 @@ def arm_near_target_angles(arm :RoboterArm, target_angles, tolerance = 0.001):
     elif(np.abs(arm.theta_tibia - target_angles[2]) > tolerance):
         return False
     else:
+        print(f"True: arm near target angles")
         return True

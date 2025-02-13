@@ -19,14 +19,16 @@ start_time = time.time() # To track the duration of the test
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
 
-coxa_elbow_goal = (0,0)
+#coxa_elbow_goal = (0,0)
+current_mode = 0
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
 # Set axis limits considering the link lengths
-ax.set_xlim(-(config.coxa_length +config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
-ax.set_ylim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
+arm_length = config.coxa_length + config.femur_length + config.tibia_length
+ax.set_xlim(-arm_length,  arm_length)
+ax.set_ylim(-arm_length,  arm_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
@@ -36,6 +38,15 @@ figure_distance_to_target, ax2 = plt.subplots()
 x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
+
+# Plot: Searched Points of the A-Star Algorithm
+search_points_plot, ax_search_points = plt.subplots()
+plt.figure(search_points_plot.number) # To make sure, the correct plot is the active one
+ax_search_points.set_aspect('equal')
+# Set axis limits considering the link lengths
+
+ax_search_points.set_xlim(-arm_length,  arm_length)
+ax_search_points.set_ylim(-arm_length,  arm_length)
 
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
@@ -57,10 +68,22 @@ def init():
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     return line, point, obstacle_circle
 
+# A-Star Algorithm
+initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
+time_start_algorithm = time.time()
+path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
+time_end_algorithm = time.time()
+config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
+
+
+next_node_index = 0
+
 # Updates the frame
 def update(frame):
     global previous_end_effector_position
     global covered_distance
+    global next_node_index
+    global current_mode
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -74,6 +97,8 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
+        plt.figure(search_points_plot.number)
+        plt.close()
         return line, point, #obstacle_circle
 
     # Calculate distance arm to obstacle. If negative, error and abort execution
@@ -83,6 +108,8 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+        plt.figure(search_points_plot.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -107,8 +134,13 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
+        plt.figure(search_points_plot.number)
+        plt.close()
 
-    current_mode = sm.choose_mode(arm)
+
+    if (current_mode == None):
+        current_mode = 0
+    current_mode = sm.choose_mode(arm, current_mode)
     print(f"Current Mode = {current_mode}")
     if (current_mode == 0):
         arm.inverse_kinematics((config.target_x, config.target_y))
@@ -138,11 +170,6 @@ def update(frame):
 frames = np.linspace(0, 2 * np.pi, config.delta_t)
 
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
-
-# if Mode coxa: Nicht immer neu berechnen! Nur wenn in den Mode gegangen wird!
-#coxa_elbow_goal = Geometrie.reflect_on_hypotenuse(config.center[0], config.center[1], 0, 0, arm.joint_coxa[0], arm.joint_coxa[1])
-
-# Femur analog
 plt.ioff()
 plt.show()
 

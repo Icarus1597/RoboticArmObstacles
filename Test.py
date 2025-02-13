@@ -29,8 +29,8 @@ config.theta_coxa = 0.01
 config.theta_femur = 0.01
 config.theta_tibia = 0.01
 
-with open("testresults.txt", "a") as file:
-    file.write(f"First Set of Tests. coxa = {config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
+#with open("testresults.txt", "a") as file:
+#    file.write(f"First Set of Tests. coxa = {config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
 
 # Position and radius of the obstacle (circle)
 config.center = (-6, 0)

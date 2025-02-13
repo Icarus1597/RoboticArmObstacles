@@ -218,7 +218,14 @@ class RoboticArm:
         length_coxa_tibia = np.sqrt(vector_coxa_tibia_1**2 + vector_coxa_tibia_2**2)
 
         # Calculate alpha
-        alpha = np.arccos((vector_coxa_1*vector_coxa_tibia_1 + vector_coxa_2*vector_coxa_tibia_2)/(self.length_femur*length_coxa_tibia))
+        # Definitionsmenge arccos: [-1, 1]
+        temp = (vector_coxa_1*vector_coxa_tibia_1 + vector_coxa_2*vector_coxa_tibia_2)/(self.length_femur*length_coxa_tibia)
+
+        if (np.abs(temp)>1):
+            print(f"Reflect Femur Link: Value for Arccos out of range")
+            temp = np.sign(temp)* abs(temp) % 1
+        print(f"Temp femur = {temp}")
+        alpha = np.arccos(temp)
         
 
         # Calculate Theta Coxa
@@ -267,7 +274,14 @@ class RoboticArm:
         length_femur_ee = np.sqrt(vector_femur_ee_1**2 + vector_femur_ee_2**2)
 
         # Calculate alpha
-        alpha = np.arccos((vector_femur_1*vector_femur_ee_1 + vector_femur_2*vector_femur_ee_2)/(self.length_femur*length_femur_ee))
+        temp = (vector_femur_1*vector_femur_ee_1 + vector_femur_2*vector_femur_ee_2)/(self.length_femur*length_femur_ee)
+        if (np.abs(temp)>1):
+            print(f"Reflect Tibia Link: Value for Arccos out of range")
+            temp = np.sign(temp)* abs(temp) % 1
+        #print(f"Temp tibia = {temp}")
+
+        alpha = np.arccos(temp)
+
 
         # Theta Coxa berechnen
         theta_femur = theta_femur + factor * alpha*2
