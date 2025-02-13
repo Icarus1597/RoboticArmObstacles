@@ -1,16 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import PotentialFields as pf
-import Obstacles
+import Geometrie
 import config
 import time
 
 PI = np.pi
 
 class AStarNode:
-    # Initializes the Point for the A-Star search
-    # Inputs:
+
     def __init__(self, position, goal_point):
+        """ Initializes the intial point for the A* search
+
+        Args:
+            position ((int, int)): position of the initial point
+            goal_point ((int, int)): position of the goal point
+        """
         self.position = position
         self.goal_point = goal_point
         self.true_cost = 0
@@ -18,8 +23,17 @@ class AStarNode:
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list, search_points_plot) :
-        #for node in open_list:
-            #print(f"Node: {node.position}")
+        """ Searches for the node with the smallest evaluation_function
+            Checks if the node is near the target (-> terminates) or is too close to the obstacle (-> abort)
+
+        Args:
+            open_list (node[]): list of not yet searched nodes
+            closed_list (node[]): list of already searched nodes
+            search_points_plot (_type_): plot that displays the searched nodes
+
+        Returns:
+            node[]: if target reached, list of the nodes on the path. Else, return nothing
+        """
 
         if(len(open_list)== 0 ):
             print("FAIL: Goal point cannot be reached")
@@ -41,7 +55,7 @@ class AStarNode:
             print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
-        if(Obstacles.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
+        if(Geometrie.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
             return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()
@@ -57,23 +71,29 @@ class AStarNode:
                         neighbour.evaluation_function = neighbour_evaluation_function
         return
 
-    # Determines if the node is in the list or not, comparing the position
-    # Input:
-    #   list: list to search the node
-    # Output:
-    #   True, if there is a node in the list at the same position
-    #   False, if there is not a node in the list at the same position
     def is_contained_in_list(self, list):
+        """ Determines if the node is in the list or not, comparing the positions.
+
+        Args:
+            list (node[]): list of nodes
+
+        Returns:
+            bool: True, if node is contained in list, else False
+        """
         for node in list:
             if (np.abs(node.position[0] - self.position[0]) < config.distance_to_neighbour/10 and np.abs(node.position[1]- self.position[1])< config.distance_to_neighbour/10):
                 return True
         return False
 
-    
-    # Searches for the node with the smallest evaluation function in the open list
-    # Output:
-    #   node_smallest_evaluation_function: The node with the smallest evaluation function in open_list
     def smallest_evaluation_function(self, open_list):
+        """ Searches for the node with the smallest evaluation function in the open list.
+
+        Args:
+            open_list (node[]): list of nodes
+
+        Returns:
+            node: The node with the smallest evaluation function in open_list
+        """
         if(open_list == None):
             return -1
         node_smallest_evaluation_function = open_list[0]
@@ -84,13 +104,12 @@ class AStarNode:
                 node_smallest_evaluation_function = node
         return node_smallest_evaluation_function
     
-    # Generates the neighbouring nodes of this node
-    # Parameters:
-    #   number_neighbouring_nodes:  Number of neighbouring nodes, typically 4/8/16
-    #   distance_to_neighbour:      Distance between current node and the neighbours
-    # Output:
-    #   neighbouring_nodes:         The neighbouring nodes of Type Node
     def generate_neighbouring_nodes(self):
+        """ Generates the neighbouring nodes of this node.
+
+        Returns:
+            node[]: list of the neighbouring nodes of this ndoe
+        """
         neighbouring_nodes = []
         for i in range (config.number_neighboring_nodes):
             alpha = 2 * PI / config.number_neighboring_nodes * i
@@ -101,11 +120,12 @@ class AStarNode:
         
         return neighbouring_nodes
     
-    # Calculates the evaluation function of the node with cartesian distance
-    # Output: 
-    #   g : Total cost of current node
-    #   h : Estimated cost from current node to goal point
     def calculate_evaluation_function(self):
+        """ Calculates the evaluation function of the node with cartesian distance.
+
+        Returns:
+            float: value of the evaluation function of this node
+        """
         if(self.parent_node == None):
             self.true_cost = 0
         else:
@@ -121,6 +141,14 @@ class AStarNode:
     #   -1 : If no path is found
     #   path_node_list: list of the nodes of the path found
     def iterative_search_wrapper(self, search_points_plot):
+        """Iterativly searches nodes in open_list until target is reached of open_list is empty.
+
+        Args:
+            search_points_plot (_type_): plot that displays the searched nodes
+
+        Returns:
+            node[]: If path to target found, else return -1
+        """
         open_list = []
         closed_list = []
         #initial_point = AStarNode(arm.end_effector, goal_point)
@@ -132,10 +160,12 @@ class AStarNode:
                 return result
         return -1
     
-    # Backtracking after finding the shortest path 
-    # Output:
-    #   path_node_list: return a list of all the nodes on the shortest path 
     def path_node_list(self):
+        """ Backtracking after finding the shortest path. Reverses the list.
+
+        Returns:
+            node[]: return a list of all the nodes on the shortest path, in correct order from initial point to goal point.
+        """
         path_node_list = []
         current_node = self
         path_node_list.append(self)

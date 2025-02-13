@@ -7,8 +7,8 @@ import time
 import autograd.numpy as anp
 import config
 import AStarAlgorithm
-import Obstacles
 import SwitchMode as sm
+import Geometrie
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -57,8 +57,12 @@ if plt.get_backend() == 'TkAgg':
     # Set position of figure_distance_to_target
     figure_distance_to_target.canvas.manager.window.geometry("+1000+100")
 
-# Initializes the figure
 def init():
+    """Initializes the figure with the robotic arm, target point and one obstacle in shape of a circle.
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
@@ -76,6 +80,14 @@ next_node_index = 0
 
 # Updates the frame
 def update(frame):
+    """ Updates the frame. Calculates the new thetas based on A* algorithm for the Robotic Arm and updates its position.
+
+    Args:
+        frame (_type_): _description_
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     global previous_end_effector_position
     global covered_distance
     global next_node_index
@@ -95,7 +107,7 @@ def update(frame):
         return line, point, #obstacle_circle
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
+    distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Punkte nacheinander abfahren path node list
     arm.inverse_kinematics(path_node_list[next_node_index].position)
@@ -115,7 +127,7 @@ def update(frame):
     
 
     # Stops, when target reached/ close to target
-    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    distance_to_target = Geometrie.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
@@ -141,7 +153,7 @@ def update(frame):
     figure_distance_to_target.canvas.draw()
 
     # Track covered distance
-    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
 

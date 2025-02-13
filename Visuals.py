@@ -9,7 +9,7 @@ from shapely.geometry import Point, Polygon
 from matplotlib.patches import Polygon as mpl_polygon
 import config
 import AStarAlgorithm
-import Obstacles
+import Geometrie
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -50,6 +50,11 @@ if plt.get_backend() == 'TkAgg':
 
 # Initializes the figure
 def init():
+    """ Initializes the figure that displays the model of the robotic arm, target point and circle-shaped obstacle
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
@@ -62,6 +67,13 @@ def init():
 
 # Updates the frame
 def update(frame):
+    """ Updates the frame. Calculates the new thetas for the Robotic Arm and updates its position based on potential field method
+    Args:
+        frame (_type_): _description_
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     global previous_end_effector_position
     global covered_distance
 
@@ -90,9 +102,6 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
-    
-
-
     # Calculations for the movement of joints: Attractive Velocity
     v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
     jacobian_matrix = arm.jacobian_matrix()
@@ -101,7 +110,7 @@ def update(frame):
 
    
     # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Obstacles.distance_to_circle(config.center, config.radius, arm.end_effector)
+    distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
     '''
     if(distance == 0):
         print(f"ERROR: End-Effector touches the obstacle!")
@@ -146,7 +155,7 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    distance_to_target = Geometrie.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
@@ -199,7 +208,7 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
-    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
 

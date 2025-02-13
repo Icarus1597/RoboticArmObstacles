@@ -7,7 +7,6 @@ import time
 import autograd.numpy as anp
 import config
 import AStarAlgorithm
-import Obstacles
 import Geometrie
 import SwitchMode as sm
 
@@ -63,6 +62,11 @@ if plt.get_backend() == 'TkAgg':
 
 # Initializes the figure
 def init():
+    """Initializes the figure with the robotic arm, target point and one obstacle in shape of a circle.
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
@@ -80,6 +84,15 @@ next_node_index = 0
 
 # Updates the frame
 def update(frame):
+    """ Updates the frame. Calculates the new thetas for the Robotic Arm and updates its position based on A* algorithm 
+        and custom elbow posture manipulation
+
+    Args:
+        frame (_type_): _description_
+
+    Returns:
+        _type_: shapes to be displayed in the plot
+    """
     global previous_end_effector_position
     global covered_distance
     global next_node_index
@@ -121,7 +134,7 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    distance_to_target = pf.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    distance_to_target = Geometrie.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
@@ -160,7 +173,7 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
-    step_covered_distance = pf.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
 

@@ -1,31 +1,35 @@
 import numpy as np
-from numpy.linalg import LinAlgError
 import autograd.numpy as anp
 import config
 import Geometrie
 
-# Class RoboticArm:
-# Model of a robotic arm with three joints
-# with the corresponding link angles and joint lengths
-# with methods to initialize the arm, update the position etc.
+""" Class RoboticArm:
+    Model of a robotic arm with three joints
+    with the corresponding link angles and joint lengths
+    with methods to initialize the arm, update the position, inverse kinematics etc.
+"""
 class RoboticArm:
-    # Initializes the arm
-    # Inputs:
-    #   length_coxa:  length of the coxa joint
-    #   length_femur: length of the femur joint
-    #   length_tibia: length of the tibia joint
     def __init__(self, length_coxa, length_femur, length_tibia):
+        """ Initializes the arm
+
+        Args:
+            length_coxa (float): length of the coxa joint
+            length_femur (float): length of the femur joint
+            length_tibia (float): length of the tibia joint
+        """
         self.length_coxa = length_coxa
         self.length_femur = length_femur
         self.length_tibia = length_tibia
         self.update_joints(0, 0, 0)
 
-    # Updates the positions of the joints (forward kinematics)
-    # Inputs:
-    #   theta_coxa:  angle of the coxa link
-    #   theta_femur: angle of the femur link
-    #   theta_tibia: angle of the tibia link
     def update_joints(self, theta_coxa, theta_femur, theta_tibia):
+        """Updates the positions of the joints (forward kinematics)
+
+        Args:
+            theta_coxa (float): angle of the coxa link
+            theta_femur (float): angle of the femur link
+            theta_tibia (float): angle of the tibia link
+        """
         
         self.theta_coxa = theta_coxa
         self.theta_femur = theta_femur
@@ -47,20 +51,12 @@ class RoboticArm:
         self.joint_tibia = anp.array([self.joint_tibia_x, self.joint_tibia_y], dtype=anp.float64)
         self.end_effector = self.joint_tibia
 
-        #print(f"theta_coxa:{theta_coxa}, theta_femur:{theta_femur}, theta_tibia:{theta_tibia}")
-        #print(f"joint_coxa:{self.joint_coxa_x},{self.joint_coxa_y}, joint_femur:{self.joint_femur_x}, {self.joint_femur_y}")
-
-    # Calculate the Jacobian Matrix
-    # Inputs:
-    #   length_coxa:  length of the coxa joint
-    #   length_femur: length of the femur joint
-    #   length_tibia: length of the tibia joint
-    #   theta_coxa:   coxa angle
-    #   theta_femur:  femur angle
-    #   theta_tibia:  tibia angle
-    # Ouptut:
-    #   j_matrix:     jacobian_matrix
     def jacobian_matrix(self) :
+        """ Calculate the Jacobian Matrix.
+
+        Returns:
+            np.array: jacobian_matrix 2x3
+        """
         j_matrix = np.array([
             [-self.length_coxa * np.sin(self.theta_coxa) - self.length_femur * np.sin(self.theta_coxa + self.theta_femur) - self.length_tibia * np.sin(self.theta_coxa + self.theta_femur + self.theta_tibia),
             -self.length_femur * np.sin(self.theta_coxa + self.theta_femur) - self.length_tibia * np.sin(self.theta_coxa + self.theta_femur + self.theta_tibia),
@@ -73,23 +69,28 @@ class RoboticArm:
         ])
         return j_matrix
   
-    # Calculate the Inverse of the Jacobian Matrix. If given matrix is singular, calculates the pseudoinverse instead
-    # Input:
-    #   matrix: matrix, to which the inverse shall be calculated
-    # Output:
-    #   inv_matrix: Inverse of matrix. If matrix was singular, pseudoinverse
     def inverse_jacobian_matrix(self, matrix) :
+        """Calculate the Pseudoinverse of the Jacobian Matrix
+
+        Args:
+            matrix (np.array): jacobian matrix
+
+        Returns:
+            np.array: pseudoinverse of given matrix
+        """
         return np.linalg.pinv(matrix)
         
-
-    
-    # Calculates the minimum distance between all links of the arm and an circle-shaped obstacle
-    # Input: 
-    #   radius: Radius of the obstacle
-    #   center: center of the obstacle
-    # Output: 
-    #   distance: minimum distance between links and obstacle
     def distance_arm_obstacle(self, center, radius) :
+        """ Calculates the minimum distance between all links of the arm and an circle-shaped obstacle
+            Prints to the output shell if arm is too close to the obstacle or already collided with it
+
+        Args:
+            center ((float, float)): center point of the obstacle
+            radius (float): radius of the obstacle
+
+        Returns:
+            float: minimum distance between links and obstacle
+        """
         # Calculates distance between each link and circle-obstacle
         distance_coxa = Geometrie.distance_segment_point(center[0], center[1], 0, 0, self.joint_coxa_x, self.joint_coxa_y) - radius
         distance_femur = Geometrie.distance_segment_point(center[0], center[1], self.joint_coxa_x, self.joint_coxa_y, self.joint_femur_x, self.joint_femur_y) - radius
@@ -118,30 +119,35 @@ class RoboticArm:
         # Checks if arm is closer to the obstacle than the minimum required distance
         if(distance_coxa < config.min_distance_to_obstacle):
             print(f"WARNING: Coxa too close to obstacle")
-            config.mode_ellbow_coxa = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Coxa-Link too close to the obstacle!\n")
+
         if(distance_femur < config.min_distance_to_obstacle):
             print(f"WARNING: Femur too close to obstacle")
-            config.mode_ellbow_coxa = True
-            config.mode_ellbow_femur = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Femur-Link too close to the obstacle!\n")
+
         if(distance_tibia < config.min_distance_to_obstacle):
             print(f"WARNING: Tibia too close to obstacle")
-            config.mode_ellbow_femur = True
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link too close to the obstacle!\n")
+
         return min(distance_coxa, distance_femur, distance_tibia)
 
 
-    def error_target_end_effector(self, target):
-        return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
+    #def error_target_end_effector(self, target):
+    #    return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
         
 
     # Nicht inverse_kinematics im eigentlichen Sinne! Bewegt joint langsam zur Zielposition
     def inverse_kinematics(self, target):
-        error = self.error_target_end_effector(target)
+        """ Moves end effector slowly to target position using approximation via inverse jacobian matrix
+
+        Args:
+            target ((float, float)): position of the target point
+        """
+        #error = self.error_target_end_effector(target)
+        error = Geometrie.cartesian_distance(target, self.end_effector)
         jacobian_matrix = self.jacobian_matrix()
         inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
         delta_theta = inverse_jacobian_matrix @ error
@@ -156,34 +162,13 @@ class RoboticArm:
         return
     
     def move_to_target(self, target_angles, step_size=0.02, tolerance=0.01):
-        """
-        Bewegt den Roboterarm in kleinen Schritten zu den Zielwinkeln.
+        """ Moves arm linkage in small steps to target angles
 
-        - target_angles: Ein Array mit den Zielwinkeln [theta_coxa, theta_femur, theta_tibia].
-        - step_size: Die Schrittgröße für die Bewegung.
-        - tolerance: Die Toleranz, bei der die Bewegung stoppt, wenn die Differenz zwischen aktuellen und Zielwinkeln kleiner ist.
+        Args:
+            target_angles(float[]): array with the target angles [theta_coxa, theta_femur, theta_tibia].
+            step_size(float): step size for the movement
+            tolerance(float): stops if difference between current and target angles smaller than the tolerance
         """
-
-        '''
-        # Berechne die Differenz zwischen Zielwinkeln und aktuellen Winkeln
-        delta_angles = np.array(target_angles) - np.array([self.theta_coxa, self.theta_femur, self.theta_tibia])
-        
-        # Solange die Differenz größer als die Toleranz ist, bewege den Arm
-        while np.linalg.norm(delta_angles) > tolerance:
-            # Bewege die Gelenke in kleinen Schritten
-            step = np.sign(delta_angles) * np.minimum(np.abs(delta_angles), step_size)
-            
-            # Berechne die neuen Winkel
-            new_theta_coxa = self.theta_coxa + step[0]
-            new_theta_femur = self.theta_femur + step[1]
-            new_theta_tibia = self.theta_tibia + step[2]
-            
-            # Aktualisiere die Gelenkwinkel des Arms
-            self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
-            
-            # Berechne die neue Differenz
-            delta_angles = np.array(target_angles) - np.array([new_theta_coxa, new_theta_femur, new_theta_tibia])
-        '''
         delta_angles = np.array(target_angles) - np.array([self.theta_coxa, self.theta_femur, self.theta_tibia])
         new_theta_coxa = self.theta_coxa + np.sign(delta_angles[0]) * np.minimum(np.abs(delta_angles[0]), step_size)
         new_theta_femur = self.theta_femur + np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size)
@@ -193,6 +178,11 @@ class RoboticArm:
 
 
     def reflect_femur_link(self):
+        """ Reflects the femur link to bring it to the other side. The position of the tibia link stays the same
+
+        Returns:
+            float[]: array containing the target angles [theta_coxa, theta_femur, theta_tibia]
+        """ 
         # Current angles of the links
         theta_coxa = self.theta_coxa  
         theta_femur = self.theta_femur  # Reflect
@@ -248,6 +238,12 @@ class RoboticArm:
 
 
     def reflect_tibia_link(self):
+        """ Reflects the tibia link to be on the other side of the arm linkage. The posture of the coxa joint stays the same.
+            The position of the end effector is also the same.
+
+        Returns:
+            float[]: array containing the target angles [theta_coxa, theta_femur, theta_tibia]
+        """
         # Current angles of the links
         theta_coxa = self.theta_coxa  # Stays the same
         theta_femur = self.theta_femur  # Calculate

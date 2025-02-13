@@ -70,7 +70,7 @@ number_neighboring_nodes = 8
 tolerance = 0.5
 learning_rate = 0.1
 
-# Change Ellbow Posture Mode
+# Change Elbow Posture Mode
 goal_reflect_femur_link = []
 
 goal_reflect_tibia_link = []

@@ -1,6 +1,5 @@
 import config
 import Geometrie
-import PotentialFields as pf
 import RoboterArm
 import numpy as np
 
@@ -10,14 +9,22 @@ import numpy as np
 # 2 : tibia mode
 #current_mode = 0 
 
-# Call this methods, if there is a switch to a new mode. When there ought to be a change in the elbow posture, 
-# Calculate new goal position for the elbow
 def switch_to_mode_coxa(arm):
+    """ Switches to the mode where the femur link needs to change position. Calculate target angles for the new position.
+
+    Args:
+        arm (RoboterArm.RoboticArm): Robotic arm to manipulate
+    """
     config.goal_reflect_femur_link = arm.reflect_femur_link()
     print(f"goal angles femur = {config.goal_reflect_femur_link}")
     return
 
 def switch_to_mode_tibia(arm):
+    """Switches to the mode where the tibia link needs to change position. Calculate target angles for the new position.
+
+    Args:
+        arm (RoboterArm.RoboticArm): Robotic arm to manipulate
+    """
     config.goal_reflect_tibia_link = arm.reflect_tibia_link()
     return
 
@@ -30,13 +37,21 @@ def switch_to_mode_normal():
 # mode_tibia: Switches the position of the tibia link to 'point' away from the obstacle
 # normal: The elbows are not near the obstacle or are in the correct posture, the movement of the arm is 
 # calculated by the algorithm
-set_modes = {"ModeCoxa":mode_coxa, "ModeTibia":mode_tibia, "Normal":mode_normal}
 '''
 
-# Continouusly reeavaluates the current mode and determines if it is still the current one or veranlasst TODO a switch
+# Continouusly reeavaluates the current mode and determines if it is still the current one or cause a switch
 # Output: 
 #   Current mode
 def choose_mode(arm, current_mode):
+    """Continouusly reeavaluates the current mode and determines if it is still the current one or cause a switch
+
+    Args:
+        arm (RoboterArm.RoboticArm): Robotic arm to manipulate
+        current_mode (int): current mode of the robotic arm
+
+    Returns:
+        int: new current mode of the robotic arm
+    """
     # Current mode: normal
     if(current_mode == 0 or current_mode == None):
         # Near obstacle?
@@ -75,6 +90,16 @@ def choose_mode(arm, current_mode):
             return 2
         
 def arm_near_target_angles(arm :RoboterArm.RoboticArm, target_angles, tolerance = 0.001):
+    """ Checks if the arm posture is within tolerance to the target_angles
+
+    Args:
+        arm (RoboterArm.RoboticArm): Robotic Arm to manipulate
+        target_angles (float[]): target angles for the links of the robotic arm [theta_coxa, theta_femur, theta_tibia]
+        tolerance (float, optional): how big the tolerance to the target angles is. Defaults to 0.001.
+
+    Returns:
+        _type_: _description_
+    """
     if(np.abs(arm.theta_coxa - target_angles[0]) > tolerance):
         return False
     elif(np.abs(arm.theta_femur - target_angles[1]) > tolerance):

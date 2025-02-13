@@ -1,6 +1,8 @@
 import numpy as np
 import math
+import autograd.numpy as anp
 
+'''
 # Function to calculate the reflection of a point P(x0, y0) across a line defined by points (x1, y1) and (x2, y2)
 def reflect_on_hypotenuse(x0, y0, x1, y1, x2, y2):
     # Calculate the reflection of the point (x0, y0) across the line (x1, y1) - (x2, y2)
@@ -37,28 +39,36 @@ def reflect_on_hypotenuse(x0, y0, x1, y1, x2, y2):
     y_reflection = 2 * y_intersection - y0
     
     return x_reflection, y_reflection
+'''
 
-# TODO: Comment Determines, if the joint is tilted to the right (0) or to the left (1) 
-# in the perspective of the ursprung of the link
-# Input:
-#   angle
-# Output:
-#   0 if eingeschlagen to the right side
-#   1 if eingeschlagen to the left side
 def which_side_small_angle(angle):
+    """ Comment Determines, if the joint is tilted to the right (0) or to the left (1) in the perspective of the start of the link
+
+    Args:
+        angle (float): angle of the link
+
+    Returns:
+        int: 0 if tilted to the right, 1 if tilted to the left
+    """
     if(angle % (2*np.pi) < np.pi):
         return 0
     else:
         return 1
     
-
-# Calculates the minimum distance between a segment and a point
-# Input: 
-#   point: (Point) 
-#   segment_a, segment_b: (Point) start- and endpoint of the segment
-# Output:
-#   minimum distance between the segment and point
 def distance_segment_point(point_x, point_y, segment_a_x, segment_a_y, segment_b_x, segment_b_y) :
+    """ Calculates the minimum distance between a segment and a point.
+
+    Args:
+        point_x (float): x coordinate of the point
+        point_y (float): y coordinate of the point
+        segment_a_x (float): x coordinate of the starting point of the segment
+        segment_a_y (float): y coordinate of the starting point of the segment
+        segment_b_x (float): x coordinate of the end point of the segment
+        segment_b_y (float): y coordinate of the end point of the segment
+
+    Returns:
+        float: minimum distance between the segment and point
+    """
     # Calculates slope of the segment
     dx = segment_b_x - segment_a_x
     dy = segment_b_y - segment_a_y
@@ -105,15 +115,20 @@ def which_side_obstacle_to_coxa(arm, center):
         return 1
 '''
 
-# Determines, from perspective of the direction of the line, if the point is on its right side or left side
-# Input:
-#   point_x, point_y: Point on right or left side of line
-#   line_start_x, line_start_y: Starting point of the line
-#   line_end_x, line_end_y: End Point of the line
-# Ouput:
-#   0 : Point is on the left side of the line
-#   1 : Point is on the right side of the line
 def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x, line_end_y):
+    """ Determines, from perspective of the direction of the line, if the point is on its right side or left side
+
+    Args:
+        point_x (_type_): x coordinate of point
+        point_y (_type_): y coordinate of point
+        line_start_x (_type_): x coordinate of starting point of the line
+        line_start_y (_type_): y coordinate of starting point of the line
+        line_end_x (_type_): x coordinate of end point of the line
+        line_end_y (_type_): y coordinate of end point of the line
+
+    Returns:
+        int: 0, if point is on the left side of the line. 1, if point is on the right side of the line
+    """
     # Cross product to determine the side of the line
     cross_product = (line_end_x - line_start_x) * (point_y - line_start_y) - (line_end_y - line_start_y) * (point_x - line_start_x)
 
@@ -122,14 +137,17 @@ def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x,
     else:  # Point is on the right side of the line
         return 1
 
-# Determines, if the elbows need to change side or not
-# Input:
-#   arm: Robotic arm
-#   center: center of the obstacle
-# Output:
-#   bool_result_coxa: 1, if on correct side, else 0
-#   bool_result_tibia: 1, if on correct side, else 0
 def booleans_switch_elbows(arm, center):
+    """ Determines, if the elbows need to change side or not
+
+    Args:
+        arm (RoboterArm.RoboticArm): robotic arm
+        center ((float, float)): center of the obstacle
+
+    Returns:
+        int: bool_result_coxa = 1, if on correct side, else 0
+        int: bool_result_tibia = 1, if on correct side, else 0
+    """
     bool_obstacle_side = side_point_to_line(center[0], center[1], 0, 0, arm.joint_coxa[0], arm.joint_coxa[1])
     bool_coxa_elbow = which_side_small_angle(arm.theta_femur)
     bool_tibia_elbow = which_side_small_angle(arm.theta_tibia)
@@ -146,4 +164,37 @@ def booleans_switch_elbows(arm, center):
     
     return bool_result_coxa, bool_result_tibia
 
-#def angle_of_intersection(m_line_a, m_line_b):
+def distance_to_circle(center, radius, point):
+    """ Method to calculate the distance between a circle and a point.
+
+    Args:
+        center ((float, float)): position of the center of the circle
+        radius (float): radius of the circle
+        point ((float, float)): point for which the distance shall be calculated
+
+    Returns:
+        float: minimum distance between the point and the border of the circle
+    """
+    distance = cartesian_distance(center, point) - radius
+    if(distance < 0) : 
+        distance = 0
+    return distance
+
+def cartesian_distance(point1, point2):
+    """ Cartesian distance of two points
+
+    Args:
+        point1 ((float, float)): One point
+        point2 ((float, float)): Another point
+
+    Returns:
+        float: cartesian distance between point1 and point2
+    """
+    point1 = anp.array(point1, dtype=anp.float64)
+    point2 = anp.array(point2, dtype=anp.float64)
+    # Calculate the vector of difference
+    difference = point1 - point2
+    # Calculate the norm of the vector
+    distance = anp.sqrt(anp.sum(difference ** 2))
+    return distance
+
