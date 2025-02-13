@@ -115,10 +115,10 @@ def update(frame):
         arm.inverse_kinematics((config.target_x, config.target_y))
     if (current_mode == 1):
         #arm.inverse_kinematics_with_knee(arm.joint_tibia, config.goal_femur_angle)
-        arm.move_to_target(arm.reflect_coxa_and_femur())
+        arm.move_to_target(config.goal_reflect_femur_link)
     if (current_mode == 2):
         #arm.inverse_kinematics_with_tibia(arm.joint_tibia, config.goal_tibia_angle)
-        arm.move_to_target(arm.reflect_tibia_and_femur())
+        arm.move_to_target(config.goal_reflect_tibia_link)
 
     # Append the new data
     x_data_time.append(current_time - start_time)

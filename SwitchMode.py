@@ -13,17 +13,11 @@ current_mode = 0
 # Call this methods, if there is a switch to a new mode. When there ought to be a change in the elbow posture, 
 # Calculate new goal position for the elbow
 def switch_to_mode_coxa(arm):
-    config.coxa_elbow_goal = Geometrie.reflect_on_hypotenuse(config.center[0], config.center[1], 
-                                                             0, 0, 
-                                                             arm.joint_coxa[0], arm.joint_coxa[1])
-    config.goal_femur_angle = arm.calculate_femur_angle(config.coxa_elbow_goal)
+    config.goal_reflect_femur_link = arm.reflect_femur_link()
     return
 
 def switch_to_mode_tibia(arm):
-    config.tibia_elbow_goal = Geometrie.reflect_on_hypotenuse(config.center[0], config.center[1], 
-                                                              arm.joint_femur[0], arm.joint_femur[1], 
-                                                              arm.joint_tibia[0], arm.joint_tibia[1])
-    config.goal_tibia_angle = arm.calculate_tibia_angle(arm.joint_tibia, config.tibia_elbow_goal)
+    config.goal_reflect_tibia_link = arm.reflect_tibia_link()
     return
 
 def switch_to_mode_normal():
@@ -37,10 +31,6 @@ def switch_to_mode_normal():
 # calculated by the algorithm
 set_modes = {"ModeCoxa":mode_coxa, "ModeTibia":mode_tibia, "Normal":mode_normal}
 '''
-
-# Calculates based on the current mode the new thetas of the arm
-def calculate_new_thetas(): # TODO: Methode nicht an dieser Stelle nötig
-    return
 
 # Continouusly reeavaluates the current mode and determines if it is still the current one or veranlasst TODO a switch
 # Output: 
@@ -68,8 +58,8 @@ def choose_mode(arm):
 
     # Current mode: coxa mode
     if(current_mode == 1):
-        # Elbow near coxa elbow goal?
-        error_elbow = pf.cartesian_distance(config.coxa_elbow_goal, arm.joint_coxa)
+        # Elbow near coxa elbow goal? TODO this doesn't make sense
+        error_elbow = pf.cartesian_distance(config.goal_reflect_femur_link[1], arm.joint_coxa)
         if(error_elbow < 0.1):
             # If yes: normal/tibia mode
             return 0
@@ -79,8 +69,8 @@ def choose_mode(arm):
 
     # Current mode: tibia mode
     if(current_mode == 2):
-        # Elbow near tibia goal?
-        error_elbow = pf.cartesian_distance(config.coxa_elbow_goal, arm.joint_femur)
+        # Elbow near tibia goal? TODO this doesn't make sense
+        error_elbow = pf.cartesian_distance(config.goal_reflect_tibia_link[2], arm.joint_femur)
         if(error_elbow < 0.1):
             # If yes: normal
             return 0
