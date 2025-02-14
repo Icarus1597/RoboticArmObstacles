@@ -19,7 +19,7 @@ class AStarNode:
         self.position = position
         self.goal_point = goal_point
         self.true_cost = 0
-        self.estimated_cost = pf.cartesian_distance(position, goal_point)
+        self.estimated_cost = Geometrie.cartesian_distance(position, goal_point)
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list, search_points_plot) :
@@ -129,8 +129,8 @@ class AStarNode:
         if(self.parent_node == None):
             self.true_cost = 0
         else:
-            self.true_cost = self.parent_node.true_cost + pf.cartesian_distance(self.parent_node.position, self.position)
-        self.estimated_cost = pf.cartesian_distance(self.goal_point, self.position)
+            self.true_cost = self.parent_node.true_cost + Geometrie.cartesian_distance(self.parent_node.position, self.position)
+        self.estimated_cost = Geometrie.cartesian_distance(self.goal_point, self.position)
         return self.true_cost + self.estimated_cost
     
     # Wraps the iterative search and iterates over every node in open_list
