@@ -135,8 +135,8 @@ class RoboticArm:
         return min(distance_coxa, distance_femur, distance_tibia)
 
 
-    #def error_target_end_effector(self, target):
-    #    return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
+    def error_target_end_effector(self, target):
+        return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
         
 
     # Nicht inverse_kinematics im eigentlichen Sinne! Bewegt joint langsam zur Zielposition
@@ -146,8 +146,7 @@ class RoboticArm:
         Args:
             target ((float, float)): position of the target point
         """
-        #error = self.error_target_end_effector(target)
-        error = Geometrie.cartesian_distance(target, self.end_effector)
+        error = self.error_target_end_effector(target)
         jacobian_matrix = self.jacobian_matrix()
         inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
         delta_theta = inverse_jacobian_matrix @ error

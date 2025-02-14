@@ -52,11 +52,12 @@ def choose_mode(arm, current_mode):
     Returns:
         int: new current mode of the robotic arm
     """
+    print(f"choose_mode: At the begin of method. current_mode={current_mode}")
     # Current mode: normal
     if(current_mode == 0 or current_mode == None):
         # Near obstacle?
         distance_to_obstacle = arm.distance_arm_obstacle(config.center, config.radius)
-        if(distance_to_obstacle < 2):
+        if(distance_to_obstacle < 0.5):
             # If yes: Elbow posture coxa correct? -> coxa mode
             bool_coxa, bool_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
             if(bool_coxa == 0):
@@ -71,7 +72,7 @@ def choose_mode(arm, current_mode):
             return 0
 
     # Current mode: coxa mode
-    if(current_mode == 1):
+    elif(current_mode == 1):
         if(arm_near_target_angles(arm, config.goal_reflect_femur_link)):
             # If yes: normal/tibia mode
             return 0
@@ -80,7 +81,7 @@ def choose_mode(arm, current_mode):
             return 1
 
     # Current mode: tibia mode
-    if(current_mode == 2):
+    elif(current_mode == 2):
         # Elbow near tibia goal?
         if(arm_near_target_angles(arm, config.goal_reflect_tibia_link)):
             # If yes: normal
@@ -88,6 +89,9 @@ def choose_mode(arm, current_mode):
         # If no: Continue in tibia mode
         else:
             return 2
+        
+    print(f"choose_mode: Should never reach this line. current_mode={current_mode}")
+    return 0
         
 def arm_near_target_angles(arm :RoboterArm.RoboticArm, target_angles, tolerance = 0.001):
     """ Checks if the arm posture is within tolerance to the target_angles

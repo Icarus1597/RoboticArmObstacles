@@ -18,7 +18,6 @@ start_time = time.time() # To track the duration of the test
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
 
-#coxa_elbow_goal = (0,0)
 current_mode = 0
 
 # Plot: Robotic arm
@@ -153,6 +152,7 @@ def update(frame):
 
     if (current_mode == None):
         current_mode = 0
+        print(f"update: Changed current mode form None to 0")
     current_mode = sm.choose_mode(arm, current_mode)
     print(f"Current Mode = {current_mode}")
     if (current_mode == 0):
