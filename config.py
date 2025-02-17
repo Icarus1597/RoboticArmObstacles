@@ -30,11 +30,11 @@ damping_factor =  0.0001
 rho_0 = 4
 k = 15
 
-rho_0_coxa = 2
-k_coxa = 5
+rho_0_femur = femur_length
+k_femur = 20
 
-rho_0_femur = 2
-k_femur = 5
+rho_0_coxa = 3
+k_coxa = 5
 
 # zeta  : attractive potential gain
 zeta = 1.1
