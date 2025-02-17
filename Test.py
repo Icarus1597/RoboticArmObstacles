@@ -5,8 +5,15 @@ import numpy as np
 PI = np.pi
 
 current_test = 1
-algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py"]
-mode = 2 # 0 : Astar-Algorithm, 1 : Potential Fields Method, 2: OwnElbow Ansatz
+algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py"]
+
+""" mode: 
+0 : A* algorithm
+1 : Potential Fields Method without considering the whole linkage
+2 : A* algorithm with own approach to avoid obstacle with whole linkage
+3 : Naive Approach
+"""
+mode = 1 
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -29,8 +36,8 @@ config.theta_coxa = 0.01
 config.theta_femur = 0.01
 config.theta_tibia = 0.01
 
-#with open("testresults.txt", "a") as file:
-#    file.write(f"First Set of Tests. coxa = {config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
+with open("testresults.txt", "a") as file:
+    file.write(f"First Set of Tests. coxa = {config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
 
 # Position and radius of the obstacle (circle)
 config.center = (-6, 0)
