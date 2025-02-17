@@ -5,10 +5,7 @@ import matplotlib.animation as animation
 import PotentialFields as pf
 import time
 import autograd.numpy as anp
-from shapely.geometry import Point, Polygon
-from matplotlib.patches import Polygon as mpl_polygon
 import config
-import AStarAlgorithm
 import Geometrie
 
 # Update the posture of the arm
@@ -60,11 +57,6 @@ def init():
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     return line, point, obstacle_circle
 
-# A-Star Algorithm
-#initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
-#path_node_list = initial_point.iterative_search_wrapper()
-
-
 # Updates the frame
 def update(frame):
     """ Updates the frame. Calculates the new thetas for the Robotic Arm and updates its position based on potential field method
@@ -111,19 +103,7 @@ def update(frame):
    
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
-    '''
-    if(distance == 0):
-        print(f"ERROR: End-Effector touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: EE touches the obstacle\n")
-        config.number_error_ee +=1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()
-        return line, point, #obstacle_circle
-    '''
+  
     # Calculates Joint Velocities for U_rep
     v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
@@ -168,37 +148,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-    '''
-    # Checks if the other links touch the Obstacle
-    # Coxa
-    distance =  distance_to_circle(config.center, config.radius, arm.joint_coxa)
-    if(distance == 0):
-        print(f"ERROR: Coxa-Link touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
-        config.number_error_coxa += 1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()        
-        return line, point, obstacle_circle
-    
-    # Femur
-    distance = distance_to_circle(config.center, config.radius, arm.joint_femur)
-    if(distance == 0):
-        print(f"ERROR: Femur-Link touches the obstacle!")
-        with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
-        config.number_error_femur += 1
-        ani.event_source.stop()
-        plt.figure(fig.number)
-        plt.close()
-        plt.figure(figure_distance_to_target.number)
-        plt.close()
-        return line, point, obstacle_circle
-    #ani.event_source.stop() # If you want to take a closer look to the start-position
-    '''
+  
     # Append the new data
     x_data_time.append(current_time - start_time)
     y_data_distance_to_target.append(distance_to_target)

@@ -68,6 +68,32 @@ class RoboticArm:
             
         ])
         return j_matrix
+    
+    def jacobian_matrix_femur(self) :
+        """ Calculate the Jacobian Matrix for the femur link
+
+        Returns:
+            np.array: Jacobian Matrix for the femur link 2x2
+        """
+        j_matrix = np.array([
+        [-self.length_coxa * np.sin(self.theta_coxa) - self.length_femur * np.sin(self.theta_coxa + self.theta_femur),
+        -self.length_femur * np.sin(self.theta_coxa + self.theta_femur)],
+        [self.length_coxa * np.cos(self.theta_coxa) + self.length_femur * np.cos(self.theta_coxa + self.theta_femur),
+        self.length_femur * np.cos(self.theta_coxa + self.theta_femur)]
+        ])
+        return j_matrix
+    
+    def jacobian_matrix_coxa(self) :
+        """ Calculate the Jacobian Matrix for the coxa link
+
+        Returns:
+            np.array: Jacobian Matrix for coxa link 1x2 (TODO or 2x1)
+        """
+        j_matrix = np.array([
+        [-self.length_coxa * np.sin(self.theta_coxa)],  
+        [self.length_coxa * np.cos(self.theta_coxa)]   
+        ])
+        return j_matrix
   
     def inverse_jacobian_matrix(self, matrix) :
         """Calculate the Pseudoinverse of the Jacobian Matrix
