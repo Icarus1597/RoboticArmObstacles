@@ -2,9 +2,9 @@ import numpy as np
 import RoboterArm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import PotentialFields as pf
+#import PotentialFields as pf
 import time
-import autograd.numpy as anp
+#import autograd.numpy as anp
 import config
 import AStarAlgorithm
 import SwitchMode as sm
@@ -17,6 +17,9 @@ arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
 start_time = time.time() # To track the duration of the test 
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
+mode_start_position = True
+time_end_algorithm = -1
+time_start_algorithm = -1
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
@@ -34,15 +37,6 @@ figure_distance_to_target, ax2 = plt.subplots()
 x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
-
-# Plot: Searched Points of the A-Star Algorithm
-search_points_plot, ax_search_points = plt.subplots()
-plt.figure(search_points_plot.number) # To make sure, the correct plot is the active one
-ax_search_points.set_aspect('equal')
-# Set axis limits considering the link lengths
-
-ax_search_points.set_xlim(-arm_length,  arm_length)
-ax_search_points.set_ylim(-arm_length,  arm_length)
 
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
@@ -66,17 +60,11 @@ def init():
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+    #mode_start_position = True
     return line, point, obstacle_circle
 
-# A-Star Algorithm
-initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
-time_start_algorithm = time.time()
-path_node_list = initial_point.iterative_search_wrapper()
-time_end_algorithm = time.time()
-config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
-
-
 next_node_index = 0
+path_node_list = []
 
 # Updates the frame
 def update(frame):
@@ -91,6 +79,12 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
     global next_node_index
+    global mode_start_position
+    global path_node_list
+    global time_end_algorithm
+    global time_start_algorithm
+
+    
     
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
@@ -102,21 +96,34 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        plt.figure(search_points_plot.number)
-        plt.close()
         return line, point, #obstacle_circle
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
-    # Punkte nacheinander abfahren path node list
-    arm.inverse_kinematics(path_node_list[next_node_index].position)
-
-    if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
-        if(len(path_node_list) > next_node_index+1):
-            next_node_index += 1
+    if(mode_start_position):
+        target_angles = (0, np.pi/2, np.pi/2)
+        if(not sm.arm_near_target_angles(arm, target_angles)):
+            arm.move_to_target(target_angles, config.tolerance)
         else:
-            print(f"End of path node list reached")
+            mode_start_position = False
+            # A* algorithm
+            initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
+            time_start_algorithm = time.time()
+            path_node_list = initial_point.iterative_search_wrapper()
+            time_end_algorithm = time.time()
+            config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
+
+    else: 
+        # Punkte nacheinander abfahren path node list
+        #print(f"path_node_list length = {len(path_node_list)}")
+        arm.inverse_kinematics(path_node_list[next_node_index].position)
+
+        if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
+            if(len(path_node_list) > next_node_index+1):
+                next_node_index += 1
+            else:
+                print(f"End of path node list reached")
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -139,8 +146,6 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-        plt.figure(search_points_plot.number)
         plt.close()
 
     # Append the new data

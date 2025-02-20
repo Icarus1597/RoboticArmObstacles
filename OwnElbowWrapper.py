@@ -74,7 +74,7 @@ def init():
 # A-Star Algorithm
 initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
 time_start_algorithm = time.time()
-path_node_list = initial_point.iterative_search_wrapper(search_points_plot)
+path_node_list = initial_point.iterative_search_wrapper()
 time_end_algorithm = time.time()
 config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
 

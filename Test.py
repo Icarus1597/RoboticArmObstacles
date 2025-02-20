@@ -5,7 +5,7 @@ import numpy as np
 PI = np.pi
 
 current_test = 1
-algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py", "PFLinkageWrapper.py"]
+algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
 
 """ mode: 
 0 : A* algorithm
@@ -13,8 +13,9 @@ algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrappe
 2 : A* algorithm with own approach to avoid obstacle with whole linkage
 3 : Naive Approach
 4 : Potential Fields Method with considering whole linkage
+5 : A* algorithm but moves to specific start position first
 """
-mode = 4
+mode = 5
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:

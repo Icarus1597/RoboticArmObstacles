@@ -54,10 +54,14 @@ def choose_mode(arm, current_mode):
     """
     print(f"choose_mode: At the begin of method. current_mode={current_mode}")
     # Current mode: normal
-    if(current_mode == 0 or current_mode == None):
+    if(current_mode == None):
+        current_mode = 0
+        print(f"Current_mode was None, is now 0/normal_mode!")
+
+    if(current_mode == 0):
         # Near obstacle?
         distance_to_obstacle = arm.distance_arm_obstacle(config.center, config.radius)
-        if(distance_to_obstacle < 0.5):
+        if(distance_to_obstacle < config.min_distance_to_obstacle*2):
             # If yes: Elbow posture coxa correct? -> coxa mode
             bool_coxa, bool_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
             if(bool_coxa == 0):
