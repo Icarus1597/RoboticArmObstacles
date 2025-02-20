@@ -103,8 +103,8 @@ def update(frame):
 
     if(mode_start_position):
         target_angles = (0, np.pi/2, np.pi/2)
-        if(not sm.arm_near_target_angles(arm, target_angles)):
-            arm.move_to_target(target_angles, config.tolerance)
+        if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
+            arm.move_to_target(target_angles, tolerance = config.tolerance)
         else:
             mode_start_position = False
             # A* algorithm

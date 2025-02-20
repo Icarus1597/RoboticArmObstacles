@@ -186,7 +186,7 @@ class RoboticArm:
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return
     
-    def move_to_target(self, target_angles, step_size=0.02, tolerance=0.01):
+    def move_to_target(self, target_angles, step_size=0.05, tolerance=0.01):
         """ Moves arm linkage in small steps to target angles
 
         Args:
@@ -198,6 +198,7 @@ class RoboticArm:
         new_theta_coxa = self.theta_coxa + np.sign(delta_angles[0]) * np.minimum(np.abs(delta_angles[0]), step_size)
         new_theta_femur = self.theta_femur + np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size)
         new_theta_tibia = self.theta_tibia + np.sign(delta_angles[2]) * np.minimum(np.abs(delta_angles[2]), step_size)
+
         print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
