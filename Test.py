@@ -15,7 +15,7 @@ algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrappe
 4 : Potential Fields Method with considering whole linkage
 5 : A* algorithm but moves to specific start position first
 """
-mode = 5
+mode = 0
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -31,7 +31,6 @@ with open("testresults.txt", "w") as file:
     file.write(f"Maximum time for a test: timeout = {config.timeout}\n")
     file.write(f"Minimum distnace to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
 
-'''
 # 1. Spalte: Ausgestreckt nach rechts
 print("Erste Spalte 0, 0, 0")
 config.theta_coxa = 0.01
@@ -194,7 +193,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
-'''
+
 
 # 4. Spalte: Ausgestreckt nach unten
 print("Vierte Spalte 3/2*PI, 0, 0")
@@ -250,7 +249,7 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
-'''
+
 # 5. Spalte: Eingeklappt nach rechts
 print("5. Spalte 0, PI, PI")
 config.theta_coxa = 0
@@ -413,7 +412,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
-'''
+
 
 # 8. Spalte: Eingeklappt nach unten
 print("8. Spalte 3/2*PI, PI, PI")
@@ -469,7 +468,6 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
-'''
 # Rechter Winkel
 # 9. Spalte rechter Winkel, rechts
 print("9. Spalte 0, PI/2, PI/2")
@@ -633,7 +631,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
-'''
+
 
 # 12. Spalte: Rechter Winkel nach unten
 print("12. Spalte 3/2*PI, PI/2, PI/2")

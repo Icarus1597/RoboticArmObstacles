@@ -78,7 +78,7 @@ def update(frame):
         print(f"TIMEOUT")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: TIMEOUT\n")
-        config.number_timeout += 1
+        config.pf_all_links_number_timeout += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -88,9 +88,14 @@ def update(frame):
 
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
-    if(distance < config.min_distance_to_obstacle):
-        #print(f"ERROR: Arm touches the obstacle!")
+    if(distance < 0):
         ani.event_source.stop()
+        if(distance == -1):
+            config.pf_all_links_number_error_coxa +=1
+        elif(distance == -2):
+            config.pf_all_links_number_error_femur +=1
+        else:
+            config.pf_all_links_number_error_tibia +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
@@ -162,9 +167,9 @@ def update(frame):
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, covered distance = {covered_distance}\n")
-        config.number_success += 1
-        config.list_covered_distance.append(covered_distance)
-        config.list_time_needed.append(time.time() - start_time)
+        config.pf_all_links_number_success += 1
+        config.pf_all_links_list_covered_distance.append(covered_distance)
+        config.pf_all_links_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

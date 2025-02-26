@@ -35,15 +35,6 @@ x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
 
-# Plot: Searched Points of the A-Star Algorithm
-search_points_plot, ax_search_points = plt.subplots()
-plt.figure(search_points_plot.number) # To make sure, the correct plot is the active one
-ax_search_points.set_aspect('equal')
-# Set axis limits considering the link lengths
-
-ax_search_points.set_xlim(-arm_length,  arm_length)
-ax_search_points.set_ylim(-arm_length,  arm_length)
-
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
 ax2.set_xlabel('Time (s)')
@@ -73,7 +64,7 @@ initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, con
 time_start_algorithm = time.time()
 path_node_list = initial_point.iterative_search_wrapper()
 time_end_algorithm = time.time()
-config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
+config.astar_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
 
 next_node_index = 0
@@ -95,14 +86,17 @@ def update(frame):
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
-    if(distance < config.min_distance_to_obstacle):
-        #print(f"ERROR: Arm touches the obstacle!")
+    if(distance < 0):
         ani.event_source.stop()
+        if(distance == -1):
+            config.astar_number_error_coxa +=1
+        elif(distance == -2):
+            config.astar_number_error_femur +=1
+        else:
+            config.astar_number_error_tibia +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-        plt.figure(search_points_plot.number)
         plt.close()
         return line, point, #obstacle_circle
 
@@ -132,15 +126,13 @@ def update(frame):
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, calculation_time = {time_end_algorithm - time_start_algorithm}, covered distance = {covered_distance}\n")
-        config.number_success += 1
-        config.list_covered_distance.append(covered_distance)
-        config.list_time_needed.append(time.time() - start_time)
+        config.astar_number_success += 1
+        config.astar_list_covered_distance.append(covered_distance)
+        config.astar_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-        plt.figure(search_points_plot.number)
         plt.close()
 
     # Append the new data

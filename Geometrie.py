@@ -159,3 +159,45 @@ def cartesian_distance(point1, point2):
     distance = anp.sqrt(anp.sum(difference ** 2))
     return distance
 
+def angle_vector_point(vector_start, vector_end, point):
+    """ Calculates the angle between a vector consisting of a start and end point and a vector from said start point to an additional point
+
+    Args:
+        vector_start (float[]): start point of the vector, two dimensional position
+        vector_end (float[]): end point of the vector, two dimensional position
+        point (float[]): another point, two dimensional position
+
+    Returns:
+        float: angle between vector and vector from start point to the point
+    """
+    # Vector start to end
+    vector_1 = vector_end[0] - vector_start[0]
+    vector_2 = vector_end[1] - vector_start[1]
+
+    # Vector start to point
+    vector_to_point_1 = point[0] - vector_start[0]
+    vector_to_point_2 = point[1] - vector_start[1]
+
+    # Length of the vectors
+    length_vector_to_point = np.sqrt(vector_to_point_1**2 + vector_to_point_2**2)
+    length_vector = np.sqrt(vector_1**2 + vector_2**2)
+
+    # Catch error to avoid dividing through zero
+    if(length_vector == 0 or length_vector_to_point == 0):
+        print(f"Geometrie.angle_vector_point: Error: Division through zero")
+        return -1
+
+
+    # Calculate alpha
+    temp = (vector_1*vector_to_point_1 + vector_2*vector_to_point_2)/(length_vector_to_point * length_vector)
+    if (np.abs(temp)>1):
+        print(f"Geometrie, angle_coxa_joint: Value for Arccos out of range")
+        temp = np.sign(temp)* abs(temp) % 1
+    #print(f"Temp tibia = {temp}")
+
+    alpha = np.arccos(temp)
+    bool = side_point_to_line(point[0], point[1], vector_start[0], vector_start[1], vector_end[0], vector_end[1])
+    if(bool==1):
+        alpha = -alpha % (np.pi*2)
+    return alpha
+

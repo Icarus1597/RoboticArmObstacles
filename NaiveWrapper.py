@@ -2,11 +2,8 @@ import numpy as np
 import RoboterArm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import PotentialFields as pf
 import time
-import autograd.numpy as anp
 import config
-import AStarAlgorithm
 import SwitchMode as sm
 import Geometrie
 
@@ -75,8 +72,13 @@ def update(frame):
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
-    if(distance < config.min_distance_to_obstacle):
-        #print(f"ERROR: Arm touches the obstacle!")
+    if(distance < 0):
+        if(distance == -1):
+            config.naive_number_error_coxa +=1
+        elif(distance == -2):
+            config.naive_number_error_femur +=1
+        else:
+            config.naive_number_error_tibia +=1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -104,9 +106,9 @@ def update(frame):
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time},  covered distance = {covered_distance}\n")
-        config.number_success += 1
-        config.list_covered_distance.append(covered_distance)
-        config.list_time_needed.append(time.time() - start_time)
+        config.naive_number_success += 1
+        config.naive_list_covered_distance.append(covered_distance)
+        config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -126,6 +128,8 @@ def update(frame):
     step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
+
+    #time.sleep(300)
 
     return line, point, obstacle_circle
 

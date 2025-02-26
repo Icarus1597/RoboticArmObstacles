@@ -127,21 +127,21 @@ class RoboticArm:
             print(f"ERROR: Coxa-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
-            config.number_error_coxa += 1
+            #config.number_error_coxa += 1
             return -1
         if(distance_femur < 0) :
             print(f"ERROR: Femur-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
-            config.number_error_femur += 1
-            return -1
+            #config.number_error_femur += 1
+            return -2
         if(distance_tibia < 0) :
             print(f"ERROR: Tibia-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link touches the obstacle!\n")
-            config.number_error_tibia += 1
-            return -1
-
+            #config.number_error_tibia += 1
+            return -3
+        '''
         # Checks if arm is closer to the obstacle than the minimum required distance
         if(distance_coxa < config.min_distance_to_obstacle):
             print(f"WARNING: Coxa too close to obstacle")
@@ -157,7 +157,7 @@ class RoboticArm:
             print(f"WARNING: Tibia too close to obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link too close to the obstacle!\n")
-
+        '''
         return min(distance_coxa, distance_femur, distance_tibia)
 
 

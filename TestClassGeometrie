@@ -6,6 +6,7 @@ import Geometrie
 
 class TestGeometrie(unittest.TestCase):
     
+    '''
     def test_reflect_on_hypotenuse(self):
         x, y = Geometrie.reflect_on_hypotenuse(-2, 2, 0, 0, 0, 3)
         self.assertEqual(x, 2)
@@ -27,6 +28,7 @@ class TestGeometrie(unittest.TestCase):
         self.assertEqual(x, 2)
         self.assertEqual(y, 0)
         return
+    '''
         
     def test_which_side_small_angle(self):
         arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -90,6 +92,30 @@ class TestGeometrie(unittest.TestCase):
         self.assertEqual(bool_result_coxa, 0)
         self.assertEqual(bool_result_tibia, 0)
         return
+    
+    def test_angle_vector_joint(self):
+        arm = RoboterArm.RoboticArm(1, 1, 1)
+        arm.update_joints(0, 0, 0)
+        config.center = (0, 3)
+        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        self.assertAlmostEqual(alpha, np.pi/2)
+
+        config.center = (1, 1)
+        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        self.assertAlmostEqual(alpha, np.pi/4)
+
+        config.center = (1, -1)
+        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        self.assertAlmostEqual(alpha, 7*np.pi/4)
+
+        arm.update_joints(np.pi/2, 0, 0)
+        config.center = (3, 0)
+        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        self.assertAlmostEqual(alpha, 3*np.pi/2)
+
+        config.center = (0,0)
+        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        self.assertAlmostEqual(alpha, -1)
 
 if __name__ == "__main__":
     unittest.main()

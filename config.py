@@ -54,18 +54,69 @@ timeout = 120
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
 min_distance_to_obstacle = 0.75
 
-# Counter for types of test results
-number_timeout = 0
-number_success = 0
-number_error_ee = 0
-number_error_tibia = 0
-number_error_femur = 0
-number_error_coxa = 0
+""" mode: 
+0 : A* algorithm
+1 : Potential Fields Method without considering the whole linkage
+2 : A* algorithm with own approach to avoid obstacle with whole linkage
+3 : Naive Approach
+4 : Potential Fields Method with considering whole linkage
+5 : A* algorithm but moves to specific start position first
+"""
+# For mode 0 : A* algorithm
+astar_list_covered_distance = []
+astar_time_needed = []
+astar_time_needed_calculation = []
+astar_number_success = 0
+astar_number_error_tibia = 0
+astar_number_error_femur = 0
+astar_number_error_coxa = 0
 
-# Lists to later calculate mean of covered distance and time needed
-list_covered_distance = []
-list_time_needed = []
-list_time_needed_for_calculation = []
+# For mode 1 : conventional Potential Field method
+pf_list_covered_distance = []
+pf_time_needed = []
+pf_number_timeout = 0
+pf_number_success = 0
+pf_number_error_ee = 0
+pf_number_error_tibia = 0
+pf_number_error_femur = 0
+pf_number_error_coxa = 0
+
+# For mode 2 : A* with changig elbow posture
+elbow_start_position_list_covered_distance = []
+elbow_start_position_time_needed = []
+elbow_start_position_time_needed_calculation = []
+elbow_start_position_number_timeout = 0
+elbow_start_position_number_success = 0
+elbow_start_position_number_error_tibia = 0
+elbow_start_position_number_error_femur = 0
+elbow_start_position_number_error_coxa = 0
+
+# For mode 3 : Naive Approach
+naive_list_covered_distance = []
+naive_list_time_needed = []
+naive_number_success = 0
+naive_number_error_tibia = 0
+naive_number_error_femur = 0
+naive_number_error_coxa = 0
+
+# For mode 4 : PF applied to all links
+pf_all_links_list_covered_distance = []
+pf_all_links_time_needed = []
+pf_all_links_number_timeout = 0
+pf_all_links_number_success = 0
+pf_all_links_number_error_tibia = 0
+pf_all_links_number_error_femur = 0
+pf_all_links_number_error_coxa = 0
+
+# For mode 5: A* algorithm but moves to specific start position first
+astar_start_position_list_covered_distance = []
+astar_start_position_time_needed = []
+astar_start_position_time_needed_calculation = []
+astar_start_position_number_timeout = 0
+astar_start_position_number_success = 0
+astar_start_position_number_error_tibia = 0
+astar_start_position_number_error_femur = 0
+astar_start_position_number_error_coxa = 0
 
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5

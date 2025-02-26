@@ -2,9 +2,7 @@ import numpy as np
 import RoboterArm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-#import PotentialFields as pf
 import time
-#import autograd.numpy as anp
 import config
 import AStarAlgorithm
 import SwitchMode as sm
@@ -89,9 +87,14 @@ def update(frame):
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
-    if(distance < config.min_distance_to_obstacle):
-        #print(f"ERROR: Arm touches the obstacle!")
+    if(distance < 0):
         ani.event_source.stop()
+        if(distance == -1):
+            config.astar_start_position_number_error_coxa +=1
+        elif(distance == -2):
+            config.astar_start_position_number_error_femur +=1
+        else:
+            config.astar_start_position_number_error_tibia +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
@@ -107,17 +110,30 @@ def update(frame):
             arm.move_to_target(target_angles, tolerance = config.tolerance)
         else:
             mode_start_position = False
+
             # A* algorithm
             initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
             time_start_algorithm = time.time()
             path_node_list = initial_point.iterative_search_wrapper()
             time_end_algorithm = time.time()
-            config.list_time_needed_for_calculation.append(time_end_algorithm - time_start_algorithm)
+            config.astar_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
     else: 
         # Punkte nacheinander abfahren path node list
         #print(f"path_node_list length = {len(path_node_list)}")
-        arm.inverse_kinematics(path_node_list[next_node_index].position)
+        if(len(path_node_list)>0):
+            arm.inverse_kinematics(path_node_list[next_node_index].position)
+        else:
+            print(f"Error: path_node_list empty/None")
+            with open("testresults.txt", "a") as file:
+                file.write(f"Test Result: Error. Arm in start position too close to obstacle\n")
+            ani.event_source.stop()
+            plt.figure(fig.number)
+            plt.close()
+            plt.figure(figure_distance_to_target.number)
+            plt.close()
+            return line, point, #obstacle_circle
+
 
         if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
             if(len(path_node_list) > next_node_index+1):
@@ -139,9 +155,9 @@ def update(frame):
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, calculation_time = {time_end_algorithm - time_start_algorithm}, covered distance = {covered_distance}\n")
-        config.number_success += 1
-        config.list_covered_distance.append(covered_distance)
-        config.list_time_needed.append(time.time() - start_time)
+        config.astar_start_position_number_success += 1
+        config.astar_start_position_list_covered_distance.append(covered_distance)
+        config.astar_start_position_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
