@@ -76,7 +76,6 @@ pf_list_covered_distance = []
 pf_time_needed = []
 pf_number_timeout = 0
 pf_number_success = 0
-pf_number_error_ee = 0
 pf_number_error_tibia = 0
 pf_number_error_femur = 0
 pf_number_error_coxa = 0

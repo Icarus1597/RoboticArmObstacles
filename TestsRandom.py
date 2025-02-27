@@ -2,13 +2,14 @@ import config
 import numpy as np
 import random
 import RoboterArm
+import PrintStatistics as ps
 
 
 PI = np.pi
 
 current_test = 1
 algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
-
+algorithm = ["StartPositionWrapper.py"]
 """ mode: 
 0 : A* algorithm
 1 : Potential Fields Method without considering the whole linkage
@@ -26,7 +27,7 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 10):
+while (current_test <= 1):
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -36,7 +37,7 @@ while (current_test <= 10):
     config.radius = np.maximum(random.random()*arm_length/4, 1)
 
     # target position
-    config.target_x = np.maximum(random.random()*2/3*arm_length, 5*config.radius)
+    config.target_x = np.minimum(random.random()*2/3*arm_length, 5*config.radius)
     config.target_y = 0
 
     # center Obstacle
@@ -68,3 +69,10 @@ while (current_test <= 10):
     current_test = current_test + 1
 
 
+
+ps.statistics_a_star()
+ps.statistics_a_star_elbow
+ps.statistics_a_star_start_position
+ps.statistics_naive
+ps.statistics_pf
+ps.statistics_pf_linkage

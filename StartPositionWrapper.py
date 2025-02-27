@@ -42,6 +42,10 @@ ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
 
+alpha = Geometrie.angle_vector_point((0,0), (5, 0), config.center)
+alpha = (alpha + np.pi) % (2*np.pi)
+print(f"alpha = {alpha}")
+
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
     fig.canvas.manager.window.geometry("+1000+100")
@@ -105,7 +109,7 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     if(mode_start_position):
-        target_angles = (0, np.pi/2, np.pi/2)
+        target_angles = (alpha, np.pi/2, np.pi/2)
         if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
             arm.move_to_target(target_angles, tolerance = config.tolerance)
         else:
@@ -115,6 +119,18 @@ def update(frame):
             initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
             time_start_algorithm = time.time()
             path_node_list = initial_point.iterative_search_wrapper()
+
+            if(path_node_list == -1):
+                print(f"Error: No path to target found")
+                with open("testresults.txt", "a") as file:
+                    file.write(f"Test Result: Error. No path to target found\n")
+                ani.event_source.stop()
+                plt.figure(fig.number)
+                plt.close()
+                plt.figure(figure_distance_to_target.number)
+                plt.close()
+                return line, point, #obstacle_circle
+
             time_end_algorithm = time.time()
             config.astar_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
