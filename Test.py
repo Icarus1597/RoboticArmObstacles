@@ -32,7 +32,6 @@ with open("testresults.txt", "w") as file:
     file.write(f"Maximum time for a test: timeout = {config.timeout}\n")
     file.write(f"Minimum distance to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
 
-'''
 # 1. Spalte: Ausgestreckt nach rechts
 print("Erste Spalte 0, 0, 0")
 config.theta_coxa = 0.01
@@ -633,7 +632,6 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[mode]).read())
-'''
 
 # 12. Spalte: Rechter Winkel nach unten
 print("12. Spalte 3/2*PI, PI/2, PI/2")
@@ -690,8 +688,8 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 ps.statistics_a_star()
-ps.statistics_a_star_elbow
-ps.statistics_a_star_start_position
-ps.statistics_naive
-ps.statistics_pf
-ps.statistics_pf_linkage
+ps.statistics_a_star_elbow()
+ps.statistics_a_star_start_position()
+ps.statistics_naive()
+ps.statistics_pf()
+ps.statistics_pf_linkage()

@@ -9,7 +9,7 @@ PI = np.pi
 
 current_test = 1
 algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
-algorithm = ["StartPositionWrapper.py"]
+#algorithm = ["StartPositionWrapper.py"]
 """ mode: 
 0 : A* algorithm
 1 : Potential Fields Method without considering the whole linkage
@@ -27,7 +27,7 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 1):
+while (current_test <= 5):
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -71,8 +71,8 @@ while (current_test <= 1):
 
 
 ps.statistics_a_star()
-ps.statistics_a_star_elbow
-ps.statistics_a_star_start_position
-ps.statistics_naive
-ps.statistics_pf
-ps.statistics_pf_linkage
+ps.statistics_a_star_elbow()
+ps.statistics_a_star_start_position()
+ps.statistics_naive()
+ps.statistics_pf()
+ps.statistics_pf_linkage()
