@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
 import config
-import AStarAlgorithm
 import SwitchMode as sm
 import Geometrie
+import new_posture
 
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
@@ -15,9 +15,6 @@ arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
 start_time = time.time() # To track the duration of the test 
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
-mode_start_position = True
-time_end_algorithm = -1
-time_start_algorithm = -1
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
@@ -42,10 +39,6 @@ ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
 
-alpha = Geometrie.angle_vector_point((0,0), (5, 0), config.center)
-alpha = (alpha + np.pi) % (2*np.pi)
-print(f"alpha = {alpha}")
-
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
     fig.canvas.manager.window.geometry("+1000+100")
@@ -62,11 +55,7 @@ def init():
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
-    #mode_start_position = True
     return line, point, obstacle_circle
-
-next_node_index = 0
-path_node_list = []
 
 # Updates the frame
 def update(frame):
@@ -80,25 +69,18 @@ def update(frame):
     """
     global previous_end_effector_position
     global covered_distance
-    global next_node_index
-    global mode_start_position
-    global path_node_list
-    global time_end_algorithm
-    global time_start_algorithm
-
-    
     
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < 0):
-        ani.event_source.stop()
         if(distance == -1):
-            config.astar_start_position_number_error_coxa +=1
+            config.naive_number_error_coxa +=1
         elif(distance == -2):
-            config.astar_start_position_number_error_femur +=1
+            config.naive_number_error_femur +=1
         else:
-            config.astar_start_position_number_error_tibia +=1
+            config.naive_number_error_tibia +=1
+        ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
@@ -108,55 +90,10 @@ def update(frame):
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
-    if(mode_start_position):
-        target_angles = (alpha, np.pi/2, np.pi/2)
-        if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
-            arm.move_to_target(target_angles, tolerance = config.tolerance)
-        else:
-            mode_start_position = False
-
-            # A* algorithm
-            initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
-            time_start_algorithm = time.time()
-            path_node_list = initial_point.iterative_search_wrapper()
-
-            if(path_node_list == -1):
-                print(f"Error: No path to target found")
-                with open("testresults.txt", "a") as file:
-                    file.write(f"Test Result: Error. No path to target found\n")
-                ani.event_source.stop()
-                plt.figure(fig.number)
-                plt.close()
-                plt.figure(figure_distance_to_target.number)
-                plt.close()
-                return line, point, #obstacle_circle
-
-            time_end_algorithm = time.time()
-            config.astar_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
-
-    else: 
-        # Punkte nacheinander abfahren path node list
-        #print(f"path_node_list length = {len(path_node_list)}")
-        if(len(path_node_list)>0):
-            theta_coxa, theta_femur, theta_tibia= arm.inverse_kinematics(path_node_list[next_node_index].position)
-            arm.update_joints(theta_coxa, theta_femur, theta_tibia)
-        else:
-            print(f"Error: path_node_list empty/None")
-            with open("testresults.txt", "a") as file:
-                file.write(f"Test Result: Error. Arm in start position too close to obstacle\n")
-            ani.event_source.stop()
-            plt.figure(fig.number)
-            plt.close()
-            plt.figure(figure_distance_to_target.number)
-            plt.close()
-            return line, point, #obstacle_circle
-
-
-        if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
-            if(len(path_node_list) > next_node_index+1):
-                next_node_index += 1
-            else:
-                print(f"End of path node list reached")
+    # Calculate new posture
+    mode = 3 # TODO
+    theta_coxa, theta_femur, theta_tibia = new_posture.calculate_new_thetas(mode, arm)
+    arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -171,10 +108,10 @@ def update(frame):
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
-            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, calculation_time = {time_end_algorithm - time_start_algorithm}, covered distance = {covered_distance}\n")
-        config.astar_start_position_number_success += 1
-        config.astar_start_position_list_covered_distance.append(covered_distance)
-        config.astar_start_position_time_needed.append(time.time() - start_time)
+            file.write(f"Test Result: SUCCESS, duration={time.time() - start_time},  covered distance = {covered_distance}\n")
+        config.naive_number_success += 1
+        config.naive_list_covered_distance.append(covered_distance)
+        config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -194,6 +131,8 @@ def update(frame):
     step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
+
+    #time.sleep(300)
 
     return line, point, obstacle_circle
 

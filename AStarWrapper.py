@@ -104,7 +104,8 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Punkte nacheinander abfahren path node list
-    arm.inverse_kinematics(path_node_list[next_node_index].position)
+    theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
+    arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
         if(len(path_node_list) > next_node_index+1):

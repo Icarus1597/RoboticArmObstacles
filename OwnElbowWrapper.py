@@ -140,7 +140,8 @@ def update(frame):
     current_mode = sm.choose_mode(arm, current_mode)
     print(f"Current Mode = {current_mode}")
     if (current_mode == 0):
-        arm.inverse_kinematics(path_node_list[next_node_index].position)
+        theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
+        arm.update_joints(theta_coxa, theta_femur, theta_tibia)
         
         if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
             if(len(path_node_list) > next_node_index+1):

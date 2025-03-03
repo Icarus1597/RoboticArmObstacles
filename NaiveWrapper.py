@@ -90,7 +90,8 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Punkte nacheinander abfahren path node list
-    arm.inverse_kinematics((config.target_x, config.target_y))
+    theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics((config.target_x, config.target_y))
+    arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
