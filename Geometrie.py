@@ -97,6 +97,25 @@ def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x,
         return 0
     else:  # Point is on the right side of the line
         return 1
+    
+def side_point_to_line2(point, line_start, line_end):
+    """ Determines, from perspective of the direction of the line, if the point is on its right side or left side
+
+    Args:
+        point (_type_): coordinates of point
+        line_start_x (_type_): coordinates of starting point of the line
+        line_end_x (_type_): coordinates of end point of the line
+
+    Returns:
+        int: -1, if point is on the left side of the line. 1, if point is on the right side of the line
+    """
+    # Cross product to determine the side of the line
+    cross_product = (line_end[0] - line_start[0]) * (point[1] - line_start[1]) - (line_end[1] - line_start[1]) * (point[0] - line_start[0])
+
+    if cross_product > 0:  # Point is on the left side of the line
+        return -1
+    else:  # Point is on the right side of the line
+        return 1
 
 def booleans_switch_elbows(arm, center):
     """ Determines, if the elbows need to change side or not

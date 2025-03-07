@@ -137,6 +137,7 @@ def update(frame):
     jacobian_matrix_femur = arm.jacobian_matrix_femur()
     inverse_jacobian_matrix_femur = arm.inverse_jacobian_matrix(jacobian_matrix_femur)
     joint_velocity_rep_femur = pf.joint_velocities_rep(inverse_jacobian_matrix_femur, v_rep_joint_femur)
+    
     joint_velocity[0] = joint_velocity[0] + joint_velocity_rep_coxa[0] + joint_velocity_rep_femur[0]
     joint_velocity[1] = joint_velocity[1] + joint_velocity_rep_femur[1]
 

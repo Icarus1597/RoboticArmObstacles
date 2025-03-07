@@ -30,7 +30,6 @@ class RoboticArm:
             theta_femur (float): angle of the femur link
             theta_tibia (float): angle of the tibia link
         """
-        
         self.theta_coxa = theta_coxa
         self.theta_femur = theta_femur
         self.theta_tibia = theta_tibia
@@ -141,23 +140,6 @@ class RoboticArm:
                 file.write(f"Test Result: ERROR: Tibia-Link touches the obstacle!\n")
             #config.number_error_tibia += 1
             return -3
-        '''
-        # Checks if arm is closer to the obstacle than the minimum required distance
-        if(distance_coxa < config.min_distance_to_obstacle):
-            print(f"WARNING: Coxa too close to obstacle")
-            with open("testresults.txt", "a") as file:
-                file.write(f"Test Result: ERROR: Coxa-Link too close to the obstacle!\n")
-
-        if(distance_femur < config.min_distance_to_obstacle):
-            print(f"WARNING: Femur too close to obstacle")
-            with open("testresults.txt", "a") as file:
-                file.write(f"Test Result: ERROR: Femur-Link too close to the obstacle!\n")
-
-        if(distance_tibia < config.min_distance_to_obstacle):
-            print(f"WARNING: Tibia too close to obstacle")
-            with open("testresults.txt", "a") as file:
-                file.write(f"Test Result: ERROR: Tibia-Link too close to the obstacle!\n")
-        '''
         return min(distance_coxa, distance_femur, distance_tibia)
 
 
@@ -179,7 +161,7 @@ class RoboticArm:
 
         #print(f"delta_coxa = {delta_theta[0]}, delta_femur = {delta_theta[1]}, delta_tibia = {delta_theta[2]}")
         
-        new_theta_coxa = self.theta_coxa + 0.0001 + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
+        new_theta_coxa = self.theta_coxa + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
         new_theta_femur = self.theta_femur + np.sign(delta_theta[1])* np.minimum(abs(config.learning_rate * delta_theta[1]), 0.5)
         new_theta_tibia = self.theta_tibia + np.sign(delta_theta[2])* np.minimum(abs(config.learning_rate * delta_theta[2]), 0.5)
 

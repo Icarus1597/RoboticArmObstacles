@@ -47,7 +47,7 @@ class AStarNode:
             print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
-        if(Geometrie.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle*2):
+        if(Geometrie.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
             return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()

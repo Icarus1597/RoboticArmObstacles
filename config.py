@@ -5,7 +5,7 @@ import numpy as np
 target_x, target_y = -12,0.1
 
 # delta_t Time between frames
-delta_t = 300
+delta_t = 150
 
 # Position and radius of the obstacle (circle)
 center = (-6, -1)
@@ -23,33 +23,30 @@ tibia_length = 4
 delta_success_distance = 2
 
 # damping factor for arm velocity
-damping_factor =  0.0001
+damping_factor =  0.0002
 
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain
-rho_0 = 4
+rho_0 = 5
 k = 15
 
 rho_0_femur = femur_length
-k_femur = 20
+k_femur = 100
 
 rho_0_coxa = 3
 k_coxa = 5
 
 # zeta  : attractive potential gain
-zeta = 1.1
+zeta = 10
 
 PI = np.pi
 # Start Position of the arm (posture/angles):
-theta_coxa = 3/2*np.pi
-theta_femur = 0
-theta_tibia = 0
-theta_coxa = PI/4
-theta_femur = PI
-theta_tibia = PI
+theta_coxa = 0
+theta_femur = PI/2
+theta_tibia = PI/2
 
 # Maximum total time in seconds
-timeout = 120
+timeout = 60
 
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
 min_distance_to_obstacle = 0.75
@@ -70,6 +67,7 @@ astar_number_success = 0
 astar_number_error_tibia = 0
 astar_number_error_femur = 0
 astar_number_error_coxa = 0
+astar_number_error_no_path = 0
 
 # For mode 1 : conventional Potential Field method
 pf_list_covered_distance = []
@@ -124,7 +122,7 @@ number_neighboring_nodes = 8
 
 # Parameters inverse Kinematics
 tolerance = 0.5
-learning_rate = 0.1
+learning_rate = 0.3
 
 # Change Elbow Posture Mode
 goal_reflect_femur_link = []

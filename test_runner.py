@@ -16,7 +16,7 @@ algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrappe
 4 : Potential Fields Method with considering whole linkage
 5 : A* algorithm but moves to specific start position first
 """
-mode = 5
+mode = 4
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:

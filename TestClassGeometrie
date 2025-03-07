@@ -117,6 +117,12 @@ class TestGeometrie(unittest.TestCase):
         alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, -1)
 
+        config.center = (-6, 0)
+        alpha = Geometrie.angle_vector_point((0,0), (1, 0), config.center)
+        self.assertAlmostEqual(alpha, np.pi)
+        alpha = (alpha + np.pi) % (2*np.pi)
+        self.assertAlmostEqual(alpha, 0)
+
 if __name__ == "__main__":
     unittest.main()
     

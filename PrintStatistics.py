@@ -3,7 +3,7 @@ import config
 def statistics_a_star():
     """Prints all tracked statistics for the conventional A* algorithm to testresults.txt
     """
-    number_tests = config.astar_number_success + config.astar_number_error_tibia + config.astar_number_error_femur + config.astar_number_error_coxa
+    number_tests = config.astar_number_success + config.astar_number_error_tibia + config.astar_number_error_femur + config.astar_number_error_coxa + config.astar_number_error_no_path
     if(number_tests == 0):
         with open("testresults.txt", "a") as file:
             file.write(f"A* algorithm : \n Total number of tests: {number_tests}\n")
@@ -27,7 +27,7 @@ def statistics_a_star():
 def statistics_pf():
     """Prints all tracked statistics for the conventional Potential Field method
     """
-    number_tests = config.pf_number_success + config.pf_number_error_tibia + config.pf_number_error_femur + config.pf_number_error_coxa
+    number_tests = config.pf_number_success + config.pf_number_error_tibia + config.pf_number_error_femur + config.pf_number_error_coxa + config.pf_number_timeout
     if(number_tests == 0):
         with open("testresults.txt", "a") as file:
             file.write(f"PF : \n Total number of tests: {number_tests}\n")

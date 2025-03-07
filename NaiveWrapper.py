@@ -68,7 +68,7 @@ def update(frame):
     """
     global previous_end_effector_position
     global covered_distance
-    
+
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
@@ -129,9 +129,7 @@ def update(frame):
     step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
-
-    #time.sleep(300)
-
+    
     return line, point, obstacle_circle
 
 # Start the animation
