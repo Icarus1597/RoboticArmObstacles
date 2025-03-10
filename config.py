@@ -23,7 +23,7 @@ tibia_length = 4
 delta_success_distance = 2
 
 # damping factor for arm velocity
-damping_factor =  0.0002
+damping_factor =  0.000108
 
 # rho_0 : max range repulsive field
 # k     : repulsive potential gain
@@ -121,8 +121,8 @@ number_neighboring_nodes = 8
 #max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
 
 # Parameters inverse Kinematics
-tolerance = 0.5
-learning_rate = 0.3
+tolerance = 2
+learning_rate = 0.1
 
 # Change Elbow Posture Mode
 goal_reflect_femur_link = []
