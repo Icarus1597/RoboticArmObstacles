@@ -11,12 +11,13 @@ algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrappe
 """ mode: 
 0 : A* algorithm
 1 : Potential Fields Method without considering the whole linkage
-2 : A* algorithm with own approach to avoid obstacle with whole linkage
+2 : A* algorithm with own approach to avoid obstacle with whole linkage ----- streichen TODO
 3 : Naive Approach
-4 : Potential Fields Method with considering whole linkage
+4 : Potential Fields Method with considering whole linkage 
 5 : A* algorithm but moves to specific start position first
+6 : PF Starting Position ---------------- TODO
 """
-mode = 4
+mode = 5
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:

@@ -8,6 +8,8 @@ import AStarAlgorithm
 import SwitchMode as sm
 import Geometrie
 
+PI = np.pi
+
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
 arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
@@ -53,6 +55,23 @@ if plt.get_backend() == 'TkAgg':
     # Set position of figure_distance_to_target
     figure_distance_to_target.canvas.manager.window.geometry("+1000+100")
 
+def calculate_starting_position(alpha_offset):
+    """Calculate, based on the target and obstacle position, the desired starting position for the robotic arm
+
+    Args:
+        alpha_offset (float): desired offset for the coxa link (PI/2 -> 90° to Obstacle)
+
+    Returns:
+        theta_coxa, theta_femur, theta_tibia: target angles for the starting position
+    """
+    side = Geometrie.side_point_to_line2((config.target_x, config.target_y), (0, 0), config.center)
+    alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+    #print(f"side = {side}, alpha = {alpha}")
+    theta_coxa = (alpha + side*alpha_offset) % (2*PI)
+    theta_femur = PI/4 * side % (2*PI)
+    theta_tibia = PI/4 * side % (2*PI)
+    return theta_coxa, theta_femur, theta_tibia
+
 def init():
     """Initializes the figure with the robotic arm, target point and one obstacle in shape of a circle.
 
@@ -86,8 +105,20 @@ def update(frame):
     global time_end_algorithm
     global time_start_algorithm
 
-    
-    
+    # After a given time, the execution will be aborted
+    current_time = time.time()
+    if(current_time - start_time > config.timeout) :
+        print(f"TIMEOUT")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: TIMEOUT\n")
+        config.astar_start_position_number_timeout += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
@@ -109,7 +140,7 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     if(mode_start_position):
-        target_angles = (alpha, np.pi/2, np.pi/2)
+        target_angles = calculate_starting_position(alpha_offset=PI*5/4)
         if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
             arm.move_to_target(target_angles, tolerance = config.tolerance)
         else:

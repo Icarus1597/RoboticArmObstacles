@@ -30,14 +30,14 @@ damping_factor =  0.000108
 rho_0 = 5
 k = 15
 
-rho_0_femur = femur_length
+rho_0_femur = 5
 k_femur = 100
 
 rho_0_coxa = 3
-k_coxa = 5
+k_coxa = 100
 
 # zeta  : attractive potential gain
-zeta = 10
+zeta = 1
 
 PI = np.pi
 # Start Position of the arm (posture/angles):
