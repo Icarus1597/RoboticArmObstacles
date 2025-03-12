@@ -46,10 +46,10 @@ theta_femur = PI/2
 theta_tibia = PI/2
 
 # Maximum total time in seconds
-timeout = 60
+timeout = 240
 
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
-min_distance_to_obstacle = 0.75
+min_distance_to_obstacle = 2
 
 """ mode: 
 0 : A* algorithm
