@@ -140,8 +140,8 @@ def update(frame):
         plt.figure(fig_path.number)
         # Generate individual name for each new figure
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"Wrapper_Naive_path_to_target_{timestamp}.pdf"
-        fig_path.savefig(filename)
+        filename = f"./PDF_Figures/Wrapper_Naive_path_to_target_{timestamp}.pdf"
+        fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
 

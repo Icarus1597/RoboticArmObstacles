@@ -55,7 +55,7 @@ def init():
     """ Initializes the figure that displays the model of the robotic arm, target point and circle-shaped obstacle
 
     Returns:
-        _type_: shapes to be displayed in the plot
+        Line2D: shapes to be displayed in the plot
     """
     line.set_data([], [])
     point.set_data([], [])
@@ -170,16 +170,19 @@ def update(frame):
 
         ax_path.set_xlim(-arm_length,  arm_length)
         ax_path.set_ylim(-arm_length,  arm_length)
-        line_path, = ax_path.plot([], [], 'r-', label="Distance")
+        line_path, = ax_path.plot([], [], 'b-', label="Distance")
         line_path.set_xdata(data_plot_path_x)
         line_path.set_ydata(data_plot_path_y)
         fig_path.canvas.draw()
         plt.figure(fig_path.number)
         # Generate individual name for each new figure
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"Wrapper_PF_path_to_target_{timestamp}.pdf"
-        #plt.gca().add_patch(obstacle_circle) TODO
-        fig_path.savefig(filename)
+        filename = f"./PDF_Figures/Wrapper_PF_path_to_target_{timestamp}.pdf"
+        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
+        plt.gca().add_patch(path_obstacle_circle) #TODO
+        plt.gca().add_patch(path_target_circle)
+        fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
   
     # Append the new data

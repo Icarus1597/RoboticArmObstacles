@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
-testresults.txt
+*.txt
 *.pdf
 *.png
+PDF_Figures/

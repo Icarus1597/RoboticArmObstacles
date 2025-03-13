@@ -41,6 +41,10 @@ ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
 
+# Plot: taken path
+data_plot_path_x = []
+data_plot_path_y= []
+
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
     fig.canvas.manager.window.geometry("+1000+100")
@@ -82,6 +86,9 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
     global next_node_index
+
+    data_plot_path_x.append(arm.end_effector[0])
+    data_plot_path_y.append(arm.end_effector[1])
     
     current_time = time.time()
     ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
@@ -144,6 +151,28 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+
+        # Plot taken path
+        # Plot: Robotic arm
+        fig_path, ax_path = plt.subplots()
+        ax_path.set_aspect('equal') #TODO ?
+
+        ax_path.set_xlim(-arm_length,  arm_length)
+        ax_path.set_ylim(-arm_length,  arm_length)
+        line_path, = ax_path.plot([], [], 'b-', label="Distance")
+        line_path.set_xdata(data_plot_path_x)
+        line_path.set_ydata(data_plot_path_y)
+        fig_path.canvas.draw()
+        plt.figure(fig_path.number)
+        # Generate individual name for each new figure
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"./PDF_Figures/Wrapper_A_star_path_to_target_{timestamp}.pdf"
+        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
+        plt.gca().add_patch(path_obstacle_circle) #TODO
+        plt.gca().add_patch(path_target_circle)
+        fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

@@ -11,6 +11,10 @@ import Geometrie
 
 PI = np.pi
 
+# Plot: taken path
+data_plot_path_x = []
+data_plot_path_y= []
+
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
 arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
@@ -97,11 +101,12 @@ def update(frame):
     """
     global previous_end_effector_position
     global covered_distance
-    global next_node_index
     global mode_start_position
-    global path_node_list
     global time_end_algorithm
     global time_start_algorithm
+
+    data_plot_path_x.append(arm.end_effector[0])
+    data_plot_path_y.append(arm.end_effector[1])
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -201,6 +206,27 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+
+        # Plot taken path
+        fig_path, ax_path = plt.subplots()
+        ax_path.set_aspect('equal') #TODO ?
+
+        ax_path.set_xlim(-arm_length,  arm_length)
+        ax_path.set_ylim(-arm_length,  arm_length)
+        line_path, = ax_path.plot([], [], 'b-', label="Distance")
+        line_path.set_xdata(data_plot_path_x)
+        line_path.set_ydata(data_plot_path_y)
+        fig_path.canvas.draw()
+        plt.figure(fig_path.number)
+        # Generate individual name for each new figure
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"./PDF_Figures/WrapperPFSP_path_to_target_{timestamp}.pdf"
+        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
+        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
+        plt.gca().add_patch(path_obstacle_circle) #TODO
+        plt.gca().add_patch(path_target_circle)
+        fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

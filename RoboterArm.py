@@ -184,7 +184,7 @@ class RoboticArm:
         #print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
-
+'''
     def reflect_femur_link(self):
         """ Reflects the femur link to bring it to the other side. The position of the tibia link stays the same
 
@@ -296,7 +296,7 @@ class RoboticArm:
 
         print(f"Reflect tibia link result: coxa = {theta_coxa}, femur = {theta_femur}, tibia = {theta_tibia}")
         return theta_coxa, theta_femur, theta_tibia
-
+    '''
 
 
 
