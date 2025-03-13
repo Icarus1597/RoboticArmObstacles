@@ -20,8 +20,9 @@ previous_end_effector_position = arm.end_effector
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
 # Set axis limits considering the link lengths
-ax.set_xlim(-(config.coxa_length +config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
-ax.set_ylim(-(config.coxa_length + config.femur_length + config.tibia_length),  config.coxa_length + config.femur_length + config.tibia_length)
+arm_length = config.coxa_length +config.femur_length + config.tibia_length
+ax.set_xlim(-arm_length,  arm_length)
+ax.set_ylim(-arm_length,  arm_length)
 line, = ax.plot([], [], 'o-', lw=2)
 point, = ax.plot([], [], 'ro', markersize=8)
 
@@ -37,6 +38,10 @@ ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
 ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
+
+# Plot: taken path
+data_plot_path_x = []
+data_plot_path_y= []
 
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
@@ -68,6 +73,9 @@ def update(frame):
     """
     global previous_end_effector_position
     global covered_distance
+
+    data_plot_path_x.append(arm.end_effector[0])
+    data_plot_path_y.append(arm.end_effector[1])
 
     # After a given time, the execution will be aborted
     current_time = time.time()
@@ -153,6 +161,25 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.close()
+
+        # Plot taken path
+        # Plot: Robotic arm
+        fig_path, ax_path = plt.subplots()
+        ax_path.set_aspect('equal') #TODO ?
+
+        ax_path.set_xlim(-arm_length,  arm_length)
+        ax_path.set_ylim(-arm_length,  arm_length)
+        line_path, = ax_path.plot([], [], 'r-', label="Distance")
+        line_path.set_xdata(data_plot_path_x)
+        line_path.set_ydata(data_plot_path_y)
+        fig_path.canvas.draw()
+        plt.figure(fig_path.number)
+        # Generate individual name for each new figure
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"Wrapper_PF_path_to_target_{timestamp}.pdf"
+        #plt.gca().add_patch(obstacle_circle) TODO
+        fig_path.savefig(filename)
         plt.close()
   
     # Append the new data

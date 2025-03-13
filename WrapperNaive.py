@@ -33,6 +33,10 @@ x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
 
+# Plot: taken path
+data_plot_path_x = []
+data_plot_path_y= []
+
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
 ax2.set_xlabel('Time (s)')
@@ -69,6 +73,10 @@ def update(frame):
     """
     global previous_end_effector_position
     global covered_distance
+
+    # Append new data plot path taken
+    data_plot_path_x.append(arm.end_effector[0])
+    data_plot_path_y.append(arm.end_effector[1])
 
     #plt.savefig('starting_position_1.pdf', bbox_inches='tight')
     current_time = time.time()
@@ -115,14 +123,29 @@ def update(frame):
         config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
+        plt.close()
 
+
+        # Plot taken path
+        # Plot: Robotic arm
+        fig_path, ax_path = plt.subplots()
+        ax_path.set_aspect('equal') #TODO ?
+
+        ax_path.set_xlim(-arm_length,  arm_length)
+        ax_path.set_ylim(-arm_length,  arm_length)
+        line_path, = ax_path.plot([], [], 'r-', label="Distance")
+        line_path.set_xdata(data_plot_path_x)
+        line_path.set_ydata(data_plot_path_y)
+        fig_path.canvas.draw()
+        plt.figure(fig_path.number)
         # Generate individual name for each new figure
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"distance_to_target_{timestamp}.pdf"
-        fig.savefig(filename)
+        filename = f"Wrapper_Naive_path_to_target_{timestamp}.pdf"
+        fig_path.savefig(filename)
         plt.close()
+
+
         plt.figure(figure_distance_to_target.number)
-        plt.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

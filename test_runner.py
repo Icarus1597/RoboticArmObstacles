@@ -21,7 +21,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-mode = 8
+mode = 0
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
