@@ -84,6 +84,7 @@ def update(frame):
     global next_node_index
     
     current_time = time.time()
+    ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < 0):

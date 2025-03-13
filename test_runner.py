@@ -7,7 +7,8 @@ PI = np.pi
 
 current_test = 1
 algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
-             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py"]
+             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
+             "WrapperPFStartingPosition.py"]
 
 """ mode: 
 0 : Naive Approach
@@ -18,8 +19,9 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 5 : PF
 6 : PF Linkage
 7 : PF Starting Position
+8 : PF Starting Position and Linkage
 """
-mode = 7
+mode = 8
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:

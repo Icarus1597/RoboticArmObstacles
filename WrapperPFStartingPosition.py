@@ -105,6 +105,7 @@ def update(frame):
 
     # After a given time, the execution will be aborted
     current_time = time.time()
+    ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
     if(current_time - start_time > config.timeout) :
         print(f"TIMEOUT")
         with open("testresults.txt", "a") as file:

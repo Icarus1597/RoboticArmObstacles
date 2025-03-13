@@ -18,6 +18,7 @@ previous_end_effector_position = arm.end_effector
 # Plot: Robotic arm
 fig, ax = plt.subplots()
 ax.set_aspect('equal') #TODO ?
+
 # Set axis limits considering the link lengths
 arm_length = config.coxa_length + config.femur_length + config.tibia_length
 ax.set_xlim(-arm_length,  arm_length)
@@ -69,7 +70,9 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
 
+    #plt.savefig('starting_position_1.pdf', bbox_inches='tight')
     current_time = time.time()
+    ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < 0):
@@ -89,7 +92,7 @@ def update(frame):
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
-    # Punkte nacheinander abfahren path node list
+    # Move to target point
     theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics((config.target_x, config.target_y))
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
@@ -112,8 +115,14 @@ def update(frame):
         config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
+
+        # Generate individual name for each new figure
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"distance_to_target_{timestamp}.pdf"
+        fig.savefig(filename)
         plt.close()
         plt.figure(figure_distance_to_target.number)
+        plt.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data
@@ -137,3 +146,6 @@ frames = np.linspace(0, 2 * np.pi, config.delta_t)
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
 plt.ioff()
 plt.show()
+#print(f"Antes de startingposition savefig")
+#plt.savefig('starting_position_1.pdf', bbox_inches='tight')
+#print(f"Despues de startingposition savefig")
