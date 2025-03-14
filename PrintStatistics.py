@@ -88,8 +88,8 @@ def statistics_naive():
     else:
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
-        number_tests = config.naive_number_success + config.naive_number_error_tibia + config.naive_number_error_femur + config.naive_number_error_coxa
-        file.write(f"Naive: \nTotal number of tests: {number_tests}, #SUCCESS: {config.naive_number_success}, in percent: {config.pf_number_success/(number_tests)}\n")
+        #number_tests = config.naive_number_success + config.naive_number_error_tibia + config.naive_number_error_femur + config.naive_number_error_coxa
+        file.write(f"Naive: \nTotal number of tests: {number_tests}, #SUCCESS: {config.naive_number_success}\n")
         file.write(f"#Error end effector = {config.naive_number_error_ee}\n")
         file.write(f"#Error tibia = {config.naive_number_error_tibia}, #Error femur = {config.naive_number_error_femur}, #Error coxa = {config.naive_number_error_coxa}")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")

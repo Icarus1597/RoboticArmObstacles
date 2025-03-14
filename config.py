@@ -59,6 +59,7 @@ min_distance_to_obstacle = 2
 4 : Potential Fields Method with considering whole linkage
 5 : A* algorithm but moves to specific start position first
 """
+wrapper_mode = 0
 # For mode 0 : A* algorithm
 astar_list_covered_distance = []
 astar_time_needed = []
