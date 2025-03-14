@@ -20,7 +20,7 @@ femur_length = 6
 tibia_length = 4
 
 # Max. distance between end effector and target point for success
-delta_success_distance = 1
+delta_success_distance = 2.5
 
 # damping factor for arm velocity
 damping_factor =  0.000108
@@ -68,6 +68,7 @@ astar_number_error_tibia = 0
 astar_number_error_femur = 0
 astar_number_error_coxa = 0
 astar_number_error_no_path = 0
+astar_number_error_ee = 0
 
 # For mode 1 : conventional Potential Field method
 pf_list_covered_distance = []
@@ -77,6 +78,7 @@ pf_number_success = 0
 pf_number_error_tibia = 0
 pf_number_error_femur = 0
 pf_number_error_coxa = 0
+pf_number_error_ee = 0
 
 # For mode 2 : A* with changig elbow posture
 elbow_start_position_list_covered_distance = []
@@ -87,6 +89,7 @@ elbow_start_position_number_success = 0
 elbow_start_position_number_error_tibia = 0
 elbow_start_position_number_error_femur = 0
 elbow_start_position_number_error_coxa = 0
+elbow_start_position_number_error_ee = 0
 
 # For mode 3 : Naive Approach
 naive_list_covered_distance = []
@@ -95,6 +98,7 @@ naive_number_success = 0
 naive_number_error_tibia = 0
 naive_number_error_femur = 0
 naive_number_error_coxa = 0
+naive_number_error_ee = 0
 
 # For mode 4 : PF applied to all links
 pf_all_links_list_covered_distance = []
@@ -104,6 +108,27 @@ pf_all_links_number_success = 0
 pf_all_links_number_error_tibia = 0
 pf_all_links_number_error_femur = 0
 pf_all_links_number_error_coxa = 0
+pf_all_links_number_error_ee = 0
+
+# PF starting position
+pf_sp_list_covered_distance = []
+pf_sp_time_needed = []
+pf_sp_number_timeout = 0
+pf_sp_number_success = 0
+pf_sp_number_error_tibia = 0
+pf_sp_number_error_femur = 0
+pf_sp_number_error_coxa = 0
+pf_sp_number_error_ee = 0
+
+# PF starting position and whole linkage
+pf_sp_linkage_list_covered_distance = []
+pf_sp_linkage_time_needed = []
+pf_sp_linkage_number_timeout = 0
+pf_sp_linkage_number_success = 0
+pf_sp_linkage_number_error_tibia = 0
+pf_sp_linkage_number_error_femur = 0
+pf_sp_linkage_number_error_coxa = 0
+pf_sp_linkage_number_error_ee = 0
 
 # For mode 5: A* algorithm but moves to specific start position first
 astar_start_position_list_covered_distance = []
@@ -114,6 +139,19 @@ astar_start_position_number_success = 0
 astar_start_position_number_error_tibia = 0
 astar_start_position_number_error_femur = 0
 astar_start_position_number_error_coxa = 0
+astar_start_position_number_error_ee = 0
+
+# A* algorithm after Tang
+astar_tang_list_covered_distance = []
+astar_tang_time_needed = []
+astar_tang_time_needed_calculation = []
+astar_tang_number_timeout = 0
+astar_tang_number_success = 0
+astar_tang_number_error_tibia = 0
+astar_tang_number_error_femur = 0
+astar_tang_number_error_coxa = 0
+astar_tang_number_error_ee = 0
+astar_tang_number_error_no_path = 0
 
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5

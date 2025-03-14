@@ -116,29 +116,33 @@ class RoboticArm:
         Returns:
             float: minimum distance between links and obstacle
         """
+        # Calculate distance between end effector and obstacle
+        distance_end_effector = Geometrie.distance_to_circle(config.center, config.radius, self.end_effector)
         # Calculates distance between each link and circle-obstacle
         distance_coxa = Geometrie.distance_segment_point(center[0], center[1], 0, 0, self.joint_coxa_x, self.joint_coxa_y) - radius
         distance_femur = Geometrie.distance_segment_point(center[0], center[1], self.joint_coxa_x, self.joint_coxa_y, self.joint_femur_x, self.joint_femur_y) - radius
         distance_tibia = Geometrie.distance_segment_point(center[0], center[1], self.joint_femur_x, self.joint_femur_y, self.joint_tibia_x, self.joint_tibia_y) - radius
         
         # Checks if arm touches the obstacle
+        if(distance_end_effector <= 0):
+            print(f"ERROR: End Effector touches the obstacle")
+            with open("testresults.txt", "a") as file:
+                file.write(f"Test Result: ERROR: End Effector touches the obstacle!\n")
+            return -4
         if(distance_coxa < 0) :
             print(f"ERROR: Coxa-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Coxa-Link touches the obstacle!\n")
-            #config.number_error_coxa += 1
             return -1
         if(distance_femur < 0) :
             print(f"ERROR: Femur-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Femur-Link touches the obstacle!\n")
-            #config.number_error_femur += 1
             return -2
         if(distance_tibia < 0) :
             print(f"ERROR: Tibia-Link touches the obstacle")
             with open("testresults.txt", "a") as file:
                 file.write(f"Test Result: ERROR: Tibia-Link touches the obstacle!\n")
-            #config.number_error_tibia += 1
             return -3
         return min(distance_coxa, distance_femur, distance_tibia)
 
@@ -158,14 +162,11 @@ class RoboticArm:
         jacobian_matrix = self.jacobian_matrix()
         inverse_jacobian_matrix = self.inverse_jacobian_matrix(jacobian_matrix)
         delta_theta = inverse_jacobian_matrix @ error
-
-        #print(f"delta_coxa = {delta_theta[0]}, delta_femur = {delta_theta[1]}, delta_tibia = {delta_theta[2]}")
         
         new_theta_coxa = self.theta_coxa + np.sign(delta_theta[0]) * np.minimum(abs(config.learning_rate * delta_theta[0]), 0.5)
         new_theta_femur = self.theta_femur + np.sign(delta_theta[1])* np.minimum(abs(config.learning_rate * delta_theta[1]), 0.5)
         new_theta_tibia = self.theta_tibia + np.sign(delta_theta[2])* np.minimum(abs(config.learning_rate * delta_theta[2]), 0.5)
 
-        #self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
         return new_theta_coxa, new_theta_femur, new_theta_tibia
     
     def move_to_target(self, target_angles, step_size=0.05, tolerance=0.01):

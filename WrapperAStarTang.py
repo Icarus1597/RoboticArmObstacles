@@ -18,7 +18,6 @@ arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
 start_time = time.time() # To track the duration of the test 
 covered_distance = 0 # To measure the path length
 previous_end_effector_position = arm.end_effector
-mode_start_position = True
 time_end_algorithm = -1
 time_start_algorithm = -1
 
@@ -65,7 +64,6 @@ def init():
     line.set_data([], [])
     point.set_data([], [])
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
-    #mode_start_position = True
     return line, point, obstacle_circle
 
 next_node_index = 0
@@ -92,7 +90,6 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
     global next_node_index
-    global mode_start_position
     global path_node_list
     global time_end_algorithm
     global time_start_algorithm
@@ -129,11 +126,13 @@ def update(frame):
     if(distance < 0):
         ani.event_source.stop()
         if(distance == -1):
-            config.astar_start_position_number_error_coxa +=1
+            config.astar_tang_number_error_coxa +=1
         elif(distance == -2):
-            config.astar_start_position_number_error_femur +=1
+            config.astar_tang_number_error_femur +=1
+        elif(distance == -3):
+            config.astar_tang_number_error_tibia +=1
         else:
-            config.astar_start_position_number_error_tibia +=1
+            config.astar_tang_number_error_ee +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
@@ -200,8 +199,6 @@ def update(frame):
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
         if(len(path_node_list) > next_node_index+1):
             next_node_index += 1
-        else:
-            print(f"End of path node list reached")
 
     # Actualize data for the next frame
     line.set_data([0, arm.joint_coxa_x, arm.joint_femur_x, arm.joint_tibia_x], [0, arm.joint_coxa_y, arm.joint_femur_y, arm.joint_tibia_y])
@@ -217,9 +214,9 @@ def update(frame):
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: SUCCESS, duration={time.time() - start_time}, calculation_time = {time_end_algorithm - time_start_algorithm}, covered distance = {covered_distance}\n")
-        config.astar_start_position_number_success += 1
-        config.astar_start_position_list_covered_distance.append(covered_distance)
-        config.astar_start_position_time_needed.append(time.time() - start_time)
+        config.astar_tang_number_success += 1
+        config.astar_tang_list_covered_distance.append(covered_distance)
+        config.astar_tang_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

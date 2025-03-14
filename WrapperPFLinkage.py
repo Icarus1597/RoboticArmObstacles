@@ -103,8 +103,10 @@ def update(frame):
             config.pf_all_links_number_error_coxa +=1
         elif(distance == -2):
             config.pf_all_links_number_error_femur +=1
-        else:
+        elif(distance == -3):
             config.pf_all_links_number_error_tibia +=1
+        else:
+            config.pf_all_links_number_error_ee +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)

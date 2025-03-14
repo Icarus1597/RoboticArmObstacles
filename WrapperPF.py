@@ -99,8 +99,10 @@ def update(frame):
             config.pf_number_error_coxa +=1
         elif(distance == -2):
             config.pf_number_error_femur +=1
-        else:
+        elif(distance == -3):
             config.pf_number_error_tibia +=1
+        else:
+            config.pf_number_error_ee +=1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

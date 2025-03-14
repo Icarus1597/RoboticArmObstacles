@@ -8,19 +8,21 @@ import PrintStatistics as ps
 PI = np.pi
 
 current_test = 1
-algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
-             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py"]
+algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarStartPosition.py", 
+             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
+             "WrapperPFLinkageStartingPosition.py"]
 
 """ mode: 
 0 : Naive Approach
 1 : A*
-2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
+2 : PF Starting Position and Linkage
 3 : A* with adjusting starting position
 4 : A* inspired by Tang with PF for linkage
 5 : PF
 6 : PF Linkage
 7 : PF Starting Position
 """
+mode = 0
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -30,7 +32,7 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 5):
+while (current_test <= 1):
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -76,6 +78,9 @@ while (current_test <= 5):
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()
+ps.statistics_astar_tang
 ps.statistics_naive()
 ps.statistics_pf()
 ps.statistics_pf_linkage()
+ps.statistics_pf_sp()
+ps.statistics_pf_linkage_sp()

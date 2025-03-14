@@ -88,8 +88,10 @@ def update(frame):
             config.naive_number_error_coxa +=1
         elif(distance == -2):
             config.naive_number_error_femur +=1
-        else:
+        elif(distance == -3):
             config.naive_number_error_tibia +=1
+        else:
+            config.naive_number_error_ee +=1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

@@ -122,8 +122,10 @@ def update(frame):
             config.elbow_start_position_number_error_coxa +=1
         elif(distance == -2):
             config.elbow_start_position_number_error_femur +=1
-        else:
+        elif(distance == -3):
             config.elbow_start_position_number_error_tibia +=1
+        else:
+            config.elbow_start_position_number_error_ee +=1
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
@@ -147,8 +149,7 @@ def update(frame):
         if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
             if(len(path_node_list) > next_node_index+1):
                 next_node_index += 1
-            else:
-                print(f"End of path node list reached")
+            
     if (current_mode == 1):
         #arm.inverse_kinematics_with_knee(arm.joint_tibia, config.goal_femur_angle)
         arm.move_to_target(config.goal_reflect_femur_link)
