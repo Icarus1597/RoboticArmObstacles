@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # Define the center point (we'll place it in the middle of the grid)
 center = (0, 0)
@@ -42,4 +43,8 @@ for direction in directions:
 
 # Show the plot
 #plt.title('A* Algorithm Visualization - Center Point with 8 Directions')
-plt.show()
+#plt.show()
+#plt.savefig("AStarVis.pdf", )
+timestamp = time.strftime("%Y%m%d_%H%M%S")
+filename = f"./PDF_Figures/AStarNeighbours_{timestamp}.pdf"
+fig.savefig(filename, bbox_inches='tight')

@@ -115,7 +115,7 @@ def update(frame):
         print(f"TIMEOUT")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: TIMEOUT\n")
-        config.astar_start_position_number_timeout += 1
+        config.pf_sp_number_timeout += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

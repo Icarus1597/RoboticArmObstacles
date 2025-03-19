@@ -125,6 +125,14 @@ def update(frame):
         config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
+
+
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"./PDF_Figures/Wrapper_Naive_arm{timestamp}.pdf"
+        fig.savefig(filename, bbox_inches='tight')
+
+
+
         plt.close()
 
 

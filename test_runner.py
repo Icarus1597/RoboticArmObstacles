@@ -8,7 +8,7 @@ PI = np.pi
 current_test = 1
 algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
              "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
-             "WrapperPFStartingPosition.py"]
+             "WrapperPFLinkageStartingPosition.py"]
 
 """ config.wrapper_mode: (in config)
 0 : Naive Approach
@@ -691,10 +691,11 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
+ps.statistics_astar_tang
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()
-ps.statistics_astar_tang
+#ps.statistics_astar_tang
 ps.statistics_naive()
 ps.statistics_pf()
 ps.statistics_pf_linkage()
