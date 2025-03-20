@@ -51,13 +51,16 @@ timeout = 240
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
 min_distance_to_obstacle = 2
 
-""" mode: 
-0 : A* algorithm
-1 : Potential Fields Method without considering the whole linkage
-2 : A* algorithm with own approach to avoid obstacle with whole linkage
-3 : Naive Approach
-4 : Potential Fields Method with considering whole linkage
-5 : A* algorithm but moves to specific start position first
+""" config.wrapper_mode: (in config)
+0 : Naive Approach
+1 : A*
+2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
+3 : A* with adjusting starting position
+4 : A* inspired by Tang with PF for linkage
+5 : PF
+6 : PF Linkage
+7 : PF Starting Position
+8 : PF Starting Position and Linkage
 """
 wrapper_mode = 0
 # For mode 0 : A* algorithm

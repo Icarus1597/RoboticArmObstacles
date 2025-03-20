@@ -70,7 +70,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
-
+ 
 config.center = (-3, -1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")

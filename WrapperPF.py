@@ -125,9 +125,10 @@ def update(frame):
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
     if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
+        #print(f"First case")
+        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
     else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10]
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>config.max_velocity):
