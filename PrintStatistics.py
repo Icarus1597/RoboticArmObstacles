@@ -189,7 +189,7 @@ def statistics_pf_sp():
 def statistics_astar_tang():
     """Prints all tracked statistics for the A* algorithm with extension inspired by Tang to testresults.txt
     """
-    number_tests = config.astar_tang_number_success + config.astar_tang_number_error_tibia + config.astar_tang_number_error_femur + config.astar_tang_number_error_coxa + config.astar_tang_number_error_no_path + config.astar_number_error_ee
+    number_tests = config.astar_tang_number_success + config.astar_tang_number_error_tibia + config.astar_tang_number_error_femur + config.astar_tang_number_error_coxa + config.astar_tang_number_error_no_path + config.astar_number_error_ee + config.astar_tang_number_timeout
     if(number_tests == 0):
         with open("testresults.txt", "a") as file:
             file.write(f"A* algorithm Tang : \n Total number of tests: {number_tests}\n")
@@ -204,8 +204,8 @@ def statistics_astar_tang():
     else:
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
-        file.write(f"A* algorithm : \n Total number of tests: {number_tests}, #SUCCESS: {config.astar_tang_number_success}, in percent: {config.astar_tang_number_success/(number_tests)}\n")
-        file.write(f"#Error end effector = {config.astar_tang_number_error_ee}\n")
+        file.write(f"A* algorithm Tang: \n Total number of tests: {number_tests}, #SUCCESS: {config.astar_tang_number_success}, in percent: {config.astar_tang_number_success/(number_tests)}\n")
+        file.write(f"#Error end effector = {config.astar_tang_number_error_ee}, #Error timeout = {config.astar_tang_number_timeout}, #Error no path = {config.astar_tang_number_error_no_path}\n")
         file.write(f"#Error tibia = {config.astar_tang_number_error_tibia}, #Error femur = {config.astar_tang_number_error_femur}, #Error coxa = {config.astar_tang_number_error_coxa}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")
         mean_time_needed_calculation = sum(config.astar_tang_time_needed_calculation)/len(config.astar_tang_time_needed_calculation)

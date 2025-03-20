@@ -75,7 +75,7 @@ time_start_algorithm = time.time()
 path_node_list = initial_point.iterative_search_wrapper()
 
 time_end_algorithm = time.time()
-config.astar_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
+config.astar_tang_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
 # Updates the frame
 def update(frame):
@@ -100,7 +100,7 @@ def update(frame):
         print(f"TIMEOUT")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: TIMEOUT\n")
-        config.astar_start_position_number_timeout += 1
+        config.astar_tang_number_timeout += 1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()
@@ -145,7 +145,7 @@ def update(frame):
     distance_femur = Geometrie.distance_segment_point(config.center[0], config.center[1], arm.joint_coxa_x, arm.joint_coxa_y, arm.joint_femur_x, arm.joint_femur_y) - config.radius
         
     if(distance_femur < config.min_distance_to_obstacle or distance_coxa < config.min_distance_to_obstacle):
-        print(f"AStarTang: PF mode")
+        #print(f"AStarTang: PF mode")
         # Calculates Coxa-Joint Velocities for U_rep
         distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
     

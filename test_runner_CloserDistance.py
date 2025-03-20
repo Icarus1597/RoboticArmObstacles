@@ -1,12 +1,30 @@
 import config
 import numpy as np
+import PrintStatistics as ps
 
 PI = np.pi
 
 current_test = 1
 
+algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
+             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
+             "WrapperPFLinkageStartingPosition.py"]
+
+""" config.wrapper_mode: (in config)
+0 : Naive Approach
+1 : A*
+2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
+3 : A* with adjusting starting position
+4 : A* inspired by Tang with PF for linkage
+5 : PF
+6 : PF Linkage
+7 : PF Starting Position
+8 : PF Starting Position and Linkage
+"""
+
 config.target_x = -6
-config.target_y = 0
+config.target_y = 0.001
+config.delta_success_distance = 0.5
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -39,50 +57,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 2. Spalte: Ausgestreckt nach oben
 print("Zweite Spalte Pi/2, 0, 0")
@@ -99,50 +106,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 3. Spalte: Ausgestreckt schräg
 print("Dritte Spalte PI/4, 0, 0")
@@ -159,50 +155,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 4. Spalte: Ausgestreckt nach unten
 print("Vierte Spalte 3/2*PI, 0, 0")
@@ -219,50 +204,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 5. Spalte: Eingeklappt
 print("Fuenfte Spalte 0, PI, PI")
@@ -279,50 +253,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 6. Spalte: Eingeklappt
 print("Sechste Spalte PI/2, PI, PI")
@@ -339,50 +302,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 7. Spalte: Eingeklappt nach schräg rechts oben
 print("7. Spalte PI/4, PI, PI")
@@ -399,50 +351,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 8. Spalte: Eingeklappt nach unten
 print("8. Spalte 3/2*PI, PI, PI")
@@ -459,50 +400,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # Rechter Winkel
 # 9. Spalte rechter Winkel, rechts
@@ -520,50 +450,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 10. Spalte: Rechter Winkel nach oben
 print("10. Spalte PI/2, PI/2, PI/2")
@@ -580,50 +499,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 11. Spalte: Rechter Winkel nach schräg rechts oben
 print("11. Spalte PI/4, PI/2, PI/2")
@@ -640,50 +548,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 # 12. Spalte: Rechter Winkel nach unten
 print("12. Spalte 3/2*PI, PI/2, PI/2")
@@ -700,57 +597,46 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-1, 0)
+config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open("Visuals.py").read())
+exec(open(algorithm[config.wrapper_mode]).read())
 
-config.center = (-3, -1)
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open("Visuals.py").read())
-
-with open("testresults.txt", "a") as file:
-    file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
-
-# Statistics
-mean_covered_distance = sum(config.list_covered_distance) / len(config.list_covered_distance)
-mean_time_needed = sum(config.list_time_needed) / len(config.list_time_needed)
-with open("testresults.txt", "a") as file:
-    file.write(f"Total number of tests: {current_test-1}, #SUCCESS: {config.number_success}, in percent: {config.number_success/(current_test-1)}\n")
-    file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")
+ps.statistics_a_star()
+ps.statistics_a_star_elbow()
+ps.statistics_a_star_start_position()
+ps.statistics_astar_tang
+ps.statistics_naive()
+ps.statistics_pf()
+ps.statistics_pf_linkage()
+ps.statistics_pf_sp()
+ps.statistics_pf_linkage_sp()
