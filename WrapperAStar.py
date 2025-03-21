@@ -87,6 +87,21 @@ def update(frame):
     global covered_distance
     global next_node_index
 
+    # After a given time, the execution will be aborted
+    current_time = time.time()
+    ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
+    if(current_time - start_time > config.timeout) :
+        print(f"TIMEOUT")
+        with open("testresults.txt", "a") as file:
+            file.write(f"Test Result: TIMEOUT\n")
+        config.astar_timeout += 1
+        ani.event_source.stop()
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
     data_plot_path_x.append(arm.end_effector[0])
     data_plot_path_y.append(arm.end_effector[1])
     

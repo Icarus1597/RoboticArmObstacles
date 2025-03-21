@@ -21,7 +21,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-
+config.wrapper_mode = 4
 # Open/Make new file in "write"-config.wrapper_mode
 with open("testresults.txt", "w") as file:
     file.write("Test results\n\n")
@@ -694,7 +694,7 @@ exec(open(algorithm[config.wrapper_mode]).read())
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()
-ps.statistics_astar_tang
+ps.statistics_astar_tang()
 ps.statistics_naive()
 ps.statistics_pf()
 ps.statistics_pf_linkage()

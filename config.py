@@ -73,6 +73,7 @@ astar_number_error_femur = 0
 astar_number_error_coxa = 0
 astar_number_error_no_path = 0
 astar_number_error_ee = 0
+astar_timeout = 0
 
 # For mode 1 : conventional Potential Field method
 pf_list_covered_distance = []
