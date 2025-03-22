@@ -1,6 +1,7 @@
 import numpy as np
 from autograd import grad
 import Geometrie
+import config
 
 def u_att_function(pos_ee, pos_target, zeta) :
     """ Calculates the Attractive Potential Field to attract the end effector to the target point
@@ -19,7 +20,7 @@ def u_att_function(pos_ee, pos_target, zeta) :
     u_att = 1/2 * zeta * rho **2
     return u_att
     
-def u_rep_function(rho_b, rho_0, k) :
+def u_rep_function(pos_ee, rho_0, k) :
     """Calculates the Repulsive Potential Field which repels from the obstacle
 
     Args:
@@ -30,11 +31,11 @@ def u_rep_function(rho_b, rho_0, k) :
     Returns:
         float : Repulsive Potential Field
     """
+    rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
     if (rho_b <= rho_0) :
-        u_rep = 1/2 * k * pow((1/rho_b - 1/rho_0), 2)
-    else :
-        u_rep = 0
-    return u_rep
+        u_rep = 1/2 * k * (1/rho_b - 1/rho_0) ** 2
+        return u_rep
+    return 0.
 
 def v_att_function(pos_ee, pos_target, zeta) :
     """ Attraction Velocity (gradient of the potential field) in Cartesian Space.
@@ -47,11 +48,11 @@ def v_att_function(pos_ee, pos_target, zeta) :
     Returns: 
         float[] : attraction velocity in cartesian space
     """
-    def potential_function(pos_ee):
+    def potential_function_att(pos_ee):
         return u_att_function(pos_ee, pos_target, zeta)
     
     # Calculate the gradient with respect to pos_ee
-    grad_function = grad(potential_function)
+    grad_function = grad(potential_function_att)
     
     # Compute the gradient at the given pos_ee
     v_att = grad_function(pos_ee)
@@ -68,7 +69,7 @@ def V_att(v_att):
     """
     return np.array([v_att[0], v_att[1]]).T
 
-def v_rep_function(rho_b, rho_0, k) :
+def v_rep_function(pos_ee, rho_0, k) :
     """ Repulsive Velocity in Cartesian Space
 
     Args:
@@ -79,10 +80,16 @@ def v_rep_function(rho_b, rho_0, k) :
     Returns:
         float[] : Gradient of the Potential Field and Repulsive Velocity in Cartesian Space, 2x1 vector
     """
-    if(rho_b <= rho_0):
-        v_rep = k * (1/rho_b - 1/rho_0) * 1 / rho_b**2
-        return v_rep
-    return 0
+    def potential_function_rep(pos_ee):
+        return u_rep_function(pos_ee, rho_0, k)
+    
+    # Calculate the gradient with respect to rho_b
+    grad_function = grad(potential_function_rep)
+
+    # Compute the gradient with the given rho_b
+    v_rep = grad_function(pos_ee)
+    return -v_rep
+
 
 def V_rep(v_rep):
     """ Repulsive Velocity in Cartesian Space with angular velocity added
@@ -93,7 +100,7 @@ def V_rep(v_rep):
     Returns:
         float[]: Repulsive Velocity in Cartesian Space, is a 3x1 Vector, with added Angular Velocities omega_rep
     """
-    return np.array([0, v_rep])
+    return np.array([v_rep[0], v_rep[1]]).T
 
 def joint_velocities_att(inverse_jacobian_matrix, v_att) :
     """Calculates the Joint Velocities from Cartesian Space to Joint Space for the Attractive Velocity

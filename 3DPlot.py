@@ -26,12 +26,10 @@ Z = np.zeros_like(X)
 for i in range(X.shape[0]):
     for j in range(X.shape[1]):
         pos_ee = (X[i, j], Y[i, j])
-        rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
-        if(rho_b <= 0):
-            Z[i, j] = 10
-        else:
-            Z[i, j] =pf.v_att_function(pos_ee, (config.target_x, config.target_y), config.zeta) - pf.v_rep_function(rho_b, config.rho_0, config.k)
-            print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}, rho_b = {rho_b}")
+        #rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
+        
+        Z[i, j] =pf.v_att_function(pos_ee, (config.target_x, config.target_y), config.zeta)# - pf.v_rep_function(pos_ee, config.rho_0, config.k)
+        print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}")
             
         if (Z[i, j] > 10):
             #print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}, rho_b = {rho_b}")

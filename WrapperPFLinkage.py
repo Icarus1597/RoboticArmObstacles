@@ -123,28 +123,25 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
+    v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
     
     
-    if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+    joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
     
 
     # Calculates Coxa-Joint Velocities for U_rep
-    distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
+    #distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
  
-    v_rep_joint_coxa = pf.v_rep_function(distance_coxa, config.rho_0_coxa, config.k_coxa)
+    v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_coxa, config.k_coxa)
     jacobian_matrix_coxa = arm.jacobian_matrix_coxa()
     inverse_jacobian_matrix_coxa = arm.inverse_jacobian_matrix(jacobian_matrix_coxa)
     joint_velocity_rep_coxa = pf.joint_velocities_rep(inverse_jacobian_matrix_coxa, v_rep_joint_coxa)
 
     # Calculates Femur-Joint Velocities for U_rep
-    distance_femur = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_femur)
+    #distance_femur = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_femur)
 
-    v_rep_joint_femur = pf.v_rep_function(distance_femur, config.rho_0_femur, config.k_femur)
+    v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_femur, config.k_femur)
     jacobian_matrix_femur = arm.jacobian_matrix_femur()
     inverse_jacobian_matrix_femur = arm.inverse_jacobian_matrix(jacobian_matrix_femur)
     joint_velocity_rep_femur = pf.joint_velocities_rep(inverse_jacobian_matrix_femur, v_rep_joint_femur)

@@ -147,17 +147,17 @@ def update(frame):
     if(distance_femur < config.min_distance_to_obstacle or distance_coxa < config.min_distance_to_obstacle):
         #print(f"AStarTang: PF mode")
         # Calculates Coxa-Joint Velocities for U_rep
-        distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
+        #distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
     
-        v_rep_joint_coxa = pf.v_rep_function(distance_coxa, config.rho_0_coxa, config.k_coxa)
+        v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_coxa, config.k_coxa)
         jacobian_matrix_coxa = arm.jacobian_matrix_coxa()
         inverse_jacobian_matrix_coxa = arm.inverse_jacobian_matrix(jacobian_matrix_coxa)
         joint_velocity_rep_coxa = pf.joint_velocities_rep(inverse_jacobian_matrix_coxa, v_rep_joint_coxa)
 
         # Calculates Femur-Joint Velocities for U_rep
-        distance_femur = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_femur)
+        #distance_femur = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_femur)
 
-        v_rep_joint_femur = pf.v_rep_function(distance_femur, config.rho_0_femur, config.k_femur)
+        v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_femur, config.k_femur)
         jacobian_matrix_femur = arm.jacobian_matrix_femur()
         inverse_jacobian_matrix_femur = arm.inverse_jacobian_matrix(jacobian_matrix_femur)
         joint_velocity_rep_femur = pf.joint_velocities_rep(inverse_jacobian_matrix_femur, v_rep_joint_femur)
@@ -173,8 +173,8 @@ def update(frame):
         #    joint_velocity[2] = np.sign(joint_velocity[2]) * config.max_velocity
 
         # Calculate the new thetas
-        theta_coxa = arm.theta_coxa - config.delta_t * joint_velocity[0] * config.damping_factor
-        theta_femur = arm.theta_femur - config.delta_t * joint_velocity[1] * config.damping_factor
+        theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
+        theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
         #theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor*2
         arm.update_joints(theta_coxa, theta_femur, arm.theta_tibia)
           

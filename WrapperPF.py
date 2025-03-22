@@ -115,20 +115,17 @@ def update(frame):
     jacobian_matrix = arm.jacobian_matrix()
     inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
-
+    print(f"joint_v_att = {joint_velocity_att}")
    
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
   
     # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
+    v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
-    if(arm.end_effector[1] < 0):
-        #print(f"First case")
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10]
+    
+    joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>config.max_velocity):

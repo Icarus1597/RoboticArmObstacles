@@ -15,6 +15,8 @@ import config
 """
 test_runner = "test_runner.py"
 test_runner = "test_runner_CloserDistance.py"
+
+'''
 config.wrapper_mode = 0 # Naive
 exec(open("config.py").read())
 exec(open(test_runner).read())
@@ -33,7 +35,7 @@ exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
+'''
 config.wrapper_mode = 4 # A* Tang
 exec(open("config.py").read())
 exec(open(test_runner).read())

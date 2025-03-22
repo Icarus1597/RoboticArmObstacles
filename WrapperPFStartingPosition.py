@@ -143,7 +143,7 @@ def update(frame):
         return line, point, #obstacle_circle
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
+    #distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     if(mode_start_position):
         target_angles = calculate_starting_position(alpha_offset=PI*5/4)
@@ -153,7 +153,7 @@ def update(frame):
             mode_start_position = False
 
     else: 
-        # Here PF method TODO
+        # PF method
         # Calculations for the movement of joints: Attractive Velocity
         v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
         jacobian_matrix = arm.jacobian_matrix()
@@ -162,16 +162,13 @@ def update(frame):
 
     
         # Calculate distance to Circle and checks if the End Effector touches the Circle
-        distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
+        #distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
     
         # Calculates Joint Velocities for U_rep
-        v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
+        v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
         joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
-        if(arm.end_effector[1] < 0):
-            joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-        else:
-            joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
 
         # Hard maximum velocity for robot arm
         if(np.abs(joint_velocity[0])>config.max_velocity):

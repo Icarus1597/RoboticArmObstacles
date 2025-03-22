@@ -162,5 +162,7 @@ class AStarNode:
             path_node_list.append(current_node.parent_node)
             current_node = current_node.parent_node
         path_node_list.reverse()
+        target_node = AStarNode((config.target_x, config.target_y), (config.target_x, config.target_y))
+        path_node_list.append(target_node)
         print(f"Length Path Node List = {len(path_node_list)}")
         return path_node_list
