@@ -32,7 +32,10 @@ def u_rep_function(pos_ee, rho_0, k) :
         float : Repulsive Potential Field
     """
     rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
+    if(rho_b <= 0 or rho_0 <= 0):
+            return 100.
     if (rho_b <= rho_0) :
+        
         u_rep = 1/2 * k * (1/rho_b - 1/rho_0) ** 2
         return u_rep
     return 0.
@@ -55,7 +58,7 @@ def v_att_function(pos_ee, pos_target, zeta) :
     grad_function = grad(potential_function_att)
     
     # Compute the gradient at the given pos_ee
-    v_att = grad_function(pos_ee)
+    v_att = np.array(grad_function(pos_ee))
     return -v_att
 
 def V_att(v_att): 
@@ -87,7 +90,7 @@ def v_rep_function(pos_ee, rho_0, k) :
     grad_function = grad(potential_function_rep)
 
     # Compute the gradient with the given rho_b
-    v_rep = grad_function(pos_ee)
+    v_rep = np.array(grad_function(pos_ee))
     return -v_rep
 
 

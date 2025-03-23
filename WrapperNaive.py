@@ -129,7 +129,7 @@ def update(frame):
 
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         filename = f"./PDF_Figures/Wrapper_Naive_arm{timestamp}.pdf"
-        fig.savefig(filename, bbox_inches='tight')
+        #fig.savefig(filename, bbox_inches='tight')
 
 
 
@@ -151,7 +151,7 @@ def update(frame):
         # Generate individual name for each new figure
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         filename = f"./PDF_Figures/Wrapper_Naive_path_to_target_{timestamp}.pdf"
-        fig_path.savefig(filename, bbox_inches='tight')
+        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
 

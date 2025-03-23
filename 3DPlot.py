@@ -27,14 +27,16 @@ for i in range(X.shape[0]):
     for j in range(X.shape[1]):
         pos_ee = (X[i, j], Y[i, j])
         #rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
-        
-        Z[i, j] =pf.v_att_function(pos_ee, (config.target_x, config.target_y), config.zeta)# - pf.v_rep_function(pos_ee, config.rho_0, config.k)
-        print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}")
-            
-        if (Z[i, j] > 10):
-            #print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}, rho_b = {rho_b}")
-            Z[i, j] = 10
-
+        rho_b = Geometrie.distance_to_circle(config.center, config.radius, pos_ee)
+        if(rho_b <= 0):
+            Z[i, j] = 30
+        #Z[i, j] =np.linalg.norm(pf.v_att_function(pos_ee, (config.target_x, config.target_y), config.zeta))# - pf.v_rep_function(pos_ee, config.rho_0, config.k)
+        else:
+            Z[i, j] =np.linalg.norm(pf.v_att_function(pos_ee, (config.target_x, config.target_y), config.zeta))*1.5 + np.linalg.norm(pf.v_rep_function(pos_ee, config.rho_0, config.k))*10000
+            #Z[i, j] =np.linalg.norm(pf.v_rep_function(pos_ee, config.rho_0, config.k)) * 1000
+            #print(f"Z wert = {Z[i, j]}, i = {i}, j = {j}")
+            if(Z[i, j] > 30):
+                Z[i, j] = 30
 
 
 fig = plt.figure()
@@ -46,5 +48,5 @@ ax = plt.axes(projection='3d')
 ax.plot_surface(X, Y, Z, cmap='viridis',\
                 edgecolor='green')
 #ax.set_title('Surface plot geeks for geeks')
-#plt.savefig("./PDF_Figures/RepulsivePF3D.pdf", bbox_inches='tight')
+#plt.savefig("./PDF_Figures/RepPF3D.pdf", bbox_inches='tight')
 plt.show()

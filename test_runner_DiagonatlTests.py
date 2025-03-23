@@ -4,7 +4,7 @@ import PrintStatistics as ps
 
 
 PI = np.pi
-config.wrapper_mode = 4
+#config.wrapper_mode = 4
 rho_0 = 7
 k = 30
 

@@ -19,6 +19,7 @@ def statistics_a_star():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"A* algorithm : \n Total number of tests: {number_tests}, #SUCCESS: {config.astar_number_success}, in percent: {config.astar_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error End Effector = {config.astar_number_error_ee}, #Error Timeout = {config.astar_timeout} \n")
         file.write(f"#Error tibia = {config.astar_number_error_tibia}, #Error femur = {config.astar_number_error_femur}, #Error coxa = {config.astar_number_error_coxa}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")
@@ -43,6 +44,7 @@ def statistics_pf():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"PF: \nTotal number of tests: {number_tests}, #SUCCESS: {config.pf_number_success}, in percent: {config.pf_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.pf_number_error_ee}\n")
         file.write(f"#Error tibia = {config.pf_number_error_tibia}, #Error femur = {config.pf_number_error_femur}, #Error coxa = {config.pf_number_error_coxa}, #TIMEOUT = {config.pf_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")
@@ -65,6 +67,7 @@ def statistics_a_star_elbow():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"A* Elbow: \n Total number of tests: {number_tests}, #SUCCESS: {config.elbow_start_position_number_success}, in percent: {config.elbow_start_position_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.elbow_start_position_number_error_ee}\n")
         file.write(f"#Error tibia = {config.elbow_start_position_number_error_tibia}, #Error femur = {config.elbow_start_position_number_error_femur}, #Error coxa = {config.elbow_start_position_number_error_coxa}, #TIMEOUT = {config.elbow_start_position_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")
@@ -90,6 +93,7 @@ def statistics_naive():
     with open("testresults.txt", "a") as file:
         #number_tests = config.naive_number_success + config.naive_number_error_tibia + config.naive_number_error_femur + config.naive_number_error_coxa
         file.write(f"Naive: \nTotal number of tests: {number_tests}, #SUCCESS: {config.naive_number_success}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.naive_number_error_ee}\n")
         file.write(f"#Error tibia = {config.naive_number_error_tibia}, #Error femur = {config.naive_number_error_femur}, #Error coxa = {config.naive_number_error_coxa}")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")
@@ -113,6 +117,7 @@ def statistics_pf_linkage():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"PF all links: \nTotal number of tests: {number_tests}, #SUCCESS: {config.pf_all_links_number_success}, in percent: {config.pf_all_links_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.pf_all_links_number_error_ee}\n")
         file.write(f"#Error tibia = {config.pf_all_links_number_error_tibia}, #Error femur = {config.pf_all_links_number_error_femur}, #Error coxa = {config.pf_all_links_number_error_coxa}, #TIMEOUT = {config.pf_all_links_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")
@@ -136,6 +141,7 @@ def statistics_a_star_start_position():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"A* start position:\nTotal number of tests: {number_tests}, #SUCCESS: {config.astar_start_position_number_success}, in percent: {config.astar_start_position_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.astar_start_position_number_error_ee}\n")
         file.write(f"#Error tibia = {config.astar_start_position_number_error_tibia}, #Error femur = {config.astar_start_position_number_error_femur}, #Error coxa = {config.astar_start_position_number_error_coxa}, #TIMEOUT = {config.astar_start_position_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n")
@@ -160,6 +166,7 @@ def statistics_pf_linkage_sp():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"PF Starting Position Linkage: \nTotal number of tests: {number_tests}, #SUCCESS: {config.pf_sp_linkage_number_success}, in percent: {config.pf_sp_linkage_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.pf_sp_linkage_number_error_ee}\n")
         file.write(f"#Error tibia = {config.pf_sp_linkage_number_error_tibia}, #Error femur = {config.pf_sp_linkage_number_error_femur}, #Error coxa = {config.pf_sp_linkage_number_error_coxa}, #TIMEOUT = {config.pf_sp_linkage_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")
@@ -182,6 +189,7 @@ def statistics_pf_sp():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"PF Starting Position: \nTotal number of tests: {number_tests}, #SUCCESS: {config.pf_sp_number_success}, in percent: {config.pf_sp_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.pf_sp_number_error_ee}\n")
         file.write(f"#Error tibia = {config.pf_sp_number_error_tibia}, #Error femur = {config.pf_sp_number_error_femur}, #Error coxa = {config.pf_sp_number_error_coxa}, #TIMEOUT = {config.pf_sp_number_timeout}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}\n\n\n")
@@ -205,6 +213,7 @@ def statistics_astar_tang():
         mean_time_needed = -1
     with open("testresults.txt", "a") as file:
         file.write(f"A* algorithm Tang: \n Total number of tests: {number_tests}, #SUCCESS: {config.astar_tang_number_success}, in percent: {config.astar_tang_number_success/(number_tests)}\n")
+        file.write(f"config.wrapper_mode = {config.wrapper_mode}")
         file.write(f"#Error end effector = {config.astar_tang_number_error_ee}, #Error timeout = {config.astar_tang_number_timeout}, #Error no path = {config.astar_tang_number_error_no_path}\n")
         file.write(f"#Error tibia = {config.astar_tang_number_error_tibia}, #Error femur = {config.astar_tang_number_error_femur}, #Error coxa = {config.astar_tang_number_error_coxa}\n")
         file.write(f"Median covered distance = {mean_covered_distance}, median time needed = {mean_time_needed}")

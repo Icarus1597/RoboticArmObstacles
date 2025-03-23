@@ -115,7 +115,6 @@ def update(frame):
     jacobian_matrix = arm.jacobian_matrix()
     inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
-    print(f"joint_v_att = {joint_velocity_att}")
    
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
@@ -182,7 +181,7 @@ def update(frame):
         path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
         plt.gca().add_patch(path_obstacle_circle) #TODO
         plt.gca().add_patch(path_target_circle)
-        fig_path.savefig(filename, bbox_inches='tight')
+        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
   
     # Append the new data

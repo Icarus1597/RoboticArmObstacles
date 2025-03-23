@@ -203,7 +203,7 @@ def update(frame):
         path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
         plt.gca().add_patch(path_obstacle_circle) #TODO
         plt.gca().add_patch(path_target_circle)
-        fig_path.savefig(filename, bbox_inches='tight')
+        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data
