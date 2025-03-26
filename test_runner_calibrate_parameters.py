@@ -6,7 +6,7 @@ import Geometrie
 PI = np.pi
 
 current_test = 1
-algorithm = ["AStarWrapper.py", "Visuals.py", "OwnElbowWrapper.py", "NaiveWrapper.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
+algorithm = ["WrapperAStar.py", "WrapperNaive.py", "OwnElbowWrapper.py", "WrapperPF.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
 
 """ mode: 
 0 : A* algorithm

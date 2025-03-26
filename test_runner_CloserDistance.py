@@ -24,7 +24,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 
 config.target_x = -6
 config.target_y = 0.001
-config.delta_success_distance = 0.5
+config.delta_success_distance = 1
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:

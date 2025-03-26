@@ -123,6 +123,43 @@ class TestGeometrie(unittest.TestCase):
         alpha = (alpha + np.pi) % (2*np.pi)
         self.assertAlmostEqual(alpha, 0)
 
+    def test_direction_coxa(self):
+        config.target_x, config.target_y = (0, 5)
+        config.center = (5, 5)
+        config.radius = 2
+
+        arm = RoboterArm.RoboticArm(1, 1, 1)
+        arm.update_joints(0, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+
+        arm.update_joints(np.pi, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+
+        config.target_x, config.target_y = (5, 5)
+        config.center = (0, 5)
+        arm.update_joints(0, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+
+        arm.update_joints(np.pi, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+
+        arm.update_joints(0, 0, 0)
+        config.target_x, config.target_y = (-5, 0)
+        config.center = (0, 5)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+
+        arm.update_joints(np.pi, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+
+        config.target_x, config.target_y = (5, -4)
+        config.center = (5, -2)
+        arm.update_joints(0, 0, 0)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+
+        config.target_x, config.target_y = (5, -2)
+        config.center = (5, -4)
+        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+
 if __name__ == "__main__":
     unittest.main()
     

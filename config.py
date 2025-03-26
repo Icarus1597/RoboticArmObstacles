@@ -33,11 +33,11 @@ k = 15
 rho_0_femur = 2
 k_femur = 15
 
-rho_0_coxa = 3.5
-k_coxa = 15
+rho_0_coxa = 5
+k_coxa = 150
 
 # zeta  : attractive potential gain
-zeta = 1
+zeta = 5
 
 PI = np.pi
 # Start Position of the arm (posture/angles):

@@ -169,7 +169,7 @@ class RoboticArm:
 
         return new_theta_coxa, new_theta_femur, new_theta_tibia
     
-    def move_to_target(self, target_angles, step_size=0.05, tolerance=0.01):
+    def move_to_target(self, target_angles, step_size=0.05):
         """ Moves arm linkage in small steps to target angles
 
         Args:
@@ -185,7 +185,38 @@ class RoboticArm:
         #print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
-'''
+    def move_to_target_direction(self, target_angles, target_position, step_size=0.05, tolerance =0.1):
+        """ Moves arm linkage in small steps to target angles
+
+        Args:
+            target_angles(float[]): array with the target angles [theta_coxa, theta_femur, theta_tibia].
+            step_size(float): step size for the movement
+            tolerance(float): stops if difference between current and target angles smaller than the tolerance
+        """
+        delta_angles = np.array(target_angles) - np.array([self.theta_coxa, self.theta_femur, self.theta_tibia])
+        direction = -Geometrie.direction_coxa(self.joint_coxa, (config.target_x, config.target_y), config.center, target_position)
+
+        if(np.abs(delta_angles[0]) > tolerance):
+            new_theta_coxa = (self.theta_coxa +  direction *  np.minimum(np.abs(delta_angles[0]), step_size)+0.000001) % (2*np.pi)
+        else:
+            new_theta_coxa = self.theta_coxa
+
+        if(np.abs(delta_angles[1]) > tolerance):
+            new_theta_femur = (self.theta_femur + np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size))% (2*np.pi)
+        else:
+            new_theta_femur = self.theta_femur
+        
+        if(np.abs(delta_angles[2]) > tolerance):
+            new_theta_tibia = (self.theta_tibia + np.sign(delta_angles[2]) * np.minimum(np.abs(delta_angles[2]), step_size))% (2*np.pi)
+        else:
+            new_theta_tibia = self.theta_tibia
+        
+        #print(f"delta_anlges = {delta_angles}, direction = {direction}")
+
+        #print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
+        self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
+
+
     def reflect_femur_link(self):
         """ Reflects the femur link to bring it to the other side. The position of the tibia link stays the same
 
@@ -297,7 +328,7 @@ class RoboticArm:
 
         print(f"Reflect tibia link result: coxa = {theta_coxa}, femur = {theta_femur}, tibia = {theta_tibia}")
         return theta_coxa, theta_femur, theta_tibia
-    '''
+    
 
 
 

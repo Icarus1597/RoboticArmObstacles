@@ -21,7 +21,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-#config.wrapper_mode = 6
+#config.wrapper_mode = 7
 # Open/Make new file in "write"-config.wrapper_mode
 with open("testresults.txt", "w") as file:
     file.write("Test results\n\n")
@@ -93,7 +93,6 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
-
 # 2. Spalte: Ausgestreckt nach oben
 print("Zweite Spalte PI/2, 0, 0")
 config.theta_coxa = PI/2
@@ -146,7 +145,6 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
-
 
 # 3. Spalte: Ausgestreckt nach schräg rechts oben
 print("Dritte Spalte PI/4, 0, 0")
@@ -311,7 +309,6 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
-
 
 # 6. Spalte: Eingeklappt nach oben
 print("6. Spalte PI/2, PI, PI")

@@ -75,6 +75,7 @@ def calculate_starting_position(alpha_offset):
     theta_coxa = (alpha + side*alpha_offset) % (2*PI)
     theta_femur = PI/4 * side % (2*PI)
     theta_tibia = PI/4 * side % (2*PI)
+    #print(f"side = {side}, alpha = {alpha}, coxa, femur, tibia = {theta_coxa}, {theta_femur}, {theta_tibia}")
     return theta_coxa, theta_femur, theta_tibia
 
 def init():
@@ -147,10 +148,14 @@ def update(frame):
 
     if(mode_start_position):
         target_angles = calculate_starting_position(alpha_offset=PI*5/4)
-        if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
-            arm.move_to_target(target_angles, tolerance = config.tolerance)
+        if(not sm.arm_near_target_angles(arm, target_angles)):
+            #if(arm.distance_arm_obstacle(config.center, config.radius) > config.min_distance_to_obstacle):
+            target_position = (config.coxa_length * np.cos(target_angles[0]), config.coxa_length * np.sin(target_angles[0]))
+            arm.move_to_target_direction(target_angles, target_position)
         else:
             mode_start_position = False
+            with open("testresults.txt", "a") as file:
+                file.write(f"Successfully Reached starting posture\n")
 
     else: 
         # PF method
