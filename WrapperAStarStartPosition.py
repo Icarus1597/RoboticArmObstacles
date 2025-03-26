@@ -151,10 +151,13 @@ def update(frame):
 
     if(mode_start_position):
         target_angles = calculate_starting_position(alpha_offset=PI*5/4)
-        if(not sm.arm_near_target_angles(arm, target_angles) and arm.distance_arm_obstacle(config.center, config.radius) > 2*config.min_distance_to_obstacle):
-            arm.move_to_target(target_angles, tolerance = config.tolerance)
+        if(not sm.arm_near_target_angles(arm, target_angles)):
+            target_position = (config.coxa_length * np.cos(target_angles[0]), config.coxa_length * np.sin(target_angles[0]))
+            arm.move_to_target_direction(target_angles, target_position)
         else:
             mode_start_position = False
+            with open("testresults.txt", "a") as file:
+                file.write(f"Successfully Reached starting posture\n")
 
             # A* algorithm
             initial_point = AStarAlgorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))

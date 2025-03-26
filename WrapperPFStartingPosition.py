@@ -149,7 +149,6 @@ def update(frame):
     if(mode_start_position):
         target_angles = calculate_starting_position(alpha_offset=PI*5/4)
         if(not sm.arm_near_target_angles(arm, target_angles)):
-            #if(arm.distance_arm_obstacle(config.center, config.radius) > config.min_distance_to_obstacle):
             target_position = (config.coxa_length * np.cos(target_angles[0]), config.coxa_length * np.sin(target_angles[0]))
             arm.move_to_target_direction(target_angles, target_position)
         else:
