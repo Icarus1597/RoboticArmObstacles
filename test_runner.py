@@ -576,12 +576,13 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
-config.center = (-6, 0)
-config.radius = 4
-with open("testresults.txt", "a") as file:
-    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
-current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+# POSITION INVALID
+#config.center = (-6, 0)
+#config.radius = 4
+#with open("testresults.txt", "a") as file:
+#    file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
+#current_test = current_test + 1
+#exec(open(algorithm[config.wrapper_mode]).read())
 
 # 11. Spalte: Rechter Winkel nach schräg rechts oben
 print("11. Spalte PI/4, PI/2, PI/2")

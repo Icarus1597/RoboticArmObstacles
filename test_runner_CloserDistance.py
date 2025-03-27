@@ -21,7 +21,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-
+config.wrapper_mode = 7
 config.target_x = -6
 config.target_y = 0.001
 config.delta_success_distance = 1

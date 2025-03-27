@@ -278,15 +278,19 @@ def direction_coxa(femur_link, target, center, target_position):
     #print(f"angle_target = {angle_target}, angle_center = {angle_center}")
     if(angle_target > angle_center):
         #if(bool == -1 and bool_side != 0):
-        if(angle_target_position > angle_target):
+        if(angle_target_position < angle_target):
+           print(f"Geometrie: Case 1, target_pos> target > center")
            return -1
         else:
+            print(f"Geometrie: Case 2, target > center, target_pos")
             return 1
     else:
         #if(bool == 1 and bool_side != 0) :
         if(angle_target_position > angle_target):
+            print(f"Geometrie: Case 3, center, target_pos > target")
             return 1
         else:
+            print(f"Geometrie: Case 4, center > target > target_pos")
             return -1
 
 

@@ -22,7 +22,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarStartPosition.py
 6 : PF Linkage
 7 : PF Starting Position
 """
-mode = 0
+mode = 6
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -32,7 +32,7 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 1):
+while (current_test <= 10):
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -63,13 +63,13 @@ while (current_test <= 1):
         file.write(f"Start posture: coxa={config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
         file.write(f"target position: x={config.target_x}, y={config.target_y}\n")
 
-    mode = 0
+    #mode = 0
 
-    while (mode < len(algorithm)):
-        with open("testresults.txt", "a") as file:
-            file.write(f"Mode:{algorithm[mode]}\n")
-        exec(open(algorithm[mode]).read())
-        mode += 1
+    #while (mode < len(algorithm)):
+    with open("testresults.txt", "a") as file:
+        file.write(f"Mode:{algorithm[mode]}\n")
+    exec(open(algorithm[mode]).read())
+        #mode += 1
 
     current_test = current_test + 1
 
