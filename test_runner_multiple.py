@@ -16,19 +16,25 @@ import config
 test_runner = "test_runner.py"
 #test_runner = "test_runner_CloserDistance.py"
 
-config.wrapper_mode = 1 # Conventional A*
+config.wrapper_mode = 5
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
 
-config.wrapper_mode = 3 # A* SP
+config.wrapper_mode = 6
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
 
-config.wrapper_mode = 4 # A* Tang
+config.wrapper_mode = 7
+exec(open("config.py").read())
+exec(open(test_runner).read())
+timestamp = time.strftime("%Y%m%d_%H%M%S")
+shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
+
+config.wrapper_mode = 8
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
@@ -36,86 +42,26 @@ shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper
 
 test_runner = "test_runner_CloserDistance.py"
 
-config.wrapper_mode = 1 # Conventional A*
+config.wrapper_mode = 5
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
 
-config.wrapper_mode = 3 # A* SP
+config.wrapper_mode = 6
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
 
-config.wrapper_mode = 4 # A* Tang
-exec(open("config.py").read())
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-'''
-test_runner = "test_runner_CloserDistance.py"
-config.wrapper_mode = 0 # Naive
+config.wrapper_mode = 7
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
 
-config.wrapper_mode = 1 # A*
+config.wrapper_mode = 8
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 5 # PF
-exec(open("config.py").read())
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-
-# Elbow
-config.wrapper_mode = 2
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-test_runner = "test_runner.py"
-config.wrapper_mode = 2
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-
-config.wrapper_mode = 7 # PF Starting Position
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 8 # PF SP and Linkage
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-test_runner = "test_runner_CloserDistance.py"
-
-config.wrapper_mode = 5 # Conventional PF
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 6 # PF Linkage
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 7 # PF Starting Position
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 8 # PF SP and Linkage
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-'''

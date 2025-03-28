@@ -10,19 +10,20 @@ PI = np.pi
 current_test = 1
 algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarStartPosition.py", 
              "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
-             "WrapperPFLinkageStartingPosition.py"]
+             "WrapperPFLinkageStartingPosition.py", "WrapperAStarElbow.py"]
 
 """ mode: 
 0 : Naive Approach
 1 : A*
-2 : PF Starting Position and Linkage
-3 : A* with adjusting starting position
-4 : A* inspired by Tang with PF for linkage
-5 : PF
-6 : PF Linkage
-7 : PF Starting Position
+2 : A* SP
+3 : A* PF
+4 : PF
+5 : PF L
+6 : PF SP
+7 : PF SP L
+8 : A* Elbow
 """
-mode = 6
+#mode = 8
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -32,7 +33,7 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 10):
+while (current_test <= 100):
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -63,13 +64,16 @@ while (current_test <= 10):
         file.write(f"Start posture: coxa={config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
         file.write(f"target position: x={config.target_x}, y={config.target_y}\n")
 
-    #mode = 0
+    mode = 0
 
-    #while (mode < len(algorithm)):
-    with open("testresults.txt", "a") as file:
-        file.write(f"Mode:{algorithm[mode]}\n")
-    exec(open(algorithm[mode]).read())
-        #mode += 1
+    while (mode < len(algorithm)):
+        config.bool_naive_successfull = False
+        with open("testresults.txt", "a") as file:
+            file.write(f"Mode:{algorithm[mode]}\n")
+        exec(open(algorithm[mode]).read())
+        mode += 1
+        if(mode == 0 and config.bool_naive_successfull):
+            break
 
     current_test = current_test + 1
 

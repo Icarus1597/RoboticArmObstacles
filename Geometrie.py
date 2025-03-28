@@ -220,6 +220,7 @@ def angle_vector_point(vector_start, vector_end, point):
         alpha = -alpha % (np.pi*2)
     return alpha
 
+'''
 def angle_vector_point2(vector_start, vector_end, point):
     """ Calculates the angle between a vector consisting of a start and end point and a vector from said start point to an additional point
 
@@ -258,39 +259,32 @@ def angle_vector_point2(vector_start, vector_end, point):
 
     alpha = np.arccos(temp)
     return alpha
+'''
 
-def direction_coxa(femur_link, target, center, target_position):
+def direction_coxa(femur_link, target_point, center, target_position):
     """Determines rotation direction for coxa joint so that it avoids the obstacle
 
     Args:
-        femur_link (float[]): position of the femur link, 2D
-        target (float[]): position of the target, 2D
-        center (float[]): position of the center, 2D
+        femur_link (float[]): current position of the femur link, 2D
+        target_point (float[]): position of the target, 2D
+        center (float[]): position of the center of the obstacle , 2D
+        target_position (float[]): target position of the femur_link (starting posture), 2D
 
     Returns:
         int: 1, if rotation against the clock, -1, if rotation with the clock
     """
-    angle_target = angle_vector_point((0,0), femur_link, target)
+    angle_target_point = angle_vector_point((0,0), femur_link, target_point)
     angle_center = angle_vector_point((0,0), femur_link, center)
-    #bool = np.sign(cartesian_distance(femur_link, target) - cartesian_distance(target_position, target)) 
-    #bool_side = side_point_to_line2(target_position, (0,0), center) + side_point_to_line2(femur_link, (0,0), center)
-    angle_target_position = angle_vector_point((0,0), target_position, target)
-    #print(f"angle_target = {angle_target}, angle_center = {angle_center}")
-    if(angle_target > angle_center):
-        #if(bool == -1 and bool_side != 0):
-        if(angle_target_position < angle_target):
-           print(f"Geometrie: Case 1, target_pos> target > center")
+    angle_target_position = angle_vector_point((0,0), target_position, target_point)
+    if(angle_target_point > angle_center):
+        if(angle_target_position < angle_target_point):
            return -1
         else:
-            print(f"Geometrie: Case 2, target > center, target_pos")
             return 1
     else:
-        #if(bool == 1 and bool_side != 0) :
-        if(angle_target_position > angle_target):
-            print(f"Geometrie: Case 3, center, target_pos > target")
+        if(angle_target_position > angle_target_point):
             return 1
         else:
-            print(f"Geometrie: Case 4, center > target > target_pos")
             return -1
 
 

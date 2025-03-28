@@ -125,6 +125,7 @@ def update(frame):
         config.naive_list_time_needed.append(time.time() - start_time)
         ani.event_source.stop()
         plt.figure(fig.number)
+        config.bool_naive_successfull = True
 
 
         timestamp = time.strftime("%Y%m%d_%H%M%S")

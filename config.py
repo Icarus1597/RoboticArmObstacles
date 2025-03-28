@@ -171,3 +171,5 @@ learning_rate = 0.1
 goal_reflect_femur_link = []
 
 goal_reflect_tibia_link = []
+
+bool_naive_successfull = False
