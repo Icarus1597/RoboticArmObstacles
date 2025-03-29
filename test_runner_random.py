@@ -77,12 +77,22 @@ while (current_test <= 100):
     if(not config.bool_naive_successfull):
         current_test = current_test + 1
 
+    if((current_test %5) == 0):
+        ps.statistics_a_star()
+        ps.statistics_a_star_elbow()
+        ps.statistics_a_star_start_position()
+        ps.statistics_astar_tang()
+        ps.statistics_naive()
+        ps.statistics_pf()
+        ps.statistics_pf_linkage()
+        ps.statistics_pf_sp()
+        ps.statistics_pf_linkage_sp()
 
 
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()
-ps.statistics_astar_tang
+ps.statistics_astar_tang()
 ps.statistics_naive()
 ps.statistics_pf()
 ps.statistics_pf_linkage()

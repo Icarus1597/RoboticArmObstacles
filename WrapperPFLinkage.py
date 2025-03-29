@@ -127,7 +127,7 @@ def update(frame):
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
     
     
-    joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+    joint_velocity = joint_velocity_att + joint_velocity_rep#+ [1E-10,1E-10,1E-10]
     
 
     # Calculates Coxa-Joint Velocities for U_rep

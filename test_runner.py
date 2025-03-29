@@ -255,7 +255,6 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
-
 # 5. Spalte: Eingeklappt nach rechts
 print("5. Spalte 0, PI, PI")
 config.theta_coxa = 0

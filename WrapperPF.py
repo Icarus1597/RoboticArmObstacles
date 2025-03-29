@@ -124,7 +124,7 @@ def update(frame):
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
     
-    joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+    joint_velocity = joint_velocity_att + joint_velocity_rep
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>config.max_velocity):
@@ -137,7 +137,7 @@ def update(frame):
     # Calculate the new thetas and update joints
     theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
     theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
-    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
+    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor*2
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     # Actualize data for the next frame
