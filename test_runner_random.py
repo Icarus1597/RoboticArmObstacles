@@ -71,11 +71,11 @@ while (current_test <= 100):
         with open("testresults.txt", "a") as file:
             file.write(f"Mode:{algorithm[mode]}\n")
         exec(open(algorithm[mode]).read())
-        mode += 1
         if(mode == 0 and config.bool_naive_successfull):
             break
-
-    current_test = current_test + 1
+        mode += 1
+    if(not config.bool_naive_successfull):
+        current_test = current_test + 1
 
 
 
