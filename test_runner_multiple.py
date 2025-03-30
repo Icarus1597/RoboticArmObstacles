@@ -14,7 +14,7 @@ import config
 8 : PF Starting Position and Linkage
 """
 test_runner = "test_runner.py"
-#test_runner = "test_runner_CloserDistance.py"
+
 config.wrapper_mode = 5
 exec(open("config.py").read())
 exec(open(test_runner).read())
