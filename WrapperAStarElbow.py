@@ -114,6 +114,15 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
+    if(path_node_list == -1):
+        print(f"Error in A* Path Calculation: No path found")
+        config.astar_number_error_no_path +=1
+        plt.figure(fig.number)
+        plt.close()
+        plt.figure(figure_distance_to_target.number)
+        plt.close()
+        return line, point, #obstacle_circle
+
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
     if(distance < 0):
@@ -144,7 +153,7 @@ def update(frame):
     print(f"Current Mode = {current_mode}")
     if (current_mode == 0):
         theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
-        arm.update_joints(theta_coxa, theta_femur, theta_tibia)
+        arm.update_joints(theta_coxa+1E-10, theta_femur, theta_tibia)
         
         if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
             if(len(path_node_list) > next_node_index+1):

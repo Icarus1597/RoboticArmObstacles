@@ -15,27 +15,9 @@ import config
 """
 test_runner = "test_runner.py"
 
-config.wrapper_mode = 5
-exec(open("config.py").read())
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 6
-exec(open("config.py").read())
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
 test_runner = "test_runner_CloserDistance.py"
 
-config.wrapper_mode = 5
-exec(open("config.py").read())
-exec(open(test_runner).read())
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-shutil.copyfile("testresults.txt", f"./Test_Results/Wrapper_mode_{config.wrapper_mode}_{timestamp}.txt")
-
-config.wrapper_mode = 6
+config.wrapper_mode = 2
 exec(open("config.py").read())
 exec(open(test_runner).read())
 timestamp = time.strftime("%Y%m%d_%H%M%S")
