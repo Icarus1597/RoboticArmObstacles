@@ -190,6 +190,7 @@ def update(frame):
         print(f"Error: path_node_list empty/None")
         with open("testresults.txt", "a") as file:
             file.write(f"Test Result: Error. Arm in start position too close to obstacle\n")
+        config.astar_tang_number_error_no_path +=1
         ani.event_source.stop()
         plt.figure(fig.number)
         plt.close()

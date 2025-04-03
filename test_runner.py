@@ -537,6 +537,7 @@ config.theta_tibia = PI/2
 with open("testresults.txt", "a") as file:
     file.write(f"Tenth Set of Tests. coxa = {config.theta_coxa}, femur = {config.theta_femur}, tibia = {config.theta_tibia}\n")
 
+'''
 # Position and radius of the obstacle (circle)
 config.center = (-6, 0)
 config.radius = 2
@@ -544,6 +545,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
+'''
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
@@ -691,12 +693,12 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
-#ps.statistics_a_star()
-#ps.statistics_a_star_elbow()
-#ps.statistics_a_star_start_position()
+ps.statistics_a_star()
+ps.statistics_a_star_elbow()
+ps.statistics_a_star_start_position()
 ps.statistics_astar_tang()
-#ps.statistics_naive()
-#ps.statistics_pf()
-#ps.statistics_pf_linkage()
-#ps.statistics_pf_sp()
-#ps.statistics_pf_linkage_sp()
+ps.statistics_naive()
+ps.statistics_pf()
+ps.statistics_pf_linkage()
+ps.statistics_pf_sp()
+ps.statistics_pf_linkage_sp()

@@ -21,7 +21,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-config.wrapper_mode = 4
+#config.wrapper_mode = 4
 config.target_x = -6
 config.target_y = 0
 config.delta_success_distance = 1
@@ -630,12 +630,12 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.wrapper_mode]).read())
 
-#ps.statistics_a_star()
-#ps.statistics_a_star_elbow()
-#ps.statistics_a_star_start_position()
+ps.statistics_a_star()
+ps.statistics_a_star_elbow()
+ps.statistics_a_star_start_position()
 ps.statistics_astar_tang()
-#ps.statistics_naive()
-#ps.statistics_pf()
-#ps.statistics_pf_linkage()
-#ps.statistics_pf_sp()
-#ps.statistics_pf_linkage_sp()
+ps.statistics_naive()
+ps.statistics_pf()
+ps.statistics_pf_linkage()
+ps.statistics_pf_sp()
+ps.statistics_pf_linkage_sp()
