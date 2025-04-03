@@ -139,7 +139,7 @@ def update(frame):
         return line, point, #obstacle_circle
 
     theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
-    arm.update_joints(theta_coxa+0.00000000000001, theta_femur, theta_tibia)
+    arm.update_joints(theta_coxa+1E-5, theta_femur, theta_tibia)
 
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
         if(len(path_node_list) > next_node_index+1):

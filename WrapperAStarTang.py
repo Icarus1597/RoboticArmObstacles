@@ -143,8 +143,10 @@ def update(frame):
     distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
     distance_coxa = Geometrie.distance_segment_point(config.center[0], config.center[1], 0, 0, arm.joint_coxa_x, arm.joint_coxa_y) - config.radius
     distance_femur = Geometrie.distance_segment_point(config.center[0], config.center[1], arm.joint_coxa_x, arm.joint_coxa_y, arm.joint_femur_x, arm.joint_femur_y) - config.radius
-        
-    if(distance_femur < config.min_distance_to_obstacle or distance_coxa < config.min_distance_to_obstacle):
+
+    distance_coxa_link = Geometrie.distance_to_circle(config.center, config.radius, (0,0))
+    distance_to_obstacle = min(config.min_distance_to_obstacle, distance_coxa_link)    
+    if(distance_femur < config.min_distance_to_obstacle or distance_coxa < distance_to_obstacle):
         #print(f"AStarTang: PF mode")
         # Calculates Coxa-Joint Velocities for U_rep
         #distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
@@ -181,9 +183,9 @@ def update(frame):
     #else: # mode A*
     # Punkte nacheinander abfahren path node list
     #print(f"path_node_list length = {len(path_node_list)}")
-    if(len(path_node_list)>0):
+    if(path_node_list != -1):
         theta_coxa, theta_femur, theta_tibia= arm.inverse_kinematics(path_node_list[next_node_index].position)
-        arm.update_joints(theta_coxa, theta_femur, theta_tibia)
+        arm.update_joints(theta_coxa+1E-5, theta_femur, theta_tibia)
     else:
         print(f"Error: path_node_list empty/None")
         with open("testresults.txt", "a") as file:
