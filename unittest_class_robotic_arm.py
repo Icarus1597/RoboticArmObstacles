@@ -1,13 +1,13 @@
 import unittest
 import config
 import numpy as np
-import RoboterArm
-import Geometrie
+import robotic_arm
+import geometry
 
 class TestRoboterArm(unittest.TestCase):
     
     def test_update_joints(self):
-        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm = robotic_arm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
         self.assertEqual(arm.theta_coxa, 0)
         self.assertEqual(arm.theta_femur, 0)
@@ -39,7 +39,7 @@ class TestRoboterArm(unittest.TestCase):
         return
     
     def test_distance_arm_obstacle(self):
-        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm = robotic_arm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
         result = arm.distance_arm_obstacle((-3, 0), 1)
         self.assertEqual(result, 2)
@@ -86,7 +86,7 @@ class TestRoboterArm(unittest.TestCase):
     '''
 
     def test_reflect_femur_link(self):
-        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm = robotic_arm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
         result_coxa, result_femur, result_tibia = arm.reflect_femur_link()
         self.assertAlmostEqual(result_coxa, 0)
@@ -106,7 +106,7 @@ class TestRoboterArm(unittest.TestCase):
         self.assertAlmostEqual(result_tibia, 320/180*np.pi)
 
     def test_reflect_tibia_link(self):
-        arm = RoboterArm.RoboticArm(3, 3, 3)
+        arm = robotic_arm.RoboticArm(3, 3, 3)
         arm.update_joints(0, 0, 0)
         result_coxa, result_femur, result_tibia = arm.reflect_tibia_link()
         self.assertAlmostEqual(result_coxa, 0)

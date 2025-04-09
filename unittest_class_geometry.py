@@ -1,76 +1,76 @@
 import unittest
 import config
 import numpy as np
-import RoboterArm
-import Geometrie
+import robotic_arm
+import geometry
 
-class TestGeometrie(unittest.TestCase):
+class Testgeometry(unittest.TestCase):
     
     '''
     def test_reflect_on_hypotenuse(self):
-        x, y = Geometrie.reflect_on_hypotenuse(-2, 2, 0, 0, 0, 3)
+        x, y = geometry.reflect_on_hypotenuse(-2, 2, 0, 0, 0, 3)
         self.assertEqual(x, 2)
         self.assertEqual(y, 2)
 
-        x, y = Geometrie.reflect_on_hypotenuse(2, 2, 0, 0, 0, 3)
+        x, y = geometry.reflect_on_hypotenuse(2, 2, 0, 0, 0, 3)
         self.assertEqual(x, -2)
         self.assertEqual(y, 2)
 
-        x, y = Geometrie.reflect_on_hypotenuse(0, 2, 0, 0, 0, 3)
+        x, y = geometry.reflect_on_hypotenuse(0, 2, 0, 0, 0, 3)
         self.assertEqual(x, 0)
         self.assertEqual(y, 2)
 
-        x, y = Geometrie.reflect_on_hypotenuse(0, 2, 0, 3, 0, 0)
+        x, y = geometry.reflect_on_hypotenuse(0, 2, 0, 3, 0, 0)
         self.assertEqual(x, 0)
         self.assertEqual(y, 2)
 
-        x, y = Geometrie.reflect_on_hypotenuse(0, 2, 0, 0, 2, 2)
+        x, y = geometry.reflect_on_hypotenuse(0, 2, 0, 0, 2, 2)
         self.assertEqual(x, 2)
         self.assertEqual(y, 0)
         return
     '''
         
     def test_which_side_small_angle(self):
-        arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+        arm = robotic_arm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
         arm.update_joints(np.pi/4, np.pi/2, np.pi*3/2)
-        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_coxa), 0)
-        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_femur), 0)
-        self.assertEqual(Geometrie.which_side_small_angle(arm.theta_tibia), 1)
+        self.assertEqual(geometry.which_side_small_angle(arm.theta_coxa), 0)
+        self.assertEqual(geometry.which_side_small_angle(arm.theta_femur), 0)
+        self.assertEqual(geometry.which_side_small_angle(arm.theta_tibia), 1)
 
     '''
     def test_which_side_obstacle_to_coxa(self):
         arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
         arm.update_joints(0, np.pi/2, np.pi/2)
-        self.assertEqual(Geometrie.which_side_obstacle_to_coxa(arm, config.center), 0)
+        self.assertEqual(geometry.which_side_obstacle_to_coxa(arm, config.center), 0)
 
         arm.update_joints(np.pi, np.pi/2, np.pi/2)
-        self.assertEqual(Geometrie.which_side_obstacle_to_coxa(arm, config.center), 1)
+        self.assertEqual(geometry.which_side_obstacle_to_coxa(arm, config.center), 1)
         return
     '''
 
     def test_distance_segment_point(self):
-        result = Geometrie.distance_segment_point(3, 3, 0, 0, 0, 5)
+        result = geometry.distance_segment_point(3, 3, 0, 0, 0, 5)
         self.assertEqual(result, 3)
 
-        result = Geometrie.distance_segment_point(-3, 3, 0, 0, 0, 5)
+        result = geometry.distance_segment_point(-3, 3, 0, 0, 0, 5)
         self.assertEqual(result, 3)
     
     def test_side_point_to_line(self):
-        result = Geometrie.side_point_to_line(1, 0, 0, 0, 1, 1)
+        result = geometry.side_point_to_line(1, 0, 0, 0, 1, 1)
         self.assertEqual(result, 1)
 
-        result = Geometrie.side_point_to_line(0, 1, 0, 0, 1, 1)
+        result = geometry.side_point_to_line(0, 1, 0, 0, 1, 1)
         self.assertEqual(result, 0)
 
-        result = Geometrie.side_point_to_line(0, 1, 1, 1, 0, 0)
+        result = geometry.side_point_to_line(0, 1, 1, 1, 0, 0)
         self.assertEqual(result, 1)
         return
     
     def test_boolean_switch_elbow(self):
-        arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+        arm = robotic_arm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
         arm.update_joints(np.pi/4, np.pi/4, np.pi/4)
         config.center = (-1, 5)
-        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+        bool_result_coxa, bool_result_tibia = geometry.booleans_switch_elbows(arm, config.center)
 
         # Should both be on correct side
         self.assertEqual(bool_result_coxa, 1)
@@ -78,7 +78,7 @@ class TestGeometrie(unittest.TestCase):
 
         arm.update_joints(np.pi/4, np.pi/4, np.pi*3/2)
         config.center = (-1, 5)
-        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+        bool_result_coxa, bool_result_tibia = geometry.booleans_switch_elbows(arm, config.center)
 
         # Coxa should still be correct, tibia on the other side
         self.assertEqual(bool_result_coxa, 1)
@@ -86,7 +86,7 @@ class TestGeometrie(unittest.TestCase):
 
         arm.update_joints(np.pi/4*5, np.pi/4, 0)
         config.center = (-1, 5)
-        bool_result_coxa, bool_result_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+        bool_result_coxa, bool_result_tibia = geometry.booleans_switch_elbows(arm, config.center)
 
         # Should both be on wrong side
         self.assertEqual(bool_result_coxa, 0)
@@ -94,31 +94,31 @@ class TestGeometrie(unittest.TestCase):
         return
     
     def test_angle_vector_joint(self):
-        arm = RoboterArm.RoboticArm(1, 1, 1)
+        arm = robotic_arm.RoboticArm(1, 1, 1)
         arm.update_joints(0, 0, 0)
         config.center = (0, 3)
-        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        alpha = geometry.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, np.pi/2)
 
         config.center = (1, 1)
-        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        alpha = geometry.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, np.pi/4)
 
         config.center = (1, -1)
-        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        alpha = geometry.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, 7*np.pi/4)
 
         arm.update_joints(np.pi/2, 0, 0)
         config.center = (3, 0)
-        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        alpha = geometry.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, 3*np.pi/2)
 
         config.center = (0,0)
-        alpha = Geometrie.angle_vector_point((0,0), arm.joint_coxa, config.center)
+        alpha = geometry.angle_vector_point((0,0), arm.joint_coxa, config.center)
         self.assertAlmostEqual(alpha, -1)
 
         config.center = (-6, 0)
-        alpha = Geometrie.angle_vector_point((0,0), (1, 0), config.center)
+        alpha = geometry.angle_vector_point((0,0), (1, 0), config.center)
         self.assertAlmostEqual(alpha, np.pi)
         alpha = (alpha + np.pi) % (2*np.pi)
         self.assertAlmostEqual(alpha, 0)
@@ -128,37 +128,37 @@ class TestGeometrie(unittest.TestCase):
         config.center = (5, 5)
         config.radius = 2
 
-        arm = RoboterArm.RoboticArm(1, 1, 1)
+        arm = robotic_arm.RoboticArm(1, 1, 1)
         arm.update_joints(0, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
 
         arm.update_joints(np.pi, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
 
         config.target_x, config.target_y = (5, 5)
         config.center = (0, 5)
         arm.update_joints(0, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
 
         arm.update_joints(np.pi, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
 
         arm.update_joints(0, 0, 0)
         config.target_x, config.target_y = (-5, 0)
         config.center = (0, 5)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
 
         arm.update_joints(np.pi, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
 
         config.target_x, config.target_y = (5, -4)
         config.center = (5, -2)
         arm.update_joints(0, 0, 0)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), -1)
 
         config.target_x, config.target_y = (5, -2)
         config.center = (5, -4)
-        self.assertEqual(Geometrie.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
+        self.assertEqual(geometry.direction_coxa(arm.joint_femur, (config.target_x, config.target_y), config.center), 1)
 
 if __name__ == "__main__":
     unittest.main()

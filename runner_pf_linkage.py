@@ -1,17 +1,17 @@
 import numpy as np
-import RoboterArm
+import robotic_arm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import PotentialFields as pf
+import potential_fields as pf
 import time
 import autograd.numpy as anp
 import config
-import Geometrie
+import geometry
 
 
 
 # Update the posture of the arm
-arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+arm = robotic_arm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
 arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
 
 start_time = time.time() # To track the duration of the test 
@@ -120,7 +120,7 @@ def update(frame):
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
+    distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     # Calculates Joint Velocities for U_rep
     v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
@@ -171,7 +171,7 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    distance_to_target = Geometrie.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
@@ -215,7 +215,7 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
-    step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    step_covered_distance = geometry.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
 

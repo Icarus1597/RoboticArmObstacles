@@ -1,11 +1,11 @@
 import unittest
-import AStarAlgorithm
+import a_star_algorithm
 import config
 
 class TestAStarAlgorithm(unittest.TestCase):
     
     def test_constructor(self):
-        node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
+        node = a_star_algorithm.AStarNode((4, 5), (6, 7))
 
         self.assertEqual(node.position, (4, 5))
         self.assertEqual(node.goal_point, (6, 7))
@@ -14,7 +14,7 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(node.parent_node, None)
         
     def test_generate_neighbouring_nodes(self):
-        node = AStarAlgorithm.AStarNode((0, 0), (6, 7))
+        node = a_star_algorithm.AStarNode((0, 0), (6, 7))
         config.number_neighboring_nodes = 8
         config.distance_to_neighbour = 1
         neighbouring_nodes = node.generate_neighbouring_nodes()
@@ -25,17 +25,17 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertAlmostEqual(neighbouring_nodes[2].position[1], 1)
 
     def test_calculate_evaluation_function(self):
-        node = AStarAlgorithm.AStarNode((0, 0), (10, 10))
+        node = a_star_algorithm.AStarNode((0, 0), (10, 10))
         evaluation_function = node.calculate_evaluation_function()
 
         self.assertAlmostEqual(evaluation_function, 14.142135623)
 
-        node2 = AStarAlgorithm.AStarNode((1, 1), (10, 10))
+        node2 = a_star_algorithm.AStarNode((1, 1), (10, 10))
         evaluation_function2 = node2.calculate_evaluation_function()
 
         self.assertAlmostEqual(evaluation_function2, 12.727922061)
 
-        node3 = AStarAlgorithm.AStarNode((10, 10), (10, 10))
+        node3 = a_star_algorithm.AStarNode((10, 10), (10, 10))
         evaluation_function3 = node3.calculate_evaluation_function()
 
         self.assertAlmostEqual(evaluation_function3, 0)
@@ -45,7 +45,7 @@ class TestAStarAlgorithm(unittest.TestCase):
 
         self.assertAlmostEqual(evaluation_function2, 25.4558441227)
 
-        node4 = AStarAlgorithm.AStarNode((1,8), (10, 10))
+        node4 = a_star_algorithm.AStarNode((1,8), (10, 10))
         node4.parent_node = node2
         node2.parent_node = node
         node.calculate_evaluation_function()
@@ -60,14 +60,14 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertAlmostEqual(node4.calculate_evaluation_function(), 17.63375801966)
 
     def test_is_contained_in_list(self):
-        node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
+        node = a_star_algorithm.AStarNode((4, 5), (6, 7))
         list = []
         self.assertFalse(node.is_contained_in_list(list))
         list.append(node)
         self.assertTrue(node.is_contained_in_list(list))
 
     def test_smallest_evaluation_function(self):
-        node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
+        node = a_star_algorithm.AStarNode((4, 5), (6, 7))
 
         self.assertEqual(node.smallest_evaluation_function(None), -1)
 
@@ -76,14 +76,14 @@ class TestAStarAlgorithm(unittest.TestCase):
 
         self.assertEqual(node.smallest_evaluation_function(open_list), node)
 
-        node2 = AStarAlgorithm.AStarNode((4, 6), (6, 7))
+        node2 = a_star_algorithm.AStarNode((4, 6), (6, 7))
         node2.calculate_evaluation_function()
         open_list.append(node2)
 
         self.assertEqual(node.smallest_evaluation_function(open_list), node2)
         self.assertNotEqual(node.smallest_evaluation_function(open_list), node)
 
-        node3 = AStarAlgorithm.AStarNode((6,7), (6,7))
+        node3 = a_star_algorithm.AStarNode((6,7), (6,7))
         node3.calculate_evaluation_function()
         open_list.append(node3)
 
@@ -95,11 +95,11 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(node.smallest_evaluation_function(open_list), node2)
 
     def test_path_node_list(self):
-        node = AStarAlgorithm.AStarNode((4, 5), (6, 7))
+        node = a_star_algorithm.AStarNode((4, 5), (6, 7))
 
         self.assertEqual(len(node.path_node_list()), 1)
 
-        node2 = AStarAlgorithm.AStarNode((1, 2), (6, 7))
+        node2 = a_star_algorithm.AStarNode((1, 2), (6, 7))
         node2.parent_node = node
         path_node_list = node2.path_node_list()
 
@@ -107,7 +107,7 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(path_node_list[0], node)
         self.assertEqual(path_node_list[1], node2)
 
-        node3 = AStarAlgorithm.AStarNode((1, 5), (6, 7))
+        node3 = a_star_algorithm.AStarNode((1, 5), (6, 7))
         node3.parent_node = node2
         path_node_list = node3.path_node_list()
 
@@ -117,7 +117,7 @@ class TestAStarAlgorithm(unittest.TestCase):
         self.assertEqual(path_node_list[2], node3)
 
     def test_iterative_search(self):
-        node = AStarAlgorithm.AStarNode((0, 0), (0, 10))
+        node = a_star_algorithm.AStarNode((0, 0), (0, 10))
         result = node.iterative_search_wrapper()
         self.assertNotEqual(result, -1)
         self.assertEqual(len(result), 11)

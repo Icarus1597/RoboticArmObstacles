@@ -1,6 +1,6 @@
 import config
 import numpy as np
-import PrintStatistics as ps
+import print_test_results as ps
 
 PI = np.pi
 

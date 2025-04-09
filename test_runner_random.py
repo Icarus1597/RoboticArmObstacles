@@ -1,8 +1,8 @@
 import config
 import numpy as np
 import random
-import RoboterArm
-import PrintStatistics as ps
+import robotic_arm
+import print_test_results as ps
 
 
 PI = np.pi
@@ -52,7 +52,7 @@ while (current_test <= 100):
     config.center = (center_x, center_y)
 
     # Test if in start position the arm is already too close to the obstacle
-    arm = RoboterArm.RoboticArm(config.coxa_length, config.femur_length, config.tibia_length)
+    arm = robotic_arm.RoboticArm(config.coxa_length, config.femur_length, config.tibia_length)
     arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
     distance = arm.distance_arm_obstacle(config.center, config.radius)
 

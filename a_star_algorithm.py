@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import PotentialFields as pf
-import Geometrie
+import potential_fields as pf
+import geometry
 import config
 import time
 
@@ -19,7 +19,7 @@ class AStarNode:
         self.position = position
         self.goal_point = goal_point
         self.true_cost = 0
-        self.estimated_cost = Geometrie.cartesian_distance(position, goal_point)
+        self.estimated_cost = geometry.cartesian_distance(position, goal_point)
         self.parent_node = None
     
     def iterative_search(self, open_list, closed_list) :
@@ -47,7 +47,7 @@ class AStarNode:
             print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
-        if(Geometrie.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
+        if(geometry.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
             return
         
         neighbouring_nodes = node.generate_neighbouring_nodes()
@@ -121,8 +121,8 @@ class AStarNode:
         if(self.parent_node == None):
             self.true_cost = 0
         else:
-            self.true_cost = self.parent_node.true_cost + Geometrie.cartesian_distance(self.parent_node.position, self.position)
-        self.estimated_cost = Geometrie.cartesian_distance(self.goal_point, self.position)
+            self.true_cost = self.parent_node.true_cost + geometry.cartesian_distance(self.parent_node.position, self.position)
+        self.estimated_cost = geometry.cartesian_distance(self.goal_point, self.position)
         return self.true_cost + self.estimated_cost
     
     # Wraps the iterative search and iterates over every node in open_list

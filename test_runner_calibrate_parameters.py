@@ -1,7 +1,6 @@
 import config
 import numpy as np
-import PrintStatistics as ps
-import Geometrie
+import print_test_results as ptr
 
 PI = np.pi
 
@@ -84,6 +83,6 @@ exec(open(algorithm[1]).read()) # PF
 exec(open(algorithm[3]).read()) # Naive
 
 
-ps.statistics_a_star()
-ps.statistics_pf()
-ps.statistics_naive()
+ptr.statistics_a_star()
+ptr.statistics_pf()
+ptr.statistics_naive()

@@ -1,15 +1,15 @@
 import numpy as np
-import RoboterArm
+import robotic_arm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import PotentialFields as pf
+import potential_fields as pf
 import time
 import autograd.numpy as anp
 import config
-import Geometrie
+import geometry
 
 # Update the posture of the arm
-arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
+arm = robotic_arm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
 arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
 
 start_time = time.time() # To track the duration of the test 
@@ -110,25 +110,21 @@ def update(frame):
         plt.close()
         return line, point, #obstacle_circle
 
-    # Calculate distance to Circle and checks if the End Effector touches the Circle
-    distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
-
     # Calculations for the movement of joints: Attractive Velocity
     v_att_joint = pf.v_att_function(arm.joint_tibia, anp.array([config.target_x, config.target_y], dtype=anp.float64), config.zeta)
     jacobian_matrix = arm.jacobian_matrix()
     inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
     joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
+   
+    # Calculate distance to Circle and checks if the End Effector touches the Circle
+    distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
   
     # Calculates Joint Velocities for U_rep
-    v_rep_joint = pf.v_rep_function(distance, config.rho_0, config.k)
+    v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
     joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
 
-    v_total = v_att_joint + v_rep_joint
-
-    if(arm.end_effector[1] < 0):
-        joint_velocity = joint_velocity_att - joint_velocity_rep + [1E-10,1E-10,1E-10] # Very small amount so arm doesn't get stuck in start position
-    else:
-        joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
+    
+    joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
 
     # Hard maximum velocity for robot arm
     if(np.abs(joint_velocity[0])>config.max_velocity):
@@ -141,7 +137,7 @@ def update(frame):
     # Calculate the new thetas and update joints
     theta_coxa = arm.theta_coxa + config.delta_t * joint_velocity[0] * config.damping_factor
     theta_femur = arm.theta_femur + config.delta_t * joint_velocity[1] * config.damping_factor
-    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor
+    theta_tibia = arm.theta_tibia + config.delta_t * joint_velocity[2] * config.damping_factor*2
     arm.update_joints(theta_coxa, theta_femur, theta_tibia)
 
     # Actualize data for the next frame
@@ -152,7 +148,7 @@ def update(frame):
     plt.gca().add_patch(obstacle_circle)
 
     # Stops, when target reached/ close to target
-    distance_to_target = Geometrie.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
+    distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
         print("SUCCESS: Target reached!")
         with open("testresults.txt", "a") as file:
@@ -197,7 +193,7 @@ def update(frame):
     line_distance_to_target.set_ydata(y_data_distance_to_target)
     figure_distance_to_target.canvas.draw()
 
-    step_covered_distance = Geometrie.cartesian_distance(previous_end_effector_position, arm.end_effector)
+    step_covered_distance = geometry.cartesian_distance(previous_end_effector_position, arm.end_effector)
     covered_distance += step_covered_distance
     previous_end_effector_position = arm.end_effector
 

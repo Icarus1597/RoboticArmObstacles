@@ -1,7 +1,7 @@
 import config
 import numpy as np
-import PrintStatistics as ps
-import Geometrie
+import print_test_results as ps
+import geometry
 
 PI = np.pi
 
@@ -41,7 +41,7 @@ config.target_y = 0
 config.center = (-6, 0)
 config.radius = 2
 alpha_offset = PI
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 print(f"alpha = {alpha}")
 alpha = (alpha + alpha_offset) % (2*np.pi)
 print(f"theta_coxa = {alpha}")
@@ -57,7 +57,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -67,7 +67,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-9, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -77,7 +77,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-9, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -87,7 +87,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -97,7 +97,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-6, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -108,7 +108,7 @@ exec(open(algorithm[mode]).read())
 
 config.center = (-6, 0)
 config.radius = 4
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -123,7 +123,7 @@ config.target_y = 0
 
 config.center = (-6, 0)
 config.radius = 2
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -133,7 +133,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -143,7 +143,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-7, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -153,7 +153,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-7, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -163,7 +163,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -173,7 +173,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-6, -1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -183,7 +183,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-6, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -197,7 +197,7 @@ config.target_y = 1
 
 config.center = (-3, -1)
 config.radius = 1
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -207,7 +207,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, 1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -217,7 +217,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-3, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -227,7 +227,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-4, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -237,7 +237,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-2, 0)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 
@@ -247,7 +247,7 @@ current_test = current_test + 1
 exec(open(algorithm[mode]).read())
 
 config.center = (-4, 1)
-alpha = Geometrie.angle_vector_point((0,0), (1,0), config.center)
+alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
 alpha = (alpha + alpha_offset) % (2*np.pi)
 config.theta_coxa = alpha
 

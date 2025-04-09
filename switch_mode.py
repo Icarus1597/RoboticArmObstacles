@@ -1,6 +1,6 @@
 import config
-import Geometrie
-import RoboterArm
+import geometry
+import robotic_arm
 import numpy as np
 
 # Current mode
@@ -63,7 +63,7 @@ def choose_mode(arm, current_mode):
         distance_to_obstacle = arm.distance_arm_obstacle(config.center, config.radius)
         if(distance_to_obstacle < config.min_distance_to_obstacle*2):
             # If yes: Elbow posture coxa correct? -> coxa mode
-            bool_coxa, bool_tibia = Geometrie.booleans_switch_elbows(arm, config.center)
+            bool_coxa, bool_tibia = geometry.booleans_switch_elbows(arm, config.center)
             if(bool_coxa == 0):
                 switch_to_mode_coxa(arm)
                 return 1
@@ -97,7 +97,7 @@ def choose_mode(arm, current_mode):
     print(f"choose_mode: Should never reach this line. current_mode={current_mode}")
     return 0
         
-def arm_near_target_angles(arm :RoboterArm.RoboticArm, target_angles, tolerance = 0.1):
+def arm_near_target_angles(arm :robotic_arm.RoboticArm, target_angles, tolerance = 0.1):
     """ Checks if the arm posture is within tolerance to the target_angles
 
     Args:
