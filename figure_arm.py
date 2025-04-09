@@ -1,10 +1,7 @@
 import numpy as np
 import RoboterArm
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-import time
 import config
-import SwitchMode as sm
 import Geometrie
 
 PI = np.pi
@@ -22,7 +19,10 @@ def calculate_theta_coxa():
     config.theta_tibia = gamma_offset * side % (2*PI)
     return alpha
 
-config.theta_coxa = calculate_theta_coxa()
+#config.theta_coxa = calculate_theta_coxa()
+config.theta_coxa = -PI/8*4
+config.theta_femur = -PI/8*6.5
+config.theta_tibia = PI/8*4.5
 # Update the posture of the arm
 arm = RoboterArm.RoboticArm(config.coxa_length,config.femur_length,config.tibia_length)
 arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
@@ -50,4 +50,4 @@ plt.figure(fig.number)
 plt.gca().add_patch(obstacle_circle)
 
 #plt.show()
-plt.savefig('starting_posture_5.pdf', bbox_inches='tight')
+plt.savefig('demo_elbow.pdf', bbox_inches='tight')
