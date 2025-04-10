@@ -1,6 +1,5 @@
 import numpy as np
 
-# Test Parameter:
 # Position of the target
 target_x, target_y = -12,0.1
 
@@ -30,17 +29,19 @@ damping_factor =  0.000108
 rho_0 = 5
 k = 15
 
-rho_0_femur = 2
-k_femur = 15
+# rho_0 and k for femur and tibia link
+rho_0_tibia = 2
+k_tibia = 15
 
-rho_0_coxa = 5
-k_coxa = 150
+rho_0_femur = 5
+k_femur = 150
 
 # zeta  : attractive potential gain
 zeta = 5
 
 PI = np.pi
-# Start Position of the arm (posture/angles):
+
+# Start posture of the arm:
 theta_coxa = 0
 theta_femur = PI/2
 theta_tibia = PI/2
@@ -51,7 +52,7 @@ timeout = 240
 # If the distance between obstacle and arm is smaller than this, stop the arm/abort execution
 min_distance_to_obstacle = 2
 
-""" config.wrapper_mode: (in config)
+""" config.runner_mode: (in config)
 0 : Naive Approach
 1 : A*
 2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
@@ -62,7 +63,8 @@ min_distance_to_obstacle = 2
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-wrapper_mode = 0
+runner_mode = 0
+
 # For mode 0 : A* algorithm
 astar_list_covered_distance = []
 astar_time_needed = []
@@ -161,7 +163,6 @@ astar_tang_number_error_no_path = 0
 # Parameters A Star Algorithm
 distance_to_neighbour = 1.5
 number_neighboring_nodes = 8
-#max_distance_to_target = distance_to_neighbour # Should be smaller/equal to distance_to_neighbour
 
 # Parameters inverse Kinematics
 tolerance = 2
@@ -169,7 +170,6 @@ learning_rate = 0.1
 
 # Change Elbow Posture Mode
 goal_reflect_femur_link = []
-
 goal_reflect_tibia_link = []
 
 bool_naive_successfull = False

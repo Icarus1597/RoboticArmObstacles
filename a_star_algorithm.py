@@ -1,11 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import potential_fields as pf
 import geometry
 import config
-import time
 
 PI = np.pi
+
 
 class AStarNode:
 
@@ -13,8 +11,8 @@ class AStarNode:
         """ Initializes the intial point for the A* search
 
         Args:
-            position ((int, int)): position of the initial point
-            goal_point ((int, int)): position of the goal point
+            position ((float, float)): position of the initial point
+            goal_point ((float, float)): position of the goal point
         """
         self.position = position
         self.goal_point = goal_point
@@ -44,7 +42,6 @@ class AStarNode:
 
         if(np.abs(node.position[0] - node.goal_point[0]) < config.distance_to_neighbour and 
            np.abs(node.position[1] - node.goal_point[1]) < config.distance_to_neighbour):
-            print("SUCCESS! Reached goal point in AStar Path Calculation\n")
             return node.path_node_list()
         
         if(geometry.distance_to_circle(config.center, config.radius, node.position) < config.min_distance_to_obstacle):
@@ -100,7 +97,7 @@ class AStarNode:
         """ Generates the neighbouring nodes of this node.
 
         Returns:
-            node[]: list of the neighbouring nodes of this ndoe
+            node[]: list of the neighbouring nodes of this node
         """
         neighbouring_nodes = []
         for i in range (config.number_neighboring_nodes):
@@ -125,13 +122,6 @@ class AStarNode:
         self.estimated_cost = geometry.cartesian_distance(self.goal_point, self.position)
         return self.true_cost + self.estimated_cost
     
-    # Wraps the iterative search and iterates over every node in open_list
-    # Input:
-    #   arm:    To calculate the initial_point based on the end_effector of the arm
-    #   goal_point: Target Point of the End Effector
-    # Output:
-    #   -1 : If no path is found
-    #   path_node_list: list of the nodes of the path found
     def iterative_search_wrapper(self):
         """Iterativly searches nodes in open_list until target is reached of open_list is empty.
 
@@ -140,7 +130,6 @@ class AStarNode:
         """
         open_list = []
         closed_list = []
-        #initial_point = AStarNode(arm.end_effector, goal_point)
         open_list.append(self)
 
         while open_list:
@@ -164,5 +153,4 @@ class AStarNode:
         path_node_list.reverse()
         target_node = AStarNode((config.target_x, config.target_y), (config.target_x, config.target_y))
         path_node_list.append(target_node)
-        print(f"Length Path Node List = {len(path_node_list)}")
         return path_node_list
