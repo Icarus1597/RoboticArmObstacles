@@ -148,7 +148,7 @@ def update(frame):
     if(distance_femur < config.min_distance_to_obstacle or distance_coxa < distance_to_obstacle):
 
         # Calculates Coxa link Velocities for U_rep
-        v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_tibia, config.k_tibia)
+        v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_femur, config.k_femur)
         jacobian_matrix_coxa = arm.jacobian_matrix_coxa()
         inverse_jacobian_matrix_coxa = arm.inverse_jacobian_matrix(jacobian_matrix_coxa)
         joint_velocity_rep_coxa = pf.joint_velocities_rep(inverse_jacobian_matrix_coxa, v_rep_joint_coxa)

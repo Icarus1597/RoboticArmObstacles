@@ -25,8 +25,7 @@ algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "r
 8 : PF Starting Position and Linkage
 """
 #mode = 8
-
-# Open/Make new file in "write"-mode
+# Write testing parameters to testresults.txt
 with open("testresults.txt", "w") as file:
     file.write("Test results\n\n")
 
@@ -34,7 +33,9 @@ config.theta_coxa = random.random()*PI
 config.theta_femur = random.random()*PI
 config.theta_tibia = random.random()*PI
 
-while (current_test <= 100):
+while (current_test <= 100): # Here number how many tests per approach
+
+    # Generate random testing parameters. angles, target and obstacle position, obstacle radius
     config.theta_coxa = random.random()*PI
     config.theta_femur = random.random()*PI
     config.theta_tibia = random.random()*PI
@@ -57,7 +58,7 @@ while (current_test <= 100):
     arm.update_joints(config.theta_coxa, config.theta_femur, config.theta_tibia)
     distance = arm.distance_arm_obstacle(config.center, config.radius)
 
-    if(distance < 1.5*config.min_distance_to_obstacle):
+    if(distance < 1.5*config.min_distance_to_obstacle): # reject tests were arm very close to obstacle
         continue
 
     with open("testresults.txt", "a") as file:
@@ -67,6 +68,7 @@ while (current_test <= 100):
 
     mode = 0
 
+    # Reject successfull tests under naive approach here. Cycle through all approaches
     while (mode < len(algorithm)):
         config.bool_naive_successfull = False
         with open("testresults.txt", "a") as file:
@@ -78,7 +80,7 @@ while (current_test <= 100):
     if(not config.bool_naive_successfull):
         current_test = current_test + 1
 
-    if((current_test %5) == 0):
+    if((current_test %5) == 0): # Print test results regularly
         ps.statistics_a_star()
         ps.statistics_a_star_elbow()
         ps.statistics_a_star_start_position()

@@ -54,7 +54,6 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.runner_mode]).read())
 
-'''
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
@@ -691,7 +690,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.runner_mode]).read())
-'''
+
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()

@@ -119,12 +119,12 @@ def update(frame):
     
     joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
  
-    v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_coxa, config.k_coxa)
+    v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_femur, config.k_femur)
     jacobian_matrix_coxa = arm.jacobian_matrix_coxa()
     inverse_jacobian_matrix_coxa = arm.inverse_jacobian_matrix(jacobian_matrix_coxa)
     joint_velocity_rep_coxa = pf.joint_velocities_rep(inverse_jacobian_matrix_coxa, v_rep_joint_coxa)
 
-    v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_femur, config.k_femur)
+    v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_tibia, config.k_tibia)
     jacobian_matrix_femur = arm.jacobian_matrix_femur()
     inverse_jacobian_matrix_femur = arm.inverse_jacobian_matrix(jacobian_matrix_femur)
     joint_velocity_rep_femur = pf.joint_velocities_rep(inverse_jacobian_matrix_femur, v_rep_joint_femur)

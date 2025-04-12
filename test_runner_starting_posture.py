@@ -10,7 +10,7 @@ algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "r
              "runner_a_star_tang.py", "runner_potential_fields.py", "runner_pf_linkage.py", "runner_pf_starting_posture.py",
              "runner_pf_linkage_sp.py"]
 
-""" config.runner_mode: (in config)
+"""runner_mode:
 0 : Naive Approach
 1 : A*
 2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
@@ -37,7 +37,7 @@ with open("testresults.txt", "w") as file:
     file.write(f"Minimum distance to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
 
 PI = np.pi
-# TODO Starting position
+
 config.target_x = -12
 config.target_y = 0
 config.center = (-6, 0)
@@ -263,6 +263,9 @@ exec(open(algorithm[mode]).read())
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()
+ps.statistics_astar_tang()
 ps.statistics_naive()
 ps.statistics_pf()
 ps.statistics_pf_linkage()
+ps.statistics_pf_sp()
+ps.statistics_pf_linkage_sp()

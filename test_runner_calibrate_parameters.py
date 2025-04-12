@@ -20,7 +20,6 @@ algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "r
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-mode = 1
 
 # Open/Make new file in "write"-mode
 with open("testresults.txt", "w") as file:
@@ -37,56 +36,21 @@ with open("testresults.txt", "w") as file:
     file.write(f"Minimum distance to obstacle: min_distance_to_obstacle = {config.min_distance_to_obstacle}\n \n")
 
 PI = np.pi
-# TODO Starting position
+
 config.target_x = -12
 config.target_y = 0
-config.center = (-600, 0)
+
+config.center = (-600, 0) # Move it far out of the way to not influence the arm
 config.radius = 2
 
 config.theta_coxa = 0
 config.theta_femur = PI/2
 config.theta_tibia = PI/2
 
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
-exec(open(algorithm[0]).read()) # A*
-exec(open(algorithm[1]).read()) # PF
-exec(open(algorithm[3]).read()) # Naive
-
+for i in range (0, 9): # run multiple times to get average
+    exec(open(algorithm[0]).read()) # naive
+    exec(open(algorithm[1]).read()) # A*
+    exec(open(algorithm[5]).read()) # PF
 
 ptr.statistics_a_star()
 ptr.statistics_pf()

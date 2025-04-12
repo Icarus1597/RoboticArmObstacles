@@ -21,12 +21,12 @@ algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "r
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-#config.wrapper_mode = 4
+#config.runner_mode = 4
 config.target_x = -6
 config.target_y = 0
 config.delta_success_distance = 1
 
-# Open/Make new file in "write"-mode
+# Write testing parameters to testresults.txt
 with open("testresults.txt", "w") as file:
     file.write("Test results\n\n")
     file.write("Current Parameters:\n")
@@ -56,39 +56,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 2. Spalte: Ausgestreckt nach oben
 print("Zweite Spalte Pi/2, 0, 0")
@@ -105,39 +105,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 3. Spalte: Ausgestreckt schräg
 print("Dritte Spalte PI/4, 0, 0")
@@ -154,39 +154,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 4. Spalte: Ausgestreckt nach unten
 print("Vierte Spalte 3/2*PI, 0, 0")
@@ -203,39 +203,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 5. Spalte: Eingeklappt
 print("Fuenfte Spalte 0, PI, PI")
@@ -252,39 +252,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 6. Spalte: Eingeklappt
 print("Sechste Spalte PI/2, PI, PI")
@@ -301,39 +301,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 7. Spalte: Eingeklappt nach schräg rechts oben
 print("7. Spalte PI/4, PI, PI")
@@ -350,39 +350,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 8. Spalte: Eingeklappt nach unten
 print("8. Spalte 3/2*PI, PI, PI")
@@ -399,39 +399,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # Rechter Winkel
 # 9. Spalte rechter Winkel, rechts
@@ -449,39 +449,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 '''
 # 10. Spalte: Rechter Winkel nach oben
 print("10. Spalte PI/2, PI/2, PI/2")
@@ -498,39 +498,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 '''
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 '''
 # 11. Spalte: Rechter Winkel nach schräg rechts oben
 print("11. Spalte PI/4, PI/2, PI/2")
@@ -547,39 +547,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 # 12. Spalte: Rechter Winkel nach unten
 print("12. Spalte 3/2*PI, PI/2, PI/2")
@@ -596,39 +596,39 @@ config.radius = 1
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-1, 0)
 config.radius = 0.5
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 0)
 config.radius = 2
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 config.center = (-3, 1)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
-exec(open(algorithm[config.wrapper_mode]).read())
+exec(open(algorithm[config.runner_mode]).read())
 
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
