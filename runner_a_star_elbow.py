@@ -35,15 +35,6 @@ x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
 
-# Plot: Searched Points of the A-Star Algorithm
-search_points_plot, ax_search_points = plt.subplots()
-plt.figure(search_points_plot.number) # To make sure, the correct plot is the active one
-ax_search_points.set_aspect('equal')
-# Set axis limits considering the link lengths
-
-ax_search_points.set_xlim(-arm_length,  arm_length)
-ax_search_points.set_ylim(-arm_length,  arm_length)
-
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
 ax2.set_xlabel('Time (s)')
@@ -69,13 +60,12 @@ def init():
     obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
     return line, point, obstacle_circle
 
-# A-Star Algorithm
+# A-Star Algorithm: Calculate path
 initial_point = a_star_algorithm.AStarNode(arm.end_effector, (config.target_x, config.target_y))
 time_start_algorithm = time.time()
 path_node_list = initial_point.iterative_search_wrapper()
 time_end_algorithm = time.time()
 config.elbow_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
-
 
 next_node_index = 0
 
@@ -108,9 +98,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        plt.figure(search_points_plot.number)
-        plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     if(path_node_list == -1):
         print(f"Error in A* Path Calculation: No path found")
@@ -119,7 +107,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     # Calculate distance arm to obstacle. If negative, error and abort execution
     distance = arm.distance_arm_obstacle(config.center, config.radius)
@@ -137,19 +125,16 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        plt.figure(search_points_plot.number)
-        plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
 
     if (current_mode == None):
         current_mode = 0
-        print(f"update: Changed current mode form None to 0")
     current_mode = sm.choose_mode(arm, current_mode)
-    print(f"Current Mode = {current_mode}")
-    if (current_mode == 0):
+    
+    if (current_mode == 0): # mode normal: approach the target via a star
         theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
         arm.update_joints(theta_coxa+1E-10, theta_femur, theta_tibia)
         
@@ -157,11 +142,9 @@ def update(frame):
             if(len(path_node_list) > next_node_index+1):
                 next_node_index += 1
             
-    if (current_mode == 1):
-        #arm.inverse_kinematics_with_knee(arm.joint_tibia, config.goal_femur_angle)
+    if (current_mode == 1): # mode reflect Femur link
         arm.move_to_target(config.goal_reflect_femur_link)
-    if (current_mode == 2):
-        #arm.inverse_kinematics_with_tibia(arm.joint_tibia, config.goal_tibia_angle)
+    if (current_mode == 2): # mode reflect Tibia link
         arm.move_to_target(config.goal_reflect_tibia_link)
 
     # Actualize data for the next frame
@@ -184,8 +167,6 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-        plt.figure(search_points_plot.number)
         plt.close()
 
     # Append the new data

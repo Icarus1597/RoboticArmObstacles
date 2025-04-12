@@ -6,11 +6,11 @@ import geometry
 """ Class RoboticArm:
     Model of a robotic arm with three joints
     with the corresponding link angles and joint lengths
-    with methods to initialize the arm, update the position, inverse kinematics etc.
+    with methods to initialize the arm, update the position, inverse kinematics
 """
 class RoboticArm:
     def __init__(self, length_coxa, length_femur, length_tibia):
-        """ Initializes the arm
+        """Initializes the arm
 
         Args:
             length_coxa (float): length of the coxa joint
@@ -51,7 +51,7 @@ class RoboticArm:
         self.end_effector = self.joint_tibia
 
     def jacobian_matrix(self) :
-        """ Calculate the Jacobian Matrix.
+        """Calculate the Jacobian Matrix.
 
         Returns:
             np.array: jacobian_matrix 2x3
@@ -69,7 +69,7 @@ class RoboticArm:
         return j_matrix
     
     def jacobian_matrix_femur(self) :
-        """ Calculate the Jacobian Matrix for the femur link
+        """Calculate the Jacobian Matrix for the femur link
 
         Returns:
             np.array: Jacobian Matrix for the femur link 2x2
@@ -83,10 +83,10 @@ class RoboticArm:
         return j_matrix
     
     def jacobian_matrix_coxa(self) :
-        """ Calculate the Jacobian Matrix for the coxa link
+        """Calculate the Jacobian Matrix for the coxa link
 
         Returns:
-            np.array: Jacobian Matrix for coxa link 1x2 (TODO or 2x1)
+            np.array: Jacobian Matrix for coxa link 1x2
         """
         j_matrix = np.array([
         [-self.length_coxa * np.sin(self.theta_coxa)],  
@@ -151,7 +151,6 @@ class RoboticArm:
         return (target[0] - self.end_effector[0], target[1] - self.end_effector[1])
         
 
-    # Nicht inverse_kinematics im eigentlichen Sinne! Bewegt joint langsam zur Zielposition
     def inverse_kinematics(self, target):
         """ Moves end effector slowly to target position using approximation via inverse jacobian matrix
 
@@ -182,7 +181,6 @@ class RoboticArm:
         new_theta_femur = self.theta_femur + np.sign(delta_angles[1]) * np.minimum(np.abs(delta_angles[1]), step_size)
         new_theta_tibia = self.theta_tibia + np.sign(delta_angles[2]) * np.minimum(np.abs(delta_angles[2]), step_size)
 
-        #print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
     def move_to_target_direction(self, target_angles, target_position, step_size=0.05, tolerance =0.1):
@@ -211,9 +209,6 @@ class RoboticArm:
         else:
             new_theta_tibia = self.theta_tibia
         
-        #print(f"delta_anlges = {delta_angles}, direction = {direction}")
-
-        #print(f"move to target new thetas: coxa = {new_theta_coxa}, femur = {new_theta_femur}, tibia = {new_theta_tibia}")
         self.update_joints(new_theta_coxa, new_theta_femur, new_theta_tibia)
 
 
@@ -244,26 +239,25 @@ class RoboticArm:
         vector_coxa_tibia_1 = self.joint_femur[0]
         vector_coxa_tibia_2 = self.joint_femur[1]
 
-        # Length Femur Link to End Effector
+        # Length Femur link to end effector
         length_coxa_tibia = np.sqrt(vector_coxa_tibia_1**2 + vector_coxa_tibia_2**2)
 
         # Calculate alpha
-        # Definitionsmenge arccos: [-1, 1]
+        # Range arccos: [-1, 1]
         temp = (vector_coxa_1*vector_coxa_tibia_1 + vector_coxa_2*vector_coxa_tibia_2)/(self.length_femur*length_coxa_tibia)
 
         if (np.abs(temp)>1):
-            print(f"Reflect Femur Link: Value for Arccos out of range")
+            print(f"Reflect Femur link: Value for Arccos out of range")
             temp = np.sign(temp)* abs(temp) % 1
         print(f"Temp femur = {temp}")
         alpha = np.arccos(temp)
         
-
         # Calculate Theta Coxa
         theta_coxa = (theta_coxa + factor * alpha*2) % (np.pi*2)
 
         # Calculate theta tibia
         
-        # Dritten Winkel im Dreieck über Innnenwinkelsumme berechnen
+        # Calculate the third angle using the sum of interior angles in triangles
         gamma = np.pi - alpha + factor * (np.pi - theta_femur)
 
         theta_tibia = (theta_tibia + factor*2*gamma)
@@ -314,10 +308,8 @@ class RoboticArm:
         if (np.abs(temp)>1):
             print(f"Reflect Tibia Link: Value for Arccos out of range")
             temp = np.sign(temp)* abs(temp) % 1
-        #print(f"Temp tibia = {temp}")
 
         alpha = np.arccos(temp)
-
 
         # Theta Coxa berechnen
         theta_femur = theta_femur + factor * alpha*2
@@ -326,7 +318,6 @@ class RoboticArm:
         theta_femur = theta_femur % (np.pi*2)
         theta_tibia = theta_tibia % (np.pi*2)
 
-        print(f"Reflect tibia link result: coxa = {theta_coxa}, femur = {theta_femur}, tibia = {theta_tibia}")
         return theta_coxa, theta_femur, theta_tibia
     
 

@@ -6,9 +6,9 @@ import print_test_results as ps
 PI = np.pi
 
 current_test = 1
-algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
-             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py",
-             "WrapperPFLinkageStartingPosition.py"]
+algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "runner_a_star_starting_posture.py", 
+             "runner_a_star_tang.py", "runner_potential_fields.py", "runner_pf_linkage.py", "runner_pf_starting_posture.py",
+             "runner_pf_linkage_sp.py"]
 
 """ config.runner_mode: (in config)
 0 : Naive Approach
@@ -21,8 +21,9 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 7 : PF Starting Position
 8 : PF Starting Position and Linkage
 """
-#config.runner_mode = 3
-# Open/Make new file in "write"-config.runner_mode
+#config.runner_mode = 0
+
+# Print testing parameters in testresults.txt
 with open("testresults.txt", "w") as file:
     file.write("Test results\n\n")
     file.write("Current Parameters:\n")
@@ -53,9 +54,7 @@ with open("testresults.txt", "a") as file:
 current_test = current_test + 1
 exec(open(algorithm[config.runner_mode]).read())
 
-
-print(f"config.runner_mode = {config.runner_mode}")
-
+'''
 config.center = (-3, 0)
 with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
@@ -692,7 +691,7 @@ with open("testresults.txt", "a") as file:
     file.write(f"Test no. {current_test} Parameters obstacle: center = {config.center}, radius = {config.radius}\n")
 current_test = current_test + 1
 exec(open(algorithm[config.runner_mode]).read())
-
+'''
 ps.statistics_a_star()
 ps.statistics_a_star_elbow()
 ps.statistics_a_star_start_position()

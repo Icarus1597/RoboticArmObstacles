@@ -16,7 +16,7 @@ previous_end_effector_position = arm.end_effector
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
-ax.set_aspect('equal') #TODO ?
+ax.set_aspect('equal')
 
 # Set axis limits considering the link lengths
 arm_length = config.coxa_length + config.femur_length + config.tibia_length
@@ -31,10 +31,6 @@ figure_distance_to_target, ax2 = plt.subplots()
 x_data_time = []
 y_data_distance_to_target = []
 line_distance_to_target, = ax2.plot([], [], 'r-', label="Distance")
-
-# Plot: taken path
-data_plot_path_x = []
-data_plot_path_y= []
 
 ax2.set_xlim(0, config.timeout)  # x-Axis 0 to maximum time till abortion
 ax2.set_ylim(-2, 30)  # y-Axis (Distance) -2 to 30
@@ -73,11 +69,6 @@ def update(frame):
     global previous_end_effector_position
     global covered_distance
 
-    # Append new data plot path taken
-    data_plot_path_x.append(arm.end_effector[0])
-    data_plot_path_y.append(arm.end_effector[1])
-
-    #plt.savefig('starting_position_1.pdf', bbox_inches='tight')
     current_time = time.time()
     ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
     # Calculate distance arm to obstacle. If negative, error and abort execution
@@ -96,7 +87,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
@@ -112,7 +103,6 @@ def update(frame):
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
     
-
     # Stops, when target reached/ close to target
     distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
@@ -125,36 +115,7 @@ def update(frame):
         ani.event_source.stop()
         plt.figure(fig.number)
         config.bool_naive_successfull = True
-
-
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"./PDF_Figures/Wrapper_Naive_arm{timestamp}.pdf"
-        #fig.savefig(filename, bbox_inches='tight')
-
-
-
         plt.close()
-
-
-        # Plot taken path
-        # Plot: Robotic arm
-        fig_path, ax_path = plt.subplots()
-        ax_path.set_aspect('equal') #TODO ?
-
-        ax_path.set_xlim(-arm_length,  arm_length)
-        ax_path.set_ylim(-arm_length,  arm_length)
-        line_path, = ax_path.plot([], [], 'r-', label="Distance")
-        line_path.set_xdata(data_plot_path_x)
-        line_path.set_ydata(data_plot_path_y)
-        fig_path.canvas.draw()
-        plt.figure(fig_path.number)
-        # Generate individual name for each new figure
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"./PDF_Figures/Wrapper_Naive_path_to_target_{timestamp}.pdf"
-        #fig_path.savefig(filename, bbox_inches='tight')
-        plt.close()
-
-
         plt.figure(figure_distance_to_target.number)
         plt.close()
 
@@ -179,6 +140,3 @@ frames = np.linspace(0, 2 * np.pi, config.delta_t)
 ani = animation.FuncAnimation(fig, update, frames=frames, init_func=init, blit=True)
 plt.ioff()
 plt.show()
-#print(f"Antes de startingposition savefig")
-#plt.savefig('starting_position_1.pdf', bbox_inches='tight')
-#print(f"Despues de startingposition savefig")

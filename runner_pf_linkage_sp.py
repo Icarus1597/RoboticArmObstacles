@@ -24,7 +24,7 @@ time_start_algorithm = -1
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
-ax.set_aspect('equal') #TODO ?
+ax.set_aspect('equal')
 # Set axis limits considering the link lengths
 arm_length = config.coxa_length + config.femur_length + config.tibia_length
 ax.set_xlim(-arm_length,  arm_length)
@@ -48,10 +48,6 @@ ax2.legend()
 alpha = geometry.angle_vector_point((0,0), (5, 0), config.center)
 alpha = (alpha + np.pi) % (2*np.pi)
 print(f"alpha = {alpha}")
-
-# Plot: taken path
-data_plot_path_x = []
-data_plot_path_y= []
 
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
@@ -105,9 +101,6 @@ def update(frame):
     global time_end_algorithm
     global time_start_algorithm
 
-    data_plot_path_x.append(arm.end_effector[0])
-    data_plot_path_y.append(arm.end_effector[1])
-
     # After a given time, the execution will be aborted
     current_time = time.time()
     if(current_time - start_time > config.timeout) :
@@ -120,7 +113,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     current_time = time.time()
     ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
@@ -140,11 +133,9 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
-    # Calculate distance to Circle and checks if the End Effector touches the Circle
-    #distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
-
+    # If arm has not moved towards the starting posture yet, do so. Else the arm approaches the target with PF method
     if(mode_start_position):
         target_angles = calculate_starting_position(alpha_offset=PI*5/4)
         if(not sm.arm_near_target_angles(arm, target_angles)):
@@ -162,28 +153,20 @@ def update(frame):
         inverse_jacobian_matrix = arm.inverse_jacobian_matrix(jacobian_matrix)
         joint_velocity_att = pf.joint_velocities_att(inverse_jacobian_matrix, v_att_joint)
 
-        # Calculate distance to Circle and checks if the End Effector touches the Circle
-        #distance = Geometrie.distance_to_circle(config.center, config.radius, arm.end_effector)
-
         # Calculates Joint Velocities for U_rep
         v_rep_joint = pf.v_rep_function(arm.end_effector, config.rho_0, config.k)
         joint_velocity_rep = pf.joint_velocities_rep(inverse_jacobian_matrix, v_rep_joint)
         
-        
         joint_velocity = joint_velocity_att + joint_velocity_rep + [1E-10,1E-10,1E-10]
     
         # Calculates Coxa-Joint Velocities for U_rep
-        #distance_coxa = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_coxa)
-    
-        v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_coxa, config.k_coxa)
+        v_rep_joint_coxa = pf.v_rep_function(arm.joint_coxa, config.rho_0_femur, config.k_femur)
         jacobian_matrix_coxa = arm.jacobian_matrix_coxa()
         inverse_jacobian_matrix_coxa = arm.inverse_jacobian_matrix(jacobian_matrix_coxa)
         joint_velocity_rep_coxa = pf.joint_velocities_rep(inverse_jacobian_matrix_coxa, v_rep_joint_coxa)
 
         # Calculates Femur-Joint Velocities for U_rep
-        #distance_femur = Geometrie.distance_to_circle(config.center, config.radius, arm.joint_femur)
-
-        v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_femur, config.k_femur)
+        v_rep_joint_femur = pf.v_rep_function(arm.joint_femur, config.rho_0_tibia, config.k_tibia)
         jacobian_matrix_femur = arm.jacobian_matrix_femur()
         inverse_jacobian_matrix_femur = arm.inverse_jacobian_matrix(jacobian_matrix_femur)
         joint_velocity_rep_femur = pf.joint_velocities_rep(inverse_jacobian_matrix_femur, v_rep_joint_femur)
@@ -191,7 +174,7 @@ def update(frame):
         joint_velocity[0] = joint_velocity[0] + joint_velocity_rep_coxa[0] + joint_velocity_rep_femur[0]
         joint_velocity[1] = joint_velocity[1] + joint_velocity_rep_femur[1]
 
-        # Hard maximum velocity for robot arm
+        # Hard maximum velocity for arm
         if(np.abs(joint_velocity[0])>config.max_velocity):
             joint_velocity[0] = np.sign(joint_velocity[0]) * config.max_velocity
         if(np.abs(joint_velocity[1])>config.max_velocity):
@@ -212,7 +195,6 @@ def update(frame):
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
     
-
     # Stops, when target reached/ close to target
     distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
@@ -226,27 +208,6 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-
-        # Plot taken path
-        fig_path, ax_path = plt.subplots()
-        ax_path.set_aspect('equal') #TODO ?
-
-        ax_path.set_xlim(-arm_length,  arm_length)
-        ax_path.set_ylim(-arm_length,  arm_length)
-        line_path, = ax_path.plot([], [], 'b-', label="Distance")
-        line_path.set_xdata(data_plot_path_x)
-        line_path.set_ydata(data_plot_path_y)
-        fig_path.canvas.draw()
-        plt.figure(fig_path.number)
-        # Generate individual name for each new figure
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"./PDF_Figures/WrapperPFLinkageSP_path_to_target_{timestamp}.pdf"
-        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
-        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
-        plt.gca().add_patch(path_obstacle_circle) #TODO
-        plt.gca().add_patch(path_target_circle)
-        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

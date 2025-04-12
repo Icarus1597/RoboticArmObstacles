@@ -3,7 +3,7 @@ import math
 import autograd.numpy as anp
 
 def which_side_small_angle(angle):
-    """ Comment Determines, if the joint is tilted to the right (0) or to the left (1) in the perspective of the start of the link
+    """Comment Determines, if the joint is tilted to the right (0) or to the left (1) in the perspective of the start of the link
 
     Args:
         angle (float): angle of the link
@@ -17,7 +17,7 @@ def which_side_small_angle(angle):
         return 1
     
 def distance_segment_point(point_x, point_y, segment_a_x, segment_a_y, segment_b_x, segment_b_y) :
-    """ Calculates the minimum distance between a segment and a point.
+    """Calculates the minimum distance between a segment and a point.
 
     Args:
         point_x (float): x coordinate of the point
@@ -54,30 +54,10 @@ def distance_segment_point(point_x, point_y, segment_a_x, segment_a_y, segment_b
     else:
         # Otherwise, the foot point H is within the segment, calculate the euclidian distance
         return math.sqrt((point_x - hx)**2 + (point_y - hy)**2)
-        
-'''
-# TODO: Determines, from perspective of the coxa link, if the obstacle is on its right side or left side
-# TODO: This is buggy
-# Input:
-#   arm: To know the position and current posture of the coxa link
-#   center: Center Point of the Obstacle
-# Ouput:
-#   0 : Obstacle is on the right side of coxa TODO is this correct? Should be correct
-#   1 : Obstacle is on the left side of coxa
-def which_side_obstacle_to_coxa(arm, center):
-    # Calculate the slope of the coxa link under the presumption, that the arm's origin is always (0,0)
-    m = arm.joint_coxa[1]/arm.joint_coxa[0]
-
-    f_center = m * center[0]
-
-    if (f_center > center[1]):
-        return 0
-    else:
-        return 1
-'''
+    
 
 def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x, line_end_y):
-    """ Determines, from perspective of the direction of the line, if the point is on its right side or left side
+    """Determines, from perspective of the direction of the line, if the point is on its right side or left side
 
     Args:
         point_x (_type_): x coordinate of point
@@ -99,7 +79,7 @@ def side_point_to_line(point_x, point_y, line_start_x, line_start_y, line_end_x,
         return 1
     
 def side_point_to_line2(point, line_start, line_end):
-    """ Determines, from perspective of the direction of the line, if the point is on its right side or left side
+    """Determines, from perspective of the direction of the line, if the point is on its right side or left side
 
     Args:
         point (_type_): coordinates of point
@@ -118,7 +98,7 @@ def side_point_to_line2(point, line_start, line_end):
         return 1
 
 def booleans_switch_elbows(arm, center):
-    """ Determines, if the elbows need to change side or not
+    """Determines, if the elbows need to change side or not
 
     Args:
         arm (RoboterArm.RoboticArm): robotic arm
@@ -145,7 +125,7 @@ def booleans_switch_elbows(arm, center):
     return bool_result_coxa, bool_result_tibia
 
 def distance_to_circle(center, radius, point):
-    """ Method to calculate the distance between a circle and a point.
+    """Method to calculate the distance between a circle and a point.
 
     Args:
         center ((float, float)): position of the center of the circle
@@ -161,7 +141,7 @@ def distance_to_circle(center, radius, point):
     return distance
 
 def cartesian_distance(point1, point2):
-    """ Cartesian distance of two points
+    """Cartesian distance between two points
 
     Args:
         point1 ((float, float)): One point
@@ -179,7 +159,7 @@ def cartesian_distance(point1, point2):
     return distance
 
 def angle_vector_point(vector_start, vector_end, point):
-    """ Calculates the angle between a vector consisting of a start and end point and a vector from said start point to an additional point
+    """Calculates the angle between a vector consisting of a start and end point and a vector from said start point to an additional point
 
     Args:
         vector_start (float[]): start point of the vector, two dimensional position
@@ -212,7 +192,6 @@ def angle_vector_point(vector_start, vector_end, point):
     if (np.abs(temp)>1):
         print(f"Geometrie, angle_coxa_joint: Value for Arccos out of range")
         temp = np.sign(temp)* abs(temp) % 1
-    #print(f"Temp tibia = {temp}")
 
     alpha = np.arccos(temp)
     bool = side_point_to_line(point[0], point[1], vector_start[0], vector_start[1], vector_end[0], vector_end[1])
@@ -220,46 +199,6 @@ def angle_vector_point(vector_start, vector_end, point):
         alpha = -alpha % (np.pi*2)
     return alpha
 
-'''
-def angle_vector_point2(vector_start, vector_end, point):
-    """ Calculates the angle between a vector consisting of a start and end point and a vector from said start point to an additional point
-
-    Args:
-        vector_start (float[]): start point of the vector, two dimensional position
-        vector_end (float[]): end point of the vector, two dimensional position
-        point (float[]): another point, two dimensional position
-
-    Returns:
-        float: angle between vector and vector from start point to the point
-    """
-    # Vector start to end
-    vector_1 = vector_end[0] - vector_start[0]
-    vector_2 = vector_end[1] - vector_start[1]
-
-    # Vector start to point
-    vector_to_point_1 = point[0] - vector_start[0]
-    vector_to_point_2 = point[1] - vector_start[1]
-
-    # Length of the vectors
-    length_vector_to_point = np.sqrt(vector_to_point_1**2 + vector_to_point_2**2)
-    length_vector = np.sqrt(vector_1**2 + vector_2**2)
-
-    # Catch error to avoid dividing through zero
-    if(length_vector == 0 or length_vector_to_point == 0):
-        print(f"Geometrie.angle_vector_point: Error: Division through zero")
-        return -1
-
-
-    # Calculate alpha
-    temp = (vector_1*vector_to_point_1 + vector_2*vector_to_point_2)/(length_vector_to_point * length_vector)
-    if (np.abs(temp)>1):
-        print(f"Geometrie, angle_coxa_joint: Value for Arccos out of range")
-        temp = np.sign(temp)* abs(temp) % 1
-    #print(f"Temp tibia = {temp}")
-
-    alpha = np.arccos(temp)
-    return alpha
-'''
 
 def direction_coxa(femur_link, target_point, center, target_position):
     """Determines rotation direction for coxa joint so that it avoids the obstacle

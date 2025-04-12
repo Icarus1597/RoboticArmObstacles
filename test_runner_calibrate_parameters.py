@@ -5,15 +5,20 @@ import print_test_results as ptr
 PI = np.pi
 
 current_test = 1
-algorithm = ["WrapperAStar.py", "WrapperNaive.py", "OwnElbowWrapper.py", "WrapperPF.py", "PFLinkageWrapper.py", "StartPositionWrapper.py"]
+algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "runner_a_star_starting_posture.py", 
+             "runner_a_star_tang.py", "runner_potential_fields.py", "runner_pf_linkage.py", "runner_pf_starting_posture.py",
+             "runner_pf_linkage_sp.py"]
 
-""" mode: 
-0 : A* algorithm
-1 : Potential Fields Method without considering the whole linkage
-2 : A* algorithm with own approach to avoid obstacle with whole linkage
-3 : Naive Approach
-4 : Potential Fields Method with considering whole linkage
-5 : A* algorithm but moves to specific start position first
+""" config.runner_mode: (in config)
+0 : Naive Approach
+1 : A*
+2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
+3 : A* with adjusting starting position
+4 : A* inspired by Tang with PF for linkage
+5 : PF
+6 : PF Linkage
+7 : PF Starting Position
+8 : PF Starting Position and Linkage
 """
 mode = 1
 

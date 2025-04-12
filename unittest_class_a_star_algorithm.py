@@ -121,12 +121,7 @@ class TestAStarAlgorithm(unittest.TestCase):
         result = node.iterative_search_wrapper()
         self.assertNotEqual(result, -1)
         self.assertEqual(len(result), 11)
-        #print(f"Result:{result}")
-        #print(f"Result length= {len(result)}")
-        #print(f"{result[0].position}")
-        #print(f"Path Node List : {result.path_node_list()}")
 
-        # TODO: Test Case with Obstacle
         config.center = (0, 5)
         config.radius = 2
         result = node.iterative_search_wrapper()

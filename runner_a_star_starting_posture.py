@@ -23,7 +23,7 @@ time_start_algorithm = -1
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
-ax.set_aspect('equal') #TODO ?
+ax.set_aspect('equal')
 # Set axis limits considering the link lengths
 arm_length = config.coxa_length + config.femur_length + config.tibia_length
 ax.set_xlim(-arm_length,  arm_length)
@@ -44,9 +44,9 @@ ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Distance')
 ax2.legend()
 
+# Calculate alpha to later generate starting posture
 alpha = geometry.angle_vector_point((0,0), (5, 0), config.center)
 alpha = (alpha + np.pi) % (2*np.pi)
-print(f"alpha = {alpha}")
 
 if plt.get_backend() == 'TkAgg':
     # Set the position of fig
@@ -66,7 +66,6 @@ def calculate_starting_position(alpha_offset):
     """
     side = geometry.side_point_to_line2((config.target_x, config.target_y), (0, 0), config.center)
     alpha = geometry.angle_vector_point((0,0), (1,0), config.center)
-    #print(f"side = {side}, alpha = {alpha}")
     theta_coxa = (alpha + side*alpha_offset) % (2*PI)
     theta_femur = PI/4 * side % (2*PI)
     theta_tibia = PI/4 * side % (2*PI)
@@ -87,10 +86,6 @@ def init():
 next_node_index = 0
 path_node_list = []
 
-# Plot: taken path
-data_plot_path_x = []
-data_plot_path_y= []
-
 # Updates the frame
 def update(frame):
     """ Updates the frame. Calculates the new thetas based on A* algorithm for the Robotic Arm and updates its position.
@@ -109,9 +104,6 @@ def update(frame):
     global time_end_algorithm
     global time_start_algorithm
 
-    data_plot_path_x.append(arm.end_effector[0])
-    data_plot_path_y.append(arm.end_effector[1])
-
     # After a given time, the execution will be aborted
     current_time = time.time()
     ax2.set_xlim(0, current_time - start_time)  # x-Axis 0 to current_time
@@ -125,7 +117,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     current_time = time.time()
     # Calculate distance arm to obstacle. If negative, error and abort execution
@@ -144,7 +136,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
@@ -173,14 +165,13 @@ def update(frame):
                 plt.close()
                 plt.figure(figure_distance_to_target.number)
                 plt.close()
-                return line, point, #obstacle_circle
+                return line, point,
 
             time_end_algorithm = time.time()
             config.astar_start_position_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
     else: 
-        # Punkte nacheinander abfahren path node list
-        #print(f"path_node_list length = {len(path_node_list)}")
+        # Follow path calculated by A*
         if(len(path_node_list)>0):
             theta_coxa, theta_femur, theta_tibia= arm.inverse_kinematics(path_node_list[next_node_index].position)
             arm.update_joints(theta_coxa, theta_femur, theta_tibia)
@@ -193,9 +184,9 @@ def update(frame):
             plt.close()
             plt.figure(figure_distance_to_target.number)
             plt.close()
-            return line, point, #obstacle_circle
+            return line, point,
 
-
+        # If current node reached, move to next node of the path
         if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
             if(len(path_node_list) > next_node_index+1):
                 next_node_index += 1
@@ -207,7 +198,6 @@ def update(frame):
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
     
-
     # Stops, when target reached/ close to target
     distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
@@ -221,27 +211,6 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-
-        # Plot taken path
-        fig_path, ax_path = plt.subplots()
-        ax_path.set_aspect('equal') #TODO ?
-
-        ax_path.set_xlim(-arm_length,  arm_length)
-        ax_path.set_ylim(-arm_length,  arm_length)
-        line_path, = ax_path.plot([], [], 'b-', label="Distance")
-        line_path.set_xdata(data_plot_path_x)
-        line_path.set_ydata(data_plot_path_y)
-        fig_path.canvas.draw()
-        plt.figure(fig_path.number)
-        # Generate individual name for each new figure
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"./PDF_Figures/WrapperAStarStartPosition_path_to_target_{timestamp}.pdf"
-        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
-        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
-        plt.gca().add_patch(path_obstacle_circle) #TODO
-        plt.gca().add_patch(path_target_circle)
-        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

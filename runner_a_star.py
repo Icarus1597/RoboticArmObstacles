@@ -2,12 +2,9 @@ import numpy as np
 import robotic_arm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import potential_fields as pf
 import time
-import autograd.numpy as anp
 import config
 import a_star_algorithm
-import switch_mode as sm
 import geometry
 
 # Update the posture of the arm
@@ -20,7 +17,7 @@ previous_end_effector_position = arm.end_effector
 
 # Plot: Robotic arm
 fig, ax = plt.subplots()
-ax.set_aspect('equal') #TODO ?
+ax.set_aspect('equal')
 # Set axis limits considering the link lengths
 arm_length = config.coxa_length + config.femur_length + config.tibia_length
 ax.set_xlim(-arm_length,  arm_length)
@@ -70,7 +67,6 @@ path_node_list = initial_point.iterative_search_wrapper()
 time_end_algorithm = time.time()
 config.astar_time_needed_calculation.append(time_end_algorithm - time_start_algorithm)
 
-
 next_node_index = 0
 
 # Updates the frame
@@ -100,7 +96,7 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     data_plot_path_x.append(arm.end_effector[0])
     data_plot_path_y.append(arm.end_effector[1])
@@ -123,12 +119,12 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
     # Calculate distance to Circle and checks if the End Effector touches the Circle
     distance = geometry.distance_to_circle(config.center, config.radius, arm.end_effector)
 
-    # Punkte nacheinander abfahren path node list
+    # Check if a path was found
     if(path_node_list == -1):
         print(f"Error in A* Path Calculation: No path found")
         config.astar_number_error_no_path +=1
@@ -136,11 +132,13 @@ def update(frame):
         plt.close()
         plt.figure(figure_distance_to_target.number)
         plt.close()
-        return line, point, #obstacle_circle
+        return line, point,
 
+    # Move towards current path node via inverse kinematics
     theta_coxa, theta_femur, theta_tibia = arm.inverse_kinematics(path_node_list[next_node_index].position)
     arm.update_joints(theta_coxa+1E-5, theta_femur, theta_tibia)
 
+    # If current node reached, move towards next node
     if(np.linalg.norm(arm.error_target_end_effector(path_node_list[next_node_index].position))<config.tolerance) :
         if(len(path_node_list) > next_node_index+1):
             next_node_index += 1
@@ -152,7 +150,6 @@ def update(frame):
     plt.figure(fig.number)
     plt.gca().add_patch(obstacle_circle)
     
-
     # Stops, when target reached/ close to target
     distance_to_target = geometry.cartesian_distance(arm.end_effector, (config.target_x, config.target_y))
     if (distance_to_target) < config.delta_success_distance :
@@ -166,28 +163,6 @@ def update(frame):
         plt.figure(fig.number)
         plt.close()
         plt.figure(figure_distance_to_target.number)
-        plt.close()
-
-        # Plot taken path
-        # Plot: Robotic arm
-        fig_path, ax_path = plt.subplots()
-        ax_path.set_aspect('equal') #TODO ?
-
-        ax_path.set_xlim(-arm_length,  arm_length)
-        ax_path.set_ylim(-arm_length,  arm_length)
-        line_path, = ax_path.plot([], [], 'b-', label="Distance")
-        line_path.set_xdata(data_plot_path_x)
-        line_path.set_ydata(data_plot_path_y)
-        fig_path.canvas.draw()
-        plt.figure(fig_path.number)
-        # Generate individual name for each new figure
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"./PDF_Figures/Wrapper_A_star_path_to_target_{timestamp}.pdf"
-        path_obstacle_circle = plt.Circle(config.center, config.radius, fc='y')
-        path_target_circle = plt.Circle((config.target_x, config.target_y), 0.5, fc='r')
-        plt.gca().add_patch(path_obstacle_circle) #TODO
-        plt.gca().add_patch(path_target_circle)
-        #fig_path.savefig(filename, bbox_inches='tight')
         plt.close()
 
     # Append the new data

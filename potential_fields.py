@@ -4,7 +4,7 @@ import geometry
 import config
 
 def u_att_function(pos_ee, pos_target, zeta) :
-    """ Calculates the Attractive Potential Field to attract the end effector to the target point
+    """Calculates the Attractive Potential Field to attract the end effector to the target point
 
     Args:
         pos_ee ((float, float)): position of the end effector of robotic arm
@@ -24,7 +24,7 @@ def u_rep_function(pos_ee, rho_0, k) :
     """Calculates the Repulsive Potential Field which repels from the obstacle
 
     Args:
-        rho_b (float): minimum distance robot linkage TODO ? to obstacle
+        rho_b (float): minimum distance link/end effector to obstacle
         rho_0 (float): max range repulsive field
         k (float): repulsive potential gain
 
@@ -41,7 +41,7 @@ def u_rep_function(pos_ee, rho_0, k) :
     return 0.
 
 def v_att_function(pos_ee, pos_target, zeta) :
-    """ Attraction Velocity (gradient of the potential field) in Cartesian Space.
+    """Attraction Velocity (gradient of the potential field) in Cartesian Space.
 
     Args:
         pos_ee ((float, float)): position end effector
@@ -62,18 +62,17 @@ def v_att_function(pos_ee, pos_target, zeta) :
     return -v_att
 
 def V_att(v_att): 
-    """ Converts v_att to vector with omega_att the angular velocity (which is zero)
-
+    """Converts v_att to vector
     Args:
         v_att (float): Attraction Velocity in Cartesian Space
 
     Returns:
-        float[] : Attraction Velocity in Cartesian SPace Array 3x1 with added omega_att = 0
+        float[] : Attraction Velocity in Cartesian SPace Array 2x1 
     """
     return np.array([v_att[0], v_att[1]]).T
 
 def v_rep_function(pos_ee, rho_0, k) :
-    """ Repulsive Velocity in Cartesian Space
+    """Repulsive Velocity in Cartesian Space
 
     Args:
         rho_b (float): minimum distance arm linkage to obstacle

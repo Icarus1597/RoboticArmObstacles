@@ -6,10 +6,11 @@ import geometry
 PI = np.pi
 
 current_test = 1
-algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "WrapperAStarStartPosition.py", 
-             "WrapperAStarTang.py", "WrapperPF.py", "WrapperPFLinkage.py", "WrapperPFStartingPosition.py"]
+algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "runner_a_star_starting_posture.py", 
+             "runner_a_star_tang.py", "runner_potential_fields.py", "runner_pf_linkage.py", "runner_pf_starting_posture.py",
+             "runner_pf_linkage_sp.py"]
 
-""" mode: 
+""" config.runner_mode: (in config)
 0 : Naive Approach
 1 : A*
 2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
@@ -18,6 +19,7 @@ algorithm = ["WrapperNaive.py", "WrapperAStar.py", "WrapperAStarElbow.py", "Wrap
 5 : PF
 6 : PF Linkage
 7 : PF Starting Position
+8 : PF Starting Position and Linkage
 """
 mode = 0
 # Open/Make new file in "write"-mode
