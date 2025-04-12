@@ -9,16 +9,16 @@ algorithm = ["runner_naive.py", "runner_a_star.py", "runner_a_star_elbow.py", "r
              "runner_a_star_tang.py", "runner_potential_fields.py", "runner_pf_linkage.py", "runner_pf_starting_posture.py",
              "runner_pf_linkage_sp.py"]
 
-""" config.runner_mode: (in config)
+"""runner_mode:
 0 : Naive Approach
 1 : A*
 2 : A* algorithm with own approach to avoid obstacle with whole linkage reflecting elbows
-3 : A* with adjusting starting position
+3 : A* with adjusting starting posture
 4 : A* inspired by Tang with PF for linkage
 5 : PF
 6 : PF Linkage
-7 : PF Starting Position
-8 : PF Starting Position and Linkage
+7 : PF Starting posture
+8 : PF Starting posture and Linkage
 """
 
 # Open/Make new file in "write"-mode
