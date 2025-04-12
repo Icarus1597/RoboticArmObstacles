@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.txt
+*.pdf
+*.png
+PDF_Figures/
+Test_Results/
